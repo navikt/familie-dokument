@@ -1,5 +1,10 @@
 package no.nav.familie.dokument.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import no.nav.familie.log.filter.LogFilter
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
@@ -23,5 +28,14 @@ class ApplicationConfig {
         filterRegistration.filter = LogFilter()
         filterRegistration.order = 1
         return filterRegistration
+    }
+
+    @Bean
+    fun objectMapper(): ObjectMapper {
+        return ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModule(JavaTimeModule())
+                .registerModule(Jdk8Module())
+                .enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     }
 }
