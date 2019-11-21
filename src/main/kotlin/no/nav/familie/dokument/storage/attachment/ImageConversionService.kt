@@ -1,7 +1,6 @@
 package no.nav.familie.dokument.storage.attachment
 
 import com.fasterxml.jackson.core.JsonProcessingException
-import no.nav.familie.dokument.storage.InternalRuntimeException
 import no.nav.familie.http.client.HttpClientUtil
 import no.nav.familie.http.client.HttpRequestUtil
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -34,18 +33,18 @@ internal class ImageConversionService(@Value("\${SOKNAD_PDF_SVG_SUPPORT_GENERATO
             val response = client.send(request, HttpResponse.BodyHandlers.ofByteArray())
 
             if (HttpStatus.Series.SUCCESSFUL != HttpStatus.Series.resolve(response.statusCode())) {
-                throw InternalRuntimeException("Response fra pdf-generator: " + response.statusCode() + ". Response.entity: " + String(response.body()))
+                throw RuntimeException("Response fra pdf-generator: " + response.statusCode() + ". Response.entity: " + String(response.body()))
             }
 
             log.info("Konvertert bilde({}) til pdf", detectedType.mimeType)
 
             return response.body()
         } catch (e: JsonProcessingException) {
-            throw InternalRuntimeException("Feiler under konvertering av innsending til json. " + e.message)
+            throw RuntimeException("Feiler under konvertering av innsending til json. " + e.message)
         } catch (e: InterruptedException) {
-            throw InternalRuntimeException("Timer ut under innsending. " + e.message)
+            throw RuntimeException("Timer ut under innsending. " + e.message)
         } catch (e: IOException) {
-            throw InternalRuntimeException("Ukjent IO feil i " + javaClass.name + "." + e.message)
+            throw RuntimeException("Ukjent IO feil i " + javaClass.name + "." + e.message)
         }
 
     }

@@ -2,7 +2,6 @@ package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,11 +17,10 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("api/vedlegg")
-//@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
-@Unprotected
+@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
-                        @Value("\${attachment.max.size.mb}") val maxFileSize: Int) {
+                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int) {
 
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
     @Throws(IOException::class)
@@ -33,9 +31,10 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         }
 
         val bytes = multipartFile.bytes
+        val maxFileSizeInBytes = maxFileSizeInMb*1024*1024
         log.debug("Vedlegg med lastet opp med størrelse: " + bytes.size)
 
-        if (bytes.size/(1024*1024) > maxFileSize) {
+        if (bytes.size > maxFileSizeInBytes) {
             throw IllegalArgumentException(HttpStatus.PAYLOAD_TOO_LARGE.toString())
         }
 

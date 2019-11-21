@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage.encryption
 
-import no.nav.familie.dokument.storage.InternalRuntimeException
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.spec.GCMParameterSpec
@@ -22,7 +21,7 @@ internal class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
             val cipher = initCipher(Cipher.DECRYPT_MODE, fnr)
             return cipher.doFinal(input)
         } catch (e: GeneralSecurityException) {
-            throw InternalRuntimeException("Kunne ikke opprette cipher", e)
+            throw RuntimeException("Kunne ikke opprette cipher", e)
         }
 
     }
@@ -33,7 +32,7 @@ internal class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
             cipher.init(cipherTransformation, secretKeyProvider.key(fnr), GCMParameterSpec(128, fnr.toByteArray()))
             return cipher
         } catch (e: GeneralSecurityException) {
-            throw InternalRuntimeException("Kunne ikke opprette cipher", e)
+            throw RuntimeException("Kunne ikke opprette cipher", e)
         }
 
     }

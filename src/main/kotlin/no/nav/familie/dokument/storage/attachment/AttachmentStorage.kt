@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
+import java.lang.RuntimeException
 import java.util.Optional
 
 class AttachmentStorage internal constructor(private val delegate: EncryptedStorage, private val storableFormatConverter: AttachmentToStorableFormatConverter) : Storage {
@@ -24,7 +25,7 @@ class AttachmentStorage internal constructor(private val delegate: EncryptedStor
         try {
             return IOUtils.toByteArray(data)
         } catch (e: IOException) {
-            throw AttachmentConversionException("Kunnne ikke lese inputstream", e)
+            throw RuntimeException("Kunnne ikke lese inputstream", e)
         }
 
     }

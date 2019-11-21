@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import io.micrometer.core.instrument.Metrics
-import no.nav.familie.dokument.storage.InternalRuntimeException
 import no.nav.familie.dokument.storage.Storage
 import org.slf4j.LoggerFactory
 
@@ -60,7 +59,7 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
                 return buffer.toByteArray()
             }
         } catch (e: IOException) {
-            throw InternalRuntimeException("Unable parse $filename", e)
+            throw RuntimeException("Unable parse $filename", e)
         }
 
     }
@@ -75,7 +74,7 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
             return vedleggObjekt.objectContent
         } catch (e: SdkClientException) {
             feilMotS3Get.increment()
-            throw InternalRuntimeException("Unable to retrieve $filename, it probably doesn't exist", e)
+            throw RuntimeException("Unable to retrieve $filename, it probably doesn't exist", e)
         }
 
     }
