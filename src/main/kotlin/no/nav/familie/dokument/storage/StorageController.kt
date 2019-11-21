@@ -18,8 +18,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("api/vedlegg")
-//@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
-@Unprotected
+@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
                         @Value("\${attachment.max.size.mb}") val maxFileSize: Int) {
@@ -35,7 +34,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         val bytes = multipartFile.bytes
         log.debug("Vedlegg med lastet opp med størrelse: " + bytes.size)
 
-        if (bytes.size > maxFileSize) {
+        if (bytes.size/(1024*1024) > maxFileSize) {
             throw IllegalArgumentException(HttpStatus.PAYLOAD_TOO_LARGE.toString())
         }
 
