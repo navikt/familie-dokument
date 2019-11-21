@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +18,8 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("api/vedlegg")
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+//@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@Unprotected
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
                         @Value("\${attachment.max.size.mb}") val maxFileSize: Int) {
