@@ -88,7 +88,7 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
 
         private val log = LoggerFactory.getLogger(S3Storage::class.java)
 
-        private val VEDLEGG_BUCKET = "kontantstottevedlegg"
+        private val VEDLEGG_BUCKET = "familievedlegg"
         private val ENCRYPTION_SIZE_FACTOR = 1.5
     }
 

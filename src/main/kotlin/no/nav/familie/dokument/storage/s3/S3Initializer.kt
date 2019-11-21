@@ -11,7 +11,7 @@ internal class S3Initializer(private val s3: AmazonS3) {
 
     fun initializeBucket(bucketName: String) {
 
-        if (s3.listBuckets().stream().noneMatch({ bucket -> bucket.getName().equals(bucketName) })) {
+        if (s3.listBuckets().stream().noneMatch { bucket -> bucket.getName().equals(bucketName) }) {
             createBucket(bucketName)
         }
 
