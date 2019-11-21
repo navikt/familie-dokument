@@ -18,7 +18,8 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("api/vedlegg")
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+//@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@Unprotected
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
                         @Value("\${attachment.max.size.mb}") val maxFileSize: Int) {
