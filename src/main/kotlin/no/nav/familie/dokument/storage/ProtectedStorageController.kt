@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-@RequestMapping("api/vedlegg")
+@RequestMapping("api/mapper")
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class ProtectedStorageController(@Autowired val storage: AttachmentStorage,
                                  @Autowired val contextHolder: TokenValidationContextHolder,
