@@ -17,7 +17,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 @Component
-internal class ImageConversionService(@Value("\${SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL}") private val imageToPdfEndpointBaseUrl: URI,
+class ImageConversionService(@Value("\${SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL}") private val imageToPdfEndpointBaseUrl: URI,
                                       private val contextHolder: TokenValidationContextHolder) {
 
     private val client: HttpClient = HttpClientUtil.create()

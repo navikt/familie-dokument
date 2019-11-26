@@ -11,5 +11,6 @@ class DevLauncher
 fun main(args: Array<String>) {
     val springApp = SpringApplication(DevLauncher::class.java)
     springApp.setAdditionalProfiles("dev")
+    springApp.setDefaultProperties(mapOf("spring.main.allow-bean-definition-overriding" to true))
     springApp.run(*args)
 }

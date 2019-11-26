@@ -8,7 +8,7 @@ import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import java.io.InputStream
 import java.util.Optional
 
-class EncryptedStorage internal constructor(private val contextHolder: TokenValidationContextHolder,
+class EncryptedStorage constructor(private val contextHolder: TokenValidationContextHolder,
                                             private val delegate: S3Storage,
                                             private val encryptor: Encryptor) : Storage {
 
