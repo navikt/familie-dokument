@@ -1,13 +1,11 @@
 package no.nav.familie.dokument.storage.encryption
 
 import io.mockk.*
-import no.nav.familie.dokument.SetOidcClaimsWithSubject
 import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.util.*
@@ -20,9 +18,6 @@ class EncryptedStorageTest {
     private val FNR = "DummyFnr"
     private val DIRECTORY = "directory"
     private val KEY = "UUID"
-
-    @Rule @JvmField
-    val claims = SetOidcClaimsWithSubject(FNR)
 
     private val storage : S3Storage = mockk()
     private val tokenValidationContextHolder : TokenValidationContextHolder = mockk()

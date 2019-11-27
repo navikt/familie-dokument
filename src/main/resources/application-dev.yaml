@@ -2,3 +2,5 @@ FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL: #mockes ut lokalt
 FAMILIE_DOKUMENT_S3_ACCESSKEY: not-a-real-key
 FAMILIE_DOKUMENT_S3_SECRETKEY: not-a-real-key
+
+spring.main.allow-bean-definition-overriding": true

@@ -5,6 +5,7 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("api/mapper")
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@Profile("!dev")
 class ProtectedStorageController(@Autowired val storage: AttachmentStorage,
                                  @Autowired val contextHolder: TokenValidationContextHolder,
                                  @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int):

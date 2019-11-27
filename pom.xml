@@ -16,7 +16,6 @@
 
     <properties>
         <revision>1.0</revision>
-        <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>11</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class>
@@ -25,9 +24,7 @@
         <felles.version>1.0_20191106113227_c2ad869</felles.version>
         <mockk.version>1.9.3</mockk.version>
         <token-validation-spring.version>1.1.2</token-validation-spring.version>
-        <oidc-support.version>0.2.18</oidc-support.version>
-
-    </properties>
+     </properties>
 
     <dependencies>
         <!-- Spring Boot -->
@@ -158,22 +155,7 @@
             <version>1.12.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>oidc-spring-support</artifactId>
-            <version>${oidc-support.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>oidc-test-support</artifactId>
-            <version>${oidc-support.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-
-
-    </dependencies>
+     </dependencies>
 
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
