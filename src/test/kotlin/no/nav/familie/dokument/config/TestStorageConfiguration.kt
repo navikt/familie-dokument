@@ -11,6 +11,7 @@ import no.nav.familie.dokument.storage.attachment.ImageConversionService
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.*
 import java.util.*
@@ -18,8 +19,8 @@ import java.util.*
 
 @Profile("dev")
 @Configuration
+@Import(TokenGeneratorConfiguration::class)
 class TestStorageConfiguration {
-
 
     @Bean
     @Primary
