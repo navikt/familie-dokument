@@ -2,7 +2,6 @@ package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,9 +10,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-
 import java.io.ByteArrayInputStream
-import java.util.UUID
+import java.util.*
 
 @RestController
 @RequestMapping("api/mapper")
@@ -27,7 +25,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                  consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
                  produces = [MediaType.APPLICATION_JSON_VALUE])
     fun addAttachment(@PathVariable("bucket")bucket: String,
-                      @RequestPart("file") multipartFile: MultipartFile): Map<String, String> {
+                      @RequestParam("file") multipartFile: MultipartFile): Map<String, String> {
 
         if (multipartFile.isEmpty) {
             return emptyMap()

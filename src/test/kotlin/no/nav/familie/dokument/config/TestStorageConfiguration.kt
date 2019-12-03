@@ -45,19 +45,6 @@ class TestStorageConfiguration {
 
     @Bean
     @Primary
-    fun contextHolder(): TokenValidationContextHolder {
-
-        val contextHolder: TokenValidationContextHolder = mockk()
-
-        every { contextHolder.tokenValidationContext = any() } just Runs
-        every { contextHolder.tokenValidationContext.getJwtToken("selvbetjening").subject } returns "FNR"
-        every { contextHolder.tokenValidationContext.getJwtToken("selvbetjening").tokenAsString } returns "TOKEN"
-
-        return contextHolder
-    }
-
-    @Bean
-    @Primary
     internal fun converter(imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
         return mockk()
     }
