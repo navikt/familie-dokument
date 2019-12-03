@@ -10,21 +10,22 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-
 import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.util.UUID
+import java.util.*
 
 @RestController
-@RequestMapping("api/vedlegg")
+@RequestMapping("api/mapper")
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
-                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int) {
+                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int)  {
 
-    @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE], produces = [MediaType.APPLICATION_JSON_VALUE])
-    @Throws(IOException::class)
-    fun addAttachment(@RequestParam("file") multipartFile: MultipartFile): Map<String, String> {
+    /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
+    @PostMapping(path = ["{bucket}"],
+                 consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+                 produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun addAttachment(@PathVariable("bucket")bucket: String,
+                      @RequestParam("file") multipartFile: MultipartFile): Map<String, String> {
 
         if (multipartFile.isEmpty) {
             return emptyMap()
@@ -32,7 +33,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
 
         val bytes = multipartFile.bytes
         val maxFileSizeInBytes = maxFileSizeInMb*1024*1024
-        log.debug("Vedlegg med lastet opp med størrelse: " + bytes.size)
+        log.debug("Dokument lastet opp med størrelse (bytes): " + bytes.size)
 
         if (bytes.size > maxFileSizeInBytes) {
             throw IllegalArgumentException(HttpStatus.PAYLOAD_TOO_LARGE.toString())
@@ -46,19 +47,20 @@ class StorageController(@Autowired val storage: AttachmentStorage,
 
         storage.put(directory, uuid, file)
 
-        return mapOf("vedleggsId" to uuid, "filnavn" to multipartFile.name)
+        return mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name)
     }
 
-    @GetMapping(path = ["{vedleggsId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun getAttachment(@PathVariable("vedleggsId") vedleggsId: String): ByteArray {
+    /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
+    @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    fun getAttachment(@PathVariable("bucket") bucket: String,
+                      @PathVariable("dokumentId") dokumentId: String): ByteArray {
         val directory = contextHolder.hentFnr()
-        val data = storage[directory, vedleggsId].orElse(null)
+        val data = storage[directory, dokumentId].orElse(null)
         log.debug("Loaded file with {}", data)
         return data
     }
 
     companion object {
-
         private val log = LoggerFactory.getLogger(StorageController::class.java)
     }
 

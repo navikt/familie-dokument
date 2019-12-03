@@ -37,6 +37,7 @@ spec:
     enabled: true
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - https://familie-dokument.nais.oera.no
+    - https://www.nav.no/familie/alene-med-barn/mellomlagring
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: prod

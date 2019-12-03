@@ -6,7 +6,7 @@ import javax.crypto.spec.GCMParameterSpec
 import java.io.InputStream
 import java.security.GeneralSecurityException
 
-internal class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
+class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
 
     fun encryptedStream(fnr: String, inputStream: InputStream): InputStream {
         return CipherInputStream(inputStream, initCipher(Cipher.ENCRYPT_MODE, fnr))

@@ -7,7 +7,7 @@ import javax.crypto.spec.SecretKeySpec
 import java.security.NoSuchAlgorithmException
 import java.security.spec.InvalidKeySpecException
 
-internal class SecretKeyProvider(private val passphrase: String) {
+class SecretKeyProvider(private val passphrase: String) {
 
     @Throws(NoSuchAlgorithmException::class, InvalidKeySpecException::class)
     fun key(salt: String): SecretKey {
