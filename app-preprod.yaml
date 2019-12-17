@@ -10,11 +10,11 @@ spec:
   image: navikt/familie-dokument:{{version}}
   port: 8082
   liveness:
-    path: /internal/status/isAlive
+    path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
     failureThreshold: 10
   readiness:
-    path: /internal/status/isAlive
+    path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
     failureThreshold: 10
   prometheus:
