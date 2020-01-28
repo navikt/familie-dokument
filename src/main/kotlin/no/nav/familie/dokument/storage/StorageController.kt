@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -58,6 +59,12 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         val data = storage[directory, dokumentId].orElse(null)
         log.debug("Loaded file with {}", data)
         return data
+    }
+
+    @Unprotected
+    @GetMapping(path = ["ping"], produces = [MediaType.TEXT_PLAIN_VALUE])
+    fun ping(): String {
+        return "pong"
     }
 
     companion object {
