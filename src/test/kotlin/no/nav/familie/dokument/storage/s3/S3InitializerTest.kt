@@ -3,7 +3,9 @@ package no.nav.familie.dokument.storage.s3
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
 import org.testcontainers.containers.localstack.LocalStackContainer
@@ -12,7 +14,8 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
-@DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
+//@DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
+@Disabled
 class S3InitializerTest {
 
     private val SIZE_MB = 20
