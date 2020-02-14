@@ -58,10 +58,13 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         val directory = contextHolder.hentFnr()
-        val data = storage[directory, dokumentId].orElse(null)
-        log.debug("Loaded file with {}", data)
-        return if (data.isNotEmpty()) ResponseEntity.ok().body(Ressurs.Companion.success(data))
-        else ResponseEntity.ok().body(Ressurs.Companion.failure("Vedlegg med id $dokumentId ikke funnet i bucket $bucket"))
+        try {
+            val data = storage[directory, dokumentId].orElse(null)
+            log.debug("Loaded file with {}", data)
+            return ResponseEntity.ok().body(Ressurs.Companion.success(data))
+        } catch (e: RuntimeException) {
+            return ResponseEntity.ok().body(Ressurs.Companion.failure(e.message))
+        }
     }
 
     @Unprotected
