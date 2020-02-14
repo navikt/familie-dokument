@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
+import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
@@ -54,11 +56,11 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
-                      @PathVariable("dokumentId") dokumentId: String): ByteArray {
+                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         val directory = contextHolder.hentFnr()
         val data = storage[directory, dokumentId].orElse(null)
         log.debug("Loaded file with {}", data)
-        return data
+        return ResponseEntity.ok(Ressurs.Companion.success(data))
     }
 
     @Unprotected
