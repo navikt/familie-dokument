@@ -60,7 +60,8 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         val directory = contextHolder.hentFnr()
         val data = storage[directory, dokumentId].orElse(null)
         log.debug("Loaded file with {}", data)
-        return ResponseEntity.ok(Ressurs.Companion.success(data))
+        return if (data.isNotEmpty()) ResponseEntity.ok().body(Ressurs.Companion.success(data))
+        else ResponseEntity.ok().body(Ressurs.Companion.failure("Vedlegg med id $dokumentId ikke funnet i bucket $bucket"))
     }
 
     @Unprotected
