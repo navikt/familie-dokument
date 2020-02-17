@@ -63,7 +63,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
             log.debug("Loaded file with {}", data)
             return ResponseEntity.ok(Ressurs.Companion.success(data))
         } catch (e: RuntimeException) {
-            return ResponseEntity.ok(Ressurs.Companion.failure(e.message))
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(e.message))
         }
     }
 
