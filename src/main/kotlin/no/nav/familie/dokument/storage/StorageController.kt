@@ -61,16 +61,16 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         try {
             val data = storage[directory, dokumentId].orElse(null)
             log.debug("Loaded file with {}", data)
-            return ResponseEntity.ok().body(Ressurs.Companion.success(data))
+            return ResponseEntity.ok(Ressurs.Companion.success(data))
         } catch (e: RuntimeException) {
-            return ResponseEntity.ok().body(Ressurs.Companion.failure(e.message))
+            return ResponseEntity.ok(Ressurs.Companion.failure(e.message))
         }
     }
 
     @Unprotected
     @GetMapping(path = ["ping"], produces = [MediaType.TEXT_PLAIN_VALUE])
     fun ping(): String {
-        return "pong"
+        return "Kontakt med familie-dokument"
     }
 
     companion object {

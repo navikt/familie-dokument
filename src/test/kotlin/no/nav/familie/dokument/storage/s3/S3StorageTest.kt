@@ -10,12 +10,10 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.ByteArrayInputStream
 
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 
 @Testcontainers
-@Disabled
-//@DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
+@DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
 class S3StorageTest {
 
     @Container
