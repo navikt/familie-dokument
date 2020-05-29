@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayInputStream
-import java.util.*
 
 class EncryptedStorageTest {
 
@@ -54,11 +53,11 @@ class EncryptedStorageTest {
     @Test
     fun encrypts_after_get() {
 
-        every { storage[DIRECTORY, KEY]  } returns Optional.of(ENCRYPTED_DATA)
+        every { storage[DIRECTORY, KEY]  } returns ENCRYPTED_DATA
 
         val fetchedData = encryptedStorage[DIRECTORY, KEY]
 
-        assertThat(fetchedData).hasValue(UNENCRYPTED_DATA)
+        assertThat(fetchedData).isEqualTo(UNENCRYPTED_DATA)
     }
 
 }

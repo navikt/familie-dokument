@@ -19,7 +19,7 @@ class S3StorageTest {
     @Container
     var localStackContainer = LocalStackContainer().withServices(S3)
 
-    private var storage: S3Storage? = null
+    lateinit var storage: S3Storage
 
     @BeforeEach
     fun setUp() {
@@ -32,11 +32,11 @@ class S3StorageTest {
 
     @Test
     fun testStorage() {
-        storage!!.put("dir", "file", ByteArrayInputStream("testeksempel1".toByteArray()))
-        storage!!.put("dir", "file2", ByteArrayInputStream("testeksempel2".toByteArray()))
+        storage.put("dir", "file", ByteArrayInputStream("testeksempel1".toByteArray()))
+        storage.put("dir", "file2", ByteArrayInputStream("testeksempel2".toByteArray()))
 
-        assertEquals("testeksempel1",String(storage!!["dir", "file"].orElse(null)))
-        assertEquals("testeksempel2",String(storage!!["dir", "file2"].orElse(null)))
+        assertEquals("testeksempel1",String(storage["dir", "file"]!!))
+        assertEquals("testeksempel2",String(storage["dir", "file2"]!!))
     }
 
 }

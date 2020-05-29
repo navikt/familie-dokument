@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.lang.RuntimeException
-import java.util.Optional
 
 class AttachmentStorage internal constructor(private val delegate: EncryptedStorage, private val storableFormatConverter: AttachmentToStorableFormatConverter) : Storage {
 
@@ -17,7 +16,7 @@ class AttachmentStorage internal constructor(private val delegate: EncryptedStor
         delegate.put(directory, key, ByteArrayInputStream(storeable))
     }
 
-    override operator fun get(directory: String, key: String): Optional<ByteArray> {
+    override operator fun get(directory: String, key: String): ByteArray? {
         return delegate.get(directory, key)
     }
 

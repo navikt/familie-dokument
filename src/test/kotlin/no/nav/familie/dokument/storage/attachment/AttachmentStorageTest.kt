@@ -51,14 +51,13 @@ class AttachmentStorageTest {
     @Test
     @Throws(IOException::class)
     fun converted_after_get() {
-        val optionalByteArray = Optional.ofNullable(pdfByteArray)
-        every { delegate[any(),any()] } returns Optional.empty()
-        every { delegate["directory123", "UUID123"] } returns optionalByteArray
+        every { delegate[any(),any()] } returns null
+        every { delegate["directory123", "UUID123"] } returns pdfByteArray
 
         attachmentStorage.put("directory123", "UUID123", toStream("dummy/pdf_dummy.pdf"))
-        assertThat(attachmentStorage["directory123", "UUID123"]).isEqualTo(optionalByteArray)
-        assertThat(attachmentStorage["directory123", "UUID1234"]).isEmpty
-        assertThat(attachmentStorage["directory1234", "UUID123"]).isEmpty
+        assertThat(attachmentStorage["directory123", "UUID123"]).isEqualTo(pdfByteArray)
+        assertThat(attachmentStorage["directory123", "UUID1234"]).isNull()
+        assertThat(attachmentStorage["directory1234", "UUID123"]).isNull()
     }
 
     @Throws(IOException::class)
