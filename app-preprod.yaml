@@ -7,7 +7,7 @@ metadata:
     team: teamfamilie
 
 spec:
-  image: navikt/familie-dokument:{{version}}
+  image: {{ image }}
   port: 8082
   liveness:
     path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
