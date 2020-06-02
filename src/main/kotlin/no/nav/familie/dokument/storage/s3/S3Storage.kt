@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.util.Optional
 import java.util.concurrent.TimeUnit
 
 open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeMB: Int) : Storage {
@@ -44,8 +43,8 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
 
     }
 
-    override operator fun get(directory: String, key: String): Optional<ByteArray> {
-        return Optional.ofNullable(readString(fileName(directory, key)))
+    override operator fun get(directory: String, key: String): ByteArray? {
+        return readString(fileName(directory, key))
     }
 
     private fun readString(filename: String): ByteArray {
