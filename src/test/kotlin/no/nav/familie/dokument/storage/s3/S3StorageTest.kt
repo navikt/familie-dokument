@@ -10,6 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.ByteArrayInputStream
 
 import org.junit.Assert.assertEquals
+import org.junit.Ignore
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 
 @Testcontainers
