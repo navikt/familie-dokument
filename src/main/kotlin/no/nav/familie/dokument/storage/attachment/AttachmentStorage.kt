@@ -9,15 +9,15 @@ import java.io.IOException
 import java.io.InputStream
 import java.lang.RuntimeException
 
-class AttachmentStorage internal constructor(private val delegate: EncryptedStorage, private val storableFormatConverter: AttachmentToStorableFormatConverter) : Storage {
+class AttachmentStorage internal constructor(private val delegate: EncryptedStorage, private val storableFormatConverter: AttachmentToStorableFormatConverter) : Storage<InputStream, ByteArray> {
 
     override fun put(directory: String, key: String, data: InputStream) {
         val storeable = storableFormatConverter.toStorageFormat(toByteArray(data))
         delegate.put(directory, key, ByteArrayInputStream(storeable))
     }
 
-    override operator fun get(directory: String, key: String): ByteArray? {
-        return delegate.get(directory, key)
+    override operator fun get(directory: String, key: String): ByteArray {
+        return delegate[directory, key]
     }
 
     private fun toByteArray(data: InputStream): ByteArray {

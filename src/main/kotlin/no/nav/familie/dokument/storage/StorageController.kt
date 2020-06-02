@@ -56,7 +56,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
-                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray?>> {
+                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         val directory = contextHolder.hentFnr()
         try {
             val data = storage[directory, dokumentId]

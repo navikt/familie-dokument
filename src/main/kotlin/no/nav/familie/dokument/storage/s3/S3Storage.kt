@@ -13,7 +13,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
-open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeMB: Int) : Storage {
+open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeMB: Int) : Storage<InputStream, ByteArray> {
     private val maxFileSizeAfterEncryption: Int
 
     private val feilMotS3Put = Metrics.counter("soknad.kontantstotte.S3.feil", "operasjon", "put")
@@ -43,7 +43,7 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
 
     }
 
-    override operator fun get(directory: String, key: String): ByteArray? {
+    override operator fun get(directory: String, key: String): ByteArray {
         return readString(fileName(directory, key))
     }
 
