@@ -15,7 +15,6 @@ import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 
 @Testcontainers
 @DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
-@Ignore
 class S3StorageTest {
 
     @Container
