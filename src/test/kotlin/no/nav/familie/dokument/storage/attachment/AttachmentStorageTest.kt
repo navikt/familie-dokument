@@ -5,7 +5,6 @@ import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import org.apache.commons.io.FileUtils
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -13,9 +12,10 @@ import java.io.File
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.util.Objects
-import java.util.Optional
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.assertThrows
+import java.lang.RuntimeException
 
 
 class AttachmentStorageTest {
@@ -51,13 +51,13 @@ class AttachmentStorageTest {
     @Test
     @Throws(IOException::class)
     fun converted_after_get() {
-        every { delegate[any(),any()] } returns null
+        every { delegate[any(),any()] } throws (RuntimeException())
         every { delegate["directory123", "UUID123"] } returns pdfByteArray
 
         attachmentStorage.put("directory123", "UUID123", toStream("dummy/pdf_dummy.pdf"))
         assertThat(attachmentStorage["directory123", "UUID123"]).isEqualTo(pdfByteArray)
-        assertThat(attachmentStorage["directory123", "UUID1234"]).isNull()
-        assertThat(attachmentStorage["directory1234", "UUID123"]).isNull()
+        assertThrows<RuntimeException>{ attachmentStorage["directory123", "UUID1234"] }
+        assertThrows<RuntimeException>{ attachmentStorage["directory1234", "UUID123"] }
     }
 
     @Throws(IOException::class)

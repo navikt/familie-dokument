@@ -14,7 +14,6 @@ import org.junit.Ignore
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.S3
 
 @Testcontainers
-@DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
 class S3StorageTest {
 
     @Container
@@ -36,8 +35,16 @@ class S3StorageTest {
         storage.put("dir", "file", ByteArrayInputStream("testeksempel1".toByteArray()))
         storage.put("dir", "file2", ByteArrayInputStream("testeksempel2".toByteArray()))
 
-        assertEquals("testeksempel1",String(storage["dir", "file"]!!))
-        assertEquals("testeksempel2",String(storage["dir", "file2"]!!))
+        assertEquals("testeksempel1",String(storage["dir", "file"]))
+        assertEquals("testeksempel2",String(storage["dir", "file2"]))
+    }
+
+    @Test
+    fun `skal overskrive gammel verdi hvis samme nøkkel blir brukt`() {
+        storage.put("dir", "fileX", ByteArrayInputStream("testeksempel1".toByteArray()))
+        storage.put("dir", "fileX", ByteArrayInputStream("testeksempel2".toByteArray()))
+
+        assertEquals("testeksempel2",String(storage["dir", "fileX"]))
     }
 
 }

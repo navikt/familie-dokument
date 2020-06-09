@@ -1,11 +1,9 @@
 package no.nav.familie.dokument.storage
 
-import java.io.InputStream
+interface Storage<T, U> {
 
-interface Storage {
+    fun put(directory: String, key: String, data: T)
 
-    fun put(directory: String, key: String, data: InputStream)
-
-    operator fun get(directory: String, key: String): ByteArray?
+    operator fun get(directory: String, key: String): U
 
 }

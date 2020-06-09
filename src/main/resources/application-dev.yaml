@@ -2,12 +2,17 @@ server:
   port: 8082
   servlet:
     context-path: /
+cors:
+  allowed_origins:
+    - "http://localhost:3000"
 
 no.nav.security.jwt:
+  issuers: selvbetjening
   issuer.selvbetjening:
     discoveryurl: http://metadata
-    acceptedAudience: aud-localhost
-    cookiename: localhost-idtoken
+    accepted_audience: aud-localhost
+    cookie_name: localhost-idtoken
+    proxyurl:
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL: #mockes ut lokalt
