@@ -39,6 +39,9 @@ class TestStorageConfiguration {
         every { storage.put(capture(slotPut), any(), capture(slotInputStream)) } answers {
             lokalStorage[slotPut.captured] = slotInputStream.captured.readAllBytes()
         }
+        every { storage.delete(capture(slotPut), any()) } answers {
+            lokalStorage.remove(slotPut.captured)
+        }
         return storage
     }
 
