@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage
 
 import com.amazonaws.SdkClientException
+import com.amazonaws.services.s3.model.AmazonS3Exception
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
+import java.lang.RuntimeException
 
 internal class OvergangstonadControllerTest {
 
@@ -47,5 +49,20 @@ internal class OvergangstonadControllerTest {
         val json = """{"a": 1}"""
         every { storageMock.put(any(), any(), any()) } throws SdkClientException("Noe gikk galt")
         Assertions.assertThat(overgangstonadController.mellomlagreSøknad(json).statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
+    @Test
+    internal fun `skal returnere 204 dersom objektet ikke finnes i S3`() {
+        val amazonNotFoundException = AmazonS3Exception("Noe gikk galt")
+        amazonNotFoundException.statusCode = 404
+        every { storageMock.get(any(), any()) } throws amazonNotFoundException
+        Assertions.assertThat(overgangstonadController.hentMellomlagretSøknad().statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+    }
+
+    @Test
+    internal fun `skal kaste 500 dersom noe uventet feil oppstår`() {
+        val uventetFeil = RuntimeException("Noe gikk galt")
+        every { storageMock.get(any(), any()) } throws uventetFeil
+        Assertions.assertThat(overgangstonadController.hentMellomlagretSøknad().statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }

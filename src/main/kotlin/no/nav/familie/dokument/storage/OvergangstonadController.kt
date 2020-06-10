@@ -1,9 +1,7 @@
 package no.nav.familie.dokument.storage
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.JsonMappingException
+import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.micrometer.core.instrument.Metrics
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -51,8 +49,12 @@ class OvergangstonadController(@Autowired val storage: MellomLagerService,
             val data = storage[directory, overgangsstønadKey]
             ResponseEntity.ok(data)
         } catch (e: RuntimeException) {
-            secureLogger.info("Noe gikk galt", e) // TODO: SKal fjernes, trenger for å teste i preprod
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+            if (e is AmazonS3Exception && e.statusCode == 404) {
+                ResponseEntity.noContent().build()
+            } else {
+                secureLogger.info("Noe gikk galt", e)
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+            }
         }
     }
 
