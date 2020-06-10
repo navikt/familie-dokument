@@ -28,4 +28,8 @@ class AttachmentStorage internal constructor(private val delegate: EncryptedStor
         }
 
     }
+
+    override fun delete(directory: String, key: String) {
+        throw NotImplementedError("Ikke implementert")
+    }
 }
