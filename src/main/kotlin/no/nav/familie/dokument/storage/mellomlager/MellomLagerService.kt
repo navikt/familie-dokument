@@ -15,4 +15,8 @@ class MellomLagerService internal constructor(private val delegate: EncryptedSto
     override fun get(directory: String, key: String): String {
         return String(delegate[directory, key])
     }
+
+    override fun delete(directory: String, key: String) {
+        delegate.delete(directory, key)
+    }
 }

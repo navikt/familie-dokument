@@ -6,4 +6,6 @@ interface Storage<T, U> {
 
     operator fun get(directory: String, key: String): U
 
+    fun delete(directory: String, key: String)
+
 }

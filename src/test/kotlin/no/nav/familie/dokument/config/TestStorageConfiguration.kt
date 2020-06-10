@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.config
 
+import com.amazonaws.services.s3.model.AmazonS3Exception
 import io.mockk.*
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.attachment.AttachmentToStorableFormatConverter
@@ -29,10 +30,17 @@ class TestStorageConfiguration {
         val slotPut = slot<String>()
         val slotInputStream = slot<InputStream>()
         every { storage[capture(slot), any()] } answers {
-            lokalStorage.getOrElse(slot.captured, { error("ingenting her") })
+            lokalStorage.getOrElse(slot.captured, {
+                val e = AmazonS3Exception("Noe gikk galt")
+                e.statusCode = 404
+                throw e
+            })
         }
         every { storage.put(capture(slotPut), any(), capture(slotInputStream)) } answers {
             lokalStorage[slotPut.captured] = slotInputStream.captured.readAllBytes()
+        }
+        every { storage.delete(capture(slotPut), any()) } answers {
+            lokalStorage.remove(slotPut.captured)
         }
         return storage
     }

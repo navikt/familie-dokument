@@ -18,4 +18,8 @@ class EncryptedStorage constructor(private val contextHolder: TokenValidationCon
         return delegate[directory, key].let { encryptor.decrypt(contextHolder.hentFnr(), it) }
     }
 
+    override fun delete(directory: String, key: String) {
+        delegate.delete(directory, key)
+    }
+
 }

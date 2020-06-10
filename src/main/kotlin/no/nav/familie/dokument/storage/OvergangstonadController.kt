@@ -1,7 +1,6 @@
 package no.nav.familie.dokument.storage
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.JsonMappingException
+import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -22,30 +21,52 @@ class OvergangstonadController(@Autowired val storage: MellomLagerService,
                                @Autowired val objectMapper: ObjectMapper) {
 
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
+    private val secureLogger = LoggerFactory.getLogger("secureLogger")
     private val overgangsstønadKey = "overgangsstønad"
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE],
                  produces = [MediaType.APPLICATION_JSON_VALUE])
     fun mellomlagreSøknad(@RequestBody(required = true) søknad: String): ResponseEntity<Unit> {
-
         log.debug("Mellomlagrer søknad om overgangsstønad")
 
         validerGyldigJson(søknad)
         val directory = contextHolder.hentFnr()
 
-        storage.put(directory, overgangsstønadKey, søknad)
+        try {
+            storage.put(directory, overgangsstønadKey, søknad)
+        } catch (e: RuntimeException) {
+            secureLogger.warn("Kunne ikke mellomlagre overgangsstønad for $directory", e)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getAttachment(): ResponseEntity<String> {
+    fun hentMellomlagretSøknad(): ResponseEntity<String> {
         val directory = contextHolder.hentFnr()
         return try {
             val data = storage[directory, overgangsstønadKey]
-            log.debug("Loaded file with {}", data)
             ResponseEntity.ok(data)
         } catch (e: RuntimeException) {
+            if (e is AmazonS3Exception && e.statusCode == 404) {
+                ResponseEntity.noContent().build()
+            } else {
+                secureLogger.info("Noe gikk galt", e)
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+            }
+        }
+    }
+
+    @DeleteMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun slettMellomlagretSøknad(): ResponseEntity<String> {
+        val directory = contextHolder.hentFnr()
+        return try {
+            log.debug("Sletter mellomlagret overgangsstønad")
+            storage.delete(directory, overgangsstønadKey)
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        } catch (e: RuntimeException) {
+            secureLogger.warn("Kunne ikke slette mellomlagret overgangsstønad for $directory", e)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }
     }
