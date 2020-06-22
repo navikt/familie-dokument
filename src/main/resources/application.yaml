@@ -6,6 +6,10 @@ server:
 spring:
   autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   main.banner-mode: "off"
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 21MB
 
 management:
   endpoint.health.show-details: always
