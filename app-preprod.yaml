@@ -19,7 +19,7 @@ spec:
     failureThreshold: 10
   prometheus:
     enabled: true
-    path: /internal/prometheus
+    path: /familie/alene-med-barn/mellomlagring/internal/prometheus
   vault:
     enabled: true
   replicas:
