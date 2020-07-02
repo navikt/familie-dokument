@@ -10,16 +10,16 @@ spec:
   image: {{ image }}
   port: 8082
   liveness:
-    path: /internal/status/isAlive
+    path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
     failureThreshold: 10
   readiness:
-    path: /internal/status/isAlive
+    path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
     failureThreshold: 10
   prometheus:
     enabled: true
-    path: /internal/prometheus
+    path: /familie/alene-med-barn/mellomlagring/internal/prometheus
   vault:
     enabled: true
   replicas:
@@ -29,7 +29,7 @@ spec:
   resources:
     limits:
       memory: 1024Mi
-      cpu: "1"
+      cpu: 750m
     requests:
       memory: 512Mi
       cpu: 500m
