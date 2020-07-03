@@ -24,7 +24,6 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
     override fun put(directory: String, key: String, data: InputStream) {
 
         val bytes: ByteArray
-        val b: ByteArrayInputStream
         try {
 
             bytes = IOUtils.toByteArray(data)
