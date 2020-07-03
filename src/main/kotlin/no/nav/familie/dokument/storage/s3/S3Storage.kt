@@ -1,12 +1,13 @@
 package no.nav.familie.dokument.storage.s3
 
-import com.amazonaws.SdkClientException
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import no.nav.familie.dokument.storage.Storage
+import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -21,7 +22,19 @@ open class S3Storage internal constructor(private val s3: AmazonS3, maxFileSizeM
     }
 
     override fun put(directory: String, key: String, data: InputStream) {
-        val request = PutObjectRequest(VEDLEGG_BUCKET, fileName(directory, key), data, ObjectMetadata())
+
+        val bytes: ByteArray
+        try {
+
+            bytes = IOUtils.toByteArray(data)
+            log.debug("Bufret stream som gav antall bytes: " + bytes.size)
+        } catch (e: IOException) {
+            throw RuntimeException("Feil oppsto ved bufring av stream.", e)
+        }
+
+        val objectMetadata = ObjectMetadata()
+        objectMetadata.contentLength = bytes.size.toLong();
+        val request = PutObjectRequest(VEDLEGG_BUCKET, fileName(directory, key), ByteArrayInputStream(bytes), objectMetadata)
         request.getRequestClientOptions().setReadLimit(maxFileSizeAfterEncryption)
 
         val result = s3.putObject(request)
