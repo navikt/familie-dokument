@@ -8,14 +8,18 @@ import java.io.InputStream
 
 class EncryptedStorage constructor(private val contextHolder: TokenValidationContextHolder,
                                    private val delegate: S3Storage,
-                                   private val encryptor: Encryptor) : Storage {
+                                   private val encryptor: Encryptor) : Storage<InputStream, ByteArray> {
 
     override fun put(directory: String, key: String, data: InputStream) {
         delegate.put(directory, key, encryptor.encryptedStream(contextHolder.hentFnr(), data))
     }
 
-    override operator fun get(directory: String, key: String): ByteArray? {
-        return delegate.get(directory, key)?.let { encryptor.decrypt(contextHolder.hentFnr(), it) }
+    override operator fun get(directory: String, key: String): ByteArray {
+        return delegate[directory, key].let { encryptor.decrypt(contextHolder.hentFnr(), it) }
+    }
+
+    override fun delete(directory: String, key: String) {
+        delegate.delete(directory, key)
     }
 
 }
