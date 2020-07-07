@@ -28,10 +28,10 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                  consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
                  produces = [MediaType.APPLICATION_JSON_VALUE])
     fun addAttachment(@PathVariable("bucket")bucket: String,
-                      @RequestParam("file") multipartFile: MultipartFile): Map<String, String> {
+                      @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
 
         if (multipartFile.isEmpty) {
-            return emptyMap()
+            return ResponseEntity.ok(emptyMap())
         }
 
         val bytes = multipartFile.bytes
@@ -47,23 +47,26 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         val uuid = UUID.randomUUID().toString()
 
         val file = ByteArrayInputStream(bytes)
+        try {
+            storage.put(directory, uuid, file)
+        } catch (e: RuntimeException) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+        }
 
-        storage.put(directory, uuid, file)
-
-        return mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name)
+        return ResponseEntity.ok(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name))
     }
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
-                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray?>> {
+                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         val directory = contextHolder.hentFnr()
-        try {
+        return try {
             val data = storage[directory, dokumentId]
             log.debug("Loaded file with {}", data)
-            return ResponseEntity.ok(Ressurs.Companion.success(data))
+            ResponseEntity.ok(Ressurs.Companion.success(data))
         } catch (e: RuntimeException) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(e.message))
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(e.message))
         }
     }
 

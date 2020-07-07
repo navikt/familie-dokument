@@ -1,16 +1,14 @@
 package no.nav.familie.dokument.config
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.log.filter.LogFilter
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 
 @SpringBootConfiguration
 class ApplicationConfig {
@@ -31,11 +29,8 @@ class ApplicationConfig {
     }
 
     @Bean
+    @Primary
     fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .registerModule(JavaTimeModule())
-                .registerModule(Jdk8Module())
-                .enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        return objectMapper;
     }
 }

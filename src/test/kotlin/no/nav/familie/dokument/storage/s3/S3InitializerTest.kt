@@ -12,7 +12,6 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
-@DisabledIfEnvironmentVariable(named = "CIRCLECI", matches = "true")
 class S3InitializerTest {
 
     private val SIZE_MB = 20
