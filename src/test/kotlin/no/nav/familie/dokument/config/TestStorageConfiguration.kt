@@ -63,7 +63,7 @@ class TestStorageConfiguration {
     fun converter(@Autowired imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
         val slot = slot<ByteArray>()
         val converter: AttachmentToStorableFormatConverter = mockk()
-//        return converter
+
         every { converter.toStorageFormat(capture(slot)) } answers { slot.captured }
 
         return converter
