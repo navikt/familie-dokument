@@ -1,7 +1,9 @@
 package no.nav.familie.dokument.config
 
 import com.amazonaws.services.s3.model.AmazonS3Exception
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.attachment.AttachmentToStorableFormatConverter
 import no.nav.familie.dokument.storage.attachment.ImageConversionService
@@ -20,6 +22,7 @@ import java.io.InputStream
 class TestStorageConfiguration {
 
     val lokalStorage: MutableMap<String, ByteArray> = HashMap()
+    val lokalStorageAttachment: MutableMap<String, ByteArray> = HashMap()
 
     @Bean
     @Primary
@@ -57,19 +60,35 @@ class TestStorageConfiguration {
 
     @Bean
     @Primary
-    internal fun converter(imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
-        return mockk()
+    fun converter(@Autowired imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
+        val slot = slot<ByteArray>()
+        val converter: AttachmentToStorableFormatConverter = mockk()
+
+        every { converter.toStorageFormat(capture(slot)) } answers { slot.captured }
+
+        return converter
     }
 
     @Bean
     @Primary
     fun attachmentStorage(
             @Autowired encryptedStorage: EncryptedStorage,
-            storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
+            @Autowired storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
+        val slot = slot<String>()
+        val slotPut = slot<String>()
+        val slotInputStream = slot<InputStream>()
         val storage: AttachmentStorage = mockk()
 
-        every { storage.put(any(), any(), any()) } just Runs
-        every { storage[any(), any()] } returns "filinnhold".toByteArray()
+        every { storage.put(capture(slotPut), any(), capture(slotInputStream)) } answers {
+            lokalStorageAttachment[slotPut.captured] = slotInputStream.captured.readAllBytes()
+        }
+        every { storage[capture(slot), any()] } answers {
+            lokalStorageAttachment.getOrElse(slot.captured, {
+                val e = AmazonS3Exception("Noe gikk galt")
+                e.statusCode = 404
+                throw e
+            })
+        }
 
         return storage
     }
