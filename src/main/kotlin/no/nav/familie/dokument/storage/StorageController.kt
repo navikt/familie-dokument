@@ -23,6 +23,8 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
                         @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int)  {
 
+    private val secureLogger = LoggerFactory.getLogger("secureLogger")
+
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(path = ["{bucket}"],
                  consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
@@ -66,6 +68,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
             log.debug("Loaded file with {}", data)
             ResponseEntity.ok(Ressurs.Companion.success(data))
         } catch (e: RuntimeException) {
+            secureLogger.error("Henting av vedlegg feilet", e)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(e.message))
         }
     }
