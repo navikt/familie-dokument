@@ -14,26 +14,28 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("api/soknad/overgangsstonad")
+@RequestMapping("api/soknad")
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
-class OvergangstonadController(@Autowired val storage: MellomLagerService,
-                               @Autowired val contextHolder: TokenValidationContextHolder,
-                               @Autowired val objectMapper: ObjectMapper) {
+class StonadController(@Autowired val storage: MellomLagerService,
+                       @Autowired val contextHolder: TokenValidationContextHolder,
+                       @Autowired val objectMapper: ObjectMapper) {
 
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
     private val secureLogger = LoggerFactory.getLogger("secureLogger")
-    private val overgangsstønadKey = "overgangsstønad"
 
-    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE],
-                 produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun mellomlagreSøknad(@RequestBody(required = true) søknad: String): ResponseEntity<Unit> {
+    @PostMapping(
+            path = ["/{stonad}"],
+            consumes = [MediaType.APPLICATION_JSON_VALUE],
+            produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun mellomlagreSøknad(@PathVariable("stonad") stønad: StønadParameter,
+                          @RequestBody(required = true) søknad: String): ResponseEntity<Unit> {
         log.debug("Mellomlagrer søknad om overgangsstønad")
 
         validerGyldigJson(søknad)
         val directory = contextHolder.hentFnr()
 
         try {
-            storage.put(directory, overgangsstønadKey, søknad)
+            storage.put(directory, stønad.stønadKey, søknad)
         } catch (e: RuntimeException) {
             secureLogger.warn("Kunne ikke mellomlagre overgangsstønad for $directory", e)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
@@ -42,11 +44,11 @@ class OvergangstonadController(@Autowired val storage: MellomLagerService,
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
-    @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun hentMellomlagretSøknad(): ResponseEntity<String> {
+    @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
         val directory = contextHolder.hentFnr()
         return try {
-            val data = storage[directory, overgangsstønadKey]
+            val data = storage[directory, stønad.stønadKey]
             ResponseEntity.ok(data)
         } catch (e: RuntimeException) {
             if (e is AmazonS3Exception && e.statusCode == 404) {
@@ -58,12 +60,12 @@ class OvergangstonadController(@Autowired val storage: MellomLagerService,
         }
     }
 
-    @DeleteMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun slettMellomlagretSøknad(): ResponseEntity<String> {
+    @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun slettMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
         val directory = contextHolder.hentFnr()
         return try {
             log.debug("Sletter mellomlagret overgangsstønad")
-            storage.delete(directory, overgangsstønadKey)
+            storage.delete(directory, stønad.stønadKey)
             ResponseEntity.status(HttpStatus.NO_CONTENT).build()
         } catch (e: RuntimeException) {
             secureLogger.warn("Kunne ikke slette mellomlagret overgangsstønad for $directory", e)
@@ -79,4 +81,9 @@ class OvergangstonadController(@Autowired val storage: MellomLagerService,
         }
     }
 
+
+    enum class StønadParameter(val stønadKey: String) {
+        overgangsstonad("overgangsstønad"),
+        barnetilsyn("barnetilsyn")
+    }
 }
