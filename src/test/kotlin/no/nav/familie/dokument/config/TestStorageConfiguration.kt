@@ -29,21 +29,21 @@ class TestStorageConfiguration {
     fun encryptedStorage(): EncryptedStorage {
         val storage: EncryptedStorage = mockk()
 
-        val slot = slot<String>()
-        val slotPut = slot<String>()
+        val slotUser = slot<String>()
+        val slotKey = slot<String>()
         val slotInputStream = slot<InputStream>()
-        every { storage[capture(slot), any()] } answers {
-            lokalStorage.getOrElse(slot.captured, {
+        every { storage[capture(slotUser), capture(slotKey)] } answers {
+            lokalStorage.getOrElse(slotUser.captured + "_" + slotKey.captured, {
                 val e = AmazonS3Exception("Noe gikk galt")
                 e.statusCode = 404
                 throw e
             })
         }
-        every { storage.put(capture(slotPut), any(), capture(slotInputStream)) } answers {
-            lokalStorage[slotPut.captured] = slotInputStream.captured.readAllBytes()
+        every { storage.put(capture(slotUser), capture(slotKey), capture(slotInputStream)) } answers {
+            lokalStorage[slotUser.captured + "_" + slotKey.captured] = slotInputStream.captured.readAllBytes()
         }
-        every { storage.delete(capture(slotPut), any()) } answers {
-            lokalStorage.remove(slotPut.captured)
+        every { storage.delete(capture(slotUser), capture(slotKey)) } answers {
+            lokalStorage.remove(slotUser.captured + "_" + slotKey.captured)
         }
         return storage
     }
