@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.config
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse
 
 @Component
 @Order(0)
+@EnableConfigurationProperties(CorsProperties::class)
 class CORSResponseFilter(val corsProperties: CorsProperties) : Filter {
 
     @Throws(IOException::class, ServletException::class)
