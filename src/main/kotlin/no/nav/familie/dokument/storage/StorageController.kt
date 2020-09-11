@@ -33,7 +33,8 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                       @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
 
         if (multipartFile.isEmpty) {
-            return ResponseEntity.ok(emptyMap())
+            log.info("Dokumentet som lastes opp er tomt - size: [{}] ", multipartFile.size)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
 
         val bytes = multipartFile.bytes
