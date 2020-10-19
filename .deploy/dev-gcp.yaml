@@ -44,7 +44,7 @@ spec:
     outbound:
       external:
         - host: familie-ba-sak.nais.preprod.local
-        - host: unleashproxy.nais.oera.no
+        - host: login.microsoftonline.com
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
   secureLogs:
     enabled: true

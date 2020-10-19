@@ -1,4 +1,4 @@
-name: Build-Deploy
+name: Build and Deploy to NAIS (dev)
 on:
   push:
     branches-ignore:
@@ -40,18 +40,18 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
   deploy:
-    name: Deploy to dev NAIS
+    name: Deploy to NAIS(dev)
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Deploy to dev SBS
+      - name: Deploy to SBS(dev)
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-sbs
           RESOURCE: .deploy/dev-sbs.yaml
-      - name: Deploy to dev GCP
+      - name: Deploy to GCP(dev)
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
