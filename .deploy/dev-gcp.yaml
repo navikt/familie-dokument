@@ -13,20 +13,24 @@ spec:
   liveness:
     path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
-    failureThreshold: 10
+    timeout: 5
+    periodSeconds: 10     # How often (in seconds) to perform the probe. Default to 10 seconds
+    failureThreshold: 27 # when a Pod starts and the probe fails,
   readiness:
     path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
-    failureThreshold: 10
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 27
   prometheus:
     enabled: true
     path: /familie/alene-med-barn/mellomlagring/internal/prometheus
   vault:
     enabled: true
   replicas:
-    min: 2
-    max: 4
-    cpuThresholdPercentage: 50
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 80
   resources:
     limits:
       memory: "1024Mi"
@@ -40,11 +44,15 @@ spec:
     outbound:
       external:
         - host: familie-ba-sak.nais.preprod.local
+        - host: unleashproxy.nais.oera.no
+  webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
   secureLogs:
     enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: preprod
+    - name: APP_TEAM
+      value: teamfamilie
   #
   # the following spec is only available when running in GCP.
   #
