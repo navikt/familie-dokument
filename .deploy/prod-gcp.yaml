@@ -1,0 +1,54 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: familie-dokument
+  namespace: teamfamilie
+  labels:
+    team: teamfamilie
+
+spec:
+  image: {{ image }}
+  team: teamfamilie
+  port: 8082
+  liveness:
+    path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
+    initialDelay: 30
+    failureThreshold: 10
+  readiness:
+    path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
+    initialDelay: 30
+    failureThreshold: 10
+  prometheus:
+    enabled: true
+    path: /familie/alene-med-barn/mellomlagring/internal/prometheus
+  vault:
+    enabled: true
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 50
+  resources:
+    limits:
+      memory: "1024Mi"
+      cpu: "1000m"
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+  ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
+    - https://familie-dokument.prod-gcp.nais.io
+  accessPolicy:
+    outbound:
+      external:
+        - host: familie-ba-sak.nais.preprod.local
+  secureLogs:
+    enabled: true
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: preprod
+  #
+  # the following spec is only available when running in GCP.
+  #
+  gcp:
+    buckets:
+      - name: familie-dokument-familievedlegg
+        cascadingDelete: false

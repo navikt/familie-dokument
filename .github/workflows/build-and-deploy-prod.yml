@@ -1,7 +1,8 @@
-name: Build-Deploy
+name: Build, push, and deploy app to dev and prod (sbs)
+
 on:
   push:
-    branches-ignore:
+    branches:
       - 'master'
 
 env:
@@ -40,13 +41,32 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
   deploy:
-    name: Deploy to NAIS
+    name: Deploy to prod NAIS
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: nais/deploy/actions/deploy@v1
+      - name: Deploy til dev SBS
+        uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-sbs
-          RESOURCE: app-preprod.yaml
+          RESOURCE: dev-sbs.yaml
+      - name: Deploy to dev GCP
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .deploy/dev-gcp.yaml
+      - name: Deploy til prod SBS
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-sbs
+          RESOURCE: .deploy/prod-sbs.yaml
+      - name: Deploy to prod GCP
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: .deploy/prod-gcp.yaml
