@@ -48,7 +48,7 @@ spec:
   azure:
     application:
       enabled: true
-  webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
+  webproxy: true # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
   secureLogs:
     enabled: true
   env:
