@@ -15,21 +15,21 @@ spec:
     initialDelay: 30
     timeout: 5
     periodSeconds: 10     # How often (in seconds) to perform the probe. Default to 10 seconds
-    failureThreshold: 27 # when a Pod starts and the probe fails,
+    failureThreshold: 10 # when a Pod starts and the probe fails,
   readiness:
     path: /familie/alene-med-barn/mellomlagring/internal/status/isAlive
     initialDelay: 30
     timeout: 5
     periodSeconds: 10
-    failureThreshold: 27
+    failureThreshold: 10
   prometheus:
     enabled: true
     path: /familie/alene-med-barn/mellomlagring/internal/prometheus
   vault:
     enabled: true
   replicas:
-    min: 1
-    max: 2
+    min: 2
+    max: 4
     cpuThresholdPercentage: 80
   resources:
     limits:
@@ -45,6 +45,7 @@ spec:
       external:
         - host: familie-ba-sak.nais.preprod.local
         - host: login.microsoftonline.com
+        - host: unleashproxy.nais.oera.no
   azure:
     application:
       enabled: true
