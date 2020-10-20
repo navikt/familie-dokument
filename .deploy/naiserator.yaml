@@ -45,10 +45,7 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: familie-ba-sak.nais.preprod.local
         - host: login.microsoftonline.com
-        - host: unleashproxy.nais.oera.no
-        - host: api-gw.oera.no
   azure:
     application:
       enabled: true
