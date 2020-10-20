@@ -50,5 +50,5 @@ spec:
   #
   gcp:
     buckets:
-      - name: familie-dokument-familievedlegg
+      - name: familie-dokument
         cascadingDelete: false
