@@ -1,5 +1,5 @@
 {
   "ingresses": ["https://familie-dokument.dev-gcp.nais.io"],
   "bucket_name" : "familie-dokument-dev",
-  "spring_profiles" : ["preprod"]
+  "spring_profiles" : ["prod"]
 }

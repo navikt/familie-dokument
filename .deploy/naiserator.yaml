@@ -47,7 +47,9 @@ spec:
       external:
         - host: familie-ba-sak.nais.preprod.local
         - host: login.microsoftonline.com
-  azure:
+        - host: unleashproxy.nais.oera.no
+        - host: api-gw.oera.no
+azure:
     application:
       enabled: true
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
