@@ -1,4 +1,4 @@
-name: Build, push, and deploy app to NAIS (dev and prod)
+name: Build, og deploy (dev og prod)
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/familie-dokument:${{ github.sha }}
-
+  IMAGE_LATEST: docker.pkg.github.com/${{ github.repository }}/familie-dokument:latest
 jobs:
-  build:
-    name: Build og push til docker
+  build-and-deploy:
+    name: Build, push til docker, og deploy til GCP
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
