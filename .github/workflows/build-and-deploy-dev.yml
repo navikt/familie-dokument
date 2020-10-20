@@ -45,12 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Deploy til SBS(dev)
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-sbs
-          RESOURCE: .deploy/dev-sbs.yaml
       - name: Deploy til GCP(dev)
         uses: nais/deploy/actions/deploy@v1
         env:
