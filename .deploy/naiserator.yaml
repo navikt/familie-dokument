@@ -57,7 +57,7 @@ spec:
     enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: {{spring_profile}}
+      value: prod
     - name: APP_TEAM
       value: teamfamilie
   #
