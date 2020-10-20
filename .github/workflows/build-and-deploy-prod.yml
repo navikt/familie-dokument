@@ -41,7 +41,7 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
   deploy:
-    name: Deploy to NAIS
+    name: Deploy til NAIS
     needs: build
     runs-on: ubuntu-latest
     steps:
