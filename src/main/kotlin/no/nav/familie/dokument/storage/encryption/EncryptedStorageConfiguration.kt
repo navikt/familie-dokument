@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.storage.encryption
 
+import no.nav.familie.dokument.storage.google.GcpStorage
 import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,7 +24,7 @@ class EncryptedStorageConfiguration {
     }
 
     @Bean
-    internal fun encryptedStorage(@Autowired contextHolder: TokenValidationContextHolder, @Autowired storage: S3Storage, encryptor: Encryptor): EncryptedStorage {
+    internal fun encryptedStorage(@Autowired contextHolder: TokenValidationContextHolder, @Autowired storage: GcpStorage, encryptor: Encryptor): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 

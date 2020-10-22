@@ -21,6 +21,7 @@ management:
   metrics.export.prometheus.enabled: true
 
 attachment.max.size.mb: 20
+storage_service.timeout.ms: 3000
 
 FAMILIE_DOKUMENT_S3_REGION: us-east-1
 FAMILIE_DOKUMENT_S3_ENDPOINT: http://objectstore.rook-ceph
