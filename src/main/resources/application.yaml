@@ -23,6 +23,8 @@ management:
 attachment.max.size.mb: 20
 storage_service.timeout.ms: 3000
 
+CLAM_AV_VIRUS_URL: http://clamav.nais.svc.nais.local/scan
+
 cors:
   allowed_origins:
     - "https://familie-ef-soknad.nais.oera.no"
