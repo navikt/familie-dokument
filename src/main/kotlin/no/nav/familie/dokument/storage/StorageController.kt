@@ -3,12 +3,12 @@ package no.nav.familie.dokument.storage
 import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
+import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,10 +20,11 @@ import java.util.*
 @RestController
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
-class StorageController(@Autowired val storage: AttachmentStorage,
-                        @Autowired val contextHolder: TokenValidationContextHolder,
+class StorageController(val storage: AttachmentStorage,
+                        val virusScanService: VirusScanService,
+                        val contextHolder: TokenValidationContextHolder,
                         @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
-                        @Autowired val hasher: Hasher) {
+                        val hasher: Hasher) {
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(path = ["{bucket}"],
@@ -42,6 +43,13 @@ class StorageController(@Autowired val storage: AttachmentStorage,
 
         if (bytes.size > maxFileSizeInBytes) {
             throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
+        }
+
+        //TODO slett try catch, kun for bruk i test for å sjekke om dette virker
+        try {
+            virusScanService.scan(bytes, multipartFile.name)
+        } catch (e: Exception) {
+            log.warn("Feilet scanning", e)
         }
 
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
