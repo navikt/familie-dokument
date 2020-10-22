@@ -17,7 +17,7 @@ class VirusScanService(private val client: VirusScanClient) {
         val scanResult: ScanResult = scanResults.first()
         logger.debug("Fikk scan result {}", scanResult);
         if (Result.OK != scanResult.result) {
-            logger.warn("Fant virus i {}, status {}", name, scanResult.result)
+            throw VirusScanException("Fil ikke godkjent, status ${scanResult.result}")
         }
     }
 
