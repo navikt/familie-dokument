@@ -27,6 +27,14 @@
         <kontrakter.version>2.0_20200130150253_a5d2e65</kontrakter.version>
         <gcp.version>0.140.0</gcp.version>
      </properties>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/navikt/familie-kontrakter</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
