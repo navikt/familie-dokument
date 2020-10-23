@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream
 class DebugController(@Qualifier(STONAD_GCP_STORAGE) val soknadGcpStorage: GcpStorageWrapper,
 @Qualifier(ATTACHMENT_GCP_STORAGE) val attachmentGcpStorage: GcpStorageWrapper) {
 
-    @GetMapping("testSoknadStorage/{directory}/{filename}")
+    @GetMapping("testGcpStorage/{directory}/{filename}")
     fun testSoknadStorage(@PathVariable("directory") directory: String,
                           @PathVariable("filename") filename: String,
                           @RequestParam("content") content: String
