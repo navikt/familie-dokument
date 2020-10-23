@@ -59,6 +59,8 @@ spec:
       value: {{spring_profile}}
     - name: APP_TEAM
       value: teamfamilie
+    - name: GCP_STORAGE_BUCKETNAME
+      value: {{bucket_name}}
   #
   # the following spec is only available when running in GCP.
   #

@@ -19,21 +19,23 @@ class GcpStorageConfiguration {
 
     @Bean
     fun gcpStorage(retrySettings: RetrySettings,
-                         @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int): GcpStorage {
-        return GcpStorage(maxFileSizeMB, retrySettings)
+                   @Value("\${gcp.storage.bucketname}") bucketName: String,
+                   @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int): GcpStorage {
+        return GcpStorage(bucketName, maxFileSizeMB, retrySettings)
     }
 
     @Bean(ATTACHMENT_GCP_STORAGE)
-    fun attachmentStorage(storage: GcpStorage): GcpStorageWrapper{
+    fun attachmentStorage(storage: GcpStorage): GcpStorageWrapper {
         return GcpStorageWrapper(storage, MediaType.APPLICATION_PDF_VALUE)
     }
 
     @Bean(STONAD_GCP_STORAGE)
-    fun stonadStorage(storage: GcpStorage): GcpStorageWrapper{
+    fun stonadStorage(storage: GcpStorage): GcpStorageWrapper {
         return GcpStorageWrapper(storage, MediaType.APPLICATION_JSON_VALUE)
     }
 
-    companion object{
+    companion object {
+
         const val ATTACHMENT_GCP_STORAGE = "attachmentGcpStorage"
         const val STONAD_GCP_STORAGE = "stonadGcpStorage"
     }
