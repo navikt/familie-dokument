@@ -10,6 +10,8 @@ spec:
   image: {{ image }}
   team: teamfamilie
   port: 8082
+  envFrom:
+    - secret: {{ secret }}
   liveness:
     path: /internal/status/isAlive
     initialDelay: 30
