@@ -19,13 +19,15 @@ import java.io.ByteArrayInputStream
 class DebugController(@Qualifier(STONAD_GCP_STORAGE) val soknadGcpStorage: GcpStorageWrapper,
 @Qualifier(ATTACHMENT_GCP_STORAGE) val attachmentGcpStorage: GcpStorageWrapper) {
 
-    @GetMapping("testGcpSoknad/{directory}/{filename}")
+    @GetMapping(path = ["testGcpSoknad/{directory}/{filename}"],
+    produces = [MediaType.APPLICATION_JSON_VALUE])
     fun testGcpSoknad(@PathVariable("directory") directory: String,
                           @PathVariable("filename") filename: String,
                           @RequestParam("content") content: String
-    ): String{
+    ): ByteArray{
+        val jsonData= "{content: ${content}}"
         soknadGcpStorage.put(directory, filename, ByteArrayInputStream(content.toByteArray()))
-        return String(soknadGcpStorage[directory, filename])
+        return soknadGcpStorage[directory, filename]
     }
 
     @GetMapping(path = ["testGcpAttachment/{directory}/{filename}"],
