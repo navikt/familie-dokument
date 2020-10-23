@@ -19,12 +19,23 @@ import java.io.ByteArrayInputStream
 class DebugController(@Qualifier(STONAD_GCP_STORAGE) val soknadGcpStorage: GcpStorageWrapper,
 @Qualifier(ATTACHMENT_GCP_STORAGE) val attachmentGcpStorage: GcpStorageWrapper) {
 
-    @GetMapping("testGcpStorage/{directory}/{filename}")
-    fun testSoknadStorage(@PathVariable("directory") directory: String,
+    @GetMapping("testGcpSoknad/{directory}/{filename}")
+    fun testGcpSoknad(@PathVariable("directory") directory: String,
                           @PathVariable("filename") filename: String,
                           @RequestParam("content") content: String
     ): String{
         soknadGcpStorage.put(directory, filename, ByteArrayInputStream(content.toByteArray()))
         return String(soknadGcpStorage[directory, filename])
     }
+
+    @GetMapping(path = ["testGcpAttachment/{directory}/{filename}"],
+    produces = [MediaType.APPLICATION_PDF_VALUE])
+    fun testGcpAttachment(@PathVariable("directory") directory: String,
+                      @PathVariable("filename") filename: String
+    ): ByteArray{
+        val pdfData = DebugController::class.java.getResource("/test_gcp_storage_attachment.pdf").readBytes()
+        soknadGcpStorage.put(directory, filename, ByteArrayInputStream(pdfData))
+        return soknadGcpStorage[directory, filename]
+    }
+
 }
