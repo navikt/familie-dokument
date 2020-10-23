@@ -8,7 +8,6 @@ import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.attachment.AttachmentToStorableFormatConverter
 import no.nav.familie.dokument.storage.attachment.ImageConversionService
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
-import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -45,16 +44,6 @@ class TestStorageConfiguration {
         every { storage.delete(capture(slotUser), capture(slotKey)) } answers {
             lokalStorage.remove(slotUser.captured + "_" + slotKey.captured)
         }
-        return storage
-    }
-
-    @Bean
-    @Primary
-    fun S3Storage(): S3Storage {
-        val storage: S3Storage = mockk()
-
-        every { storage[any(), any()] } returns "filinnhold".toByteArray()
-
         return storage
     }
 

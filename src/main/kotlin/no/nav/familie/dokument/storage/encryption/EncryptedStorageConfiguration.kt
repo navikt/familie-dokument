@@ -4,7 +4,6 @@ import no.nav.familie.dokument.storage.google.GcpStorage
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.ATTACHMENT_GCP_STORAGE
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.STONAD_GCP_STORAGE
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
-import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
