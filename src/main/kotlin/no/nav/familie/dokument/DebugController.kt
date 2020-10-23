@@ -14,7 +14,7 @@ import java.io.ByteArrayInputStream
 
 @RestController
 @RequestMapping("debugger")
-@Profile("preprod")
+@Profile("debug")
 @Unprotected
 class DebugController(@Qualifier(STONAD_GCP_STORAGE) val soknadGcpStorage: GcpStorageWrapper,
 @Qualifier(ATTACHMENT_GCP_STORAGE) val attachmentGcpStorage: GcpStorageWrapper) {
