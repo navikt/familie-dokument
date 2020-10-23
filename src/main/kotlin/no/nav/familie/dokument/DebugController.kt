@@ -26,7 +26,7 @@ class DebugController(@Qualifier(STONAD_GCP_STORAGE) val soknadGcpStorage: GcpSt
                           @RequestParam("content") content: String
     ): ByteArray{
         val jsonData= "{content: ${content}}"
-        soknadGcpStorage.put(directory, filename, ByteArrayInputStream(content.toByteArray()))
+        soknadGcpStorage.put(directory, filename, ByteArrayInputStream(jsonData.toByteArray()))
         return soknadGcpStorage[directory, filename]
     }
 
