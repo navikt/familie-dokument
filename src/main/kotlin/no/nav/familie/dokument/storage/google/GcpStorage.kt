@@ -5,7 +5,6 @@ import com.google.cloud.storage.*
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import org.slf4j.LoggerFactory
-import org.springframework.http.MediaType
 import java.io.InputStream
 
 class GcpStorage(maxFileSizeMB: Int, retrySettings: RetrySettings) {
@@ -54,7 +53,7 @@ class GcpStorage(maxFileSizeMB: Int, retrySettings: RetrySettings) {
 
     fun delete(directory: String, key: String) {
         storage.delete(BlobId.of(VEDLEGG_BUCKET, makeKey(directory, key)))
-        LOG.debug("Deleted file from bucket ${directory}")
+        LOG.debug("Deleted file from bucket ${key}")
     }
 
     companion object {
