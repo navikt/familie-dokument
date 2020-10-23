@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage.encryption
 
 import io.mockk.*
 import no.nav.familie.dokument.storage.google.GcpStorage
+import no.nav.familie.dokument.storage.google.GcpStorageWrapper
 import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -19,7 +20,7 @@ class EncryptedStorageTest {
     private val DIRECTORY = "directory"
     private val KEY = "UUID"
 
-    private val storage : GcpStorage = mockk()
+    private val storage : GcpStorageWrapper = mockk()
     private val tokenValidationContextHolder : TokenValidationContextHolder = mockk()
     private val encryptor : Encryptor = mockk()
 

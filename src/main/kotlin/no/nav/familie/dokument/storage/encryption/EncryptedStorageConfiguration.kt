@@ -1,9 +1,13 @@
 package no.nav.familie.dokument.storage.encryption
 
 import no.nav.familie.dokument.storage.google.GcpStorage
+import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.ATTACHMENT_GCP_STORAGE
+import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.STONAD_GCP_STORAGE
+import no.nav.familie.dokument.storage.google.GcpStorageWrapper
 import no.nav.familie.dokument.storage.s3.S3Storage
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,9 +27,20 @@ class EncryptedStorageConfiguration {
         return SecretKeyProvider(passphrase)
     }
 
-    @Bean
-    internal fun encryptedStorage(@Autowired contextHolder: TokenValidationContextHolder, @Autowired storage: GcpStorage, encryptor: Encryptor): EncryptedStorage {
+    @Bean(ATTACHMENT_ENCRYPTED_STORAGE)
+    internal fun attachmentEncryptedStorage(@Autowired contextHolder: TokenValidationContextHolder,
+                                  @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper, encryptor: Encryptor): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 
+    @Bean(STONAD_ENCRYPTED_STORAGE)
+    internal fun stonadEncryptedStorage(@Autowired contextHolder: TokenValidationContextHolder,
+                                            @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper, encryptor: Encryptor): EncryptedStorage {
+        return EncryptedStorage(contextHolder, storage, encryptor)
+    }
+
+    companion object{
+        const val ATTACHMENT_ENCRYPTED_STORAGE = "attachmentEncryptedStorage"
+        const val STONAD_ENCRYPTED_STORAGE = "stonadEncryptedStorage"
+    }
 }

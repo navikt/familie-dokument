@@ -24,7 +24,7 @@ class GcpStorage(maxFileSizeMB: Int, retrySettings: RetrySettings) {
 
     fun makeKey(directory: String, key: String) = "${directory}_${key}"
 
-    fun put(directory: String, key: String, data: InputStream) {
+    fun put(directory: String, key: String, data: InputStream, mediaTypeValue: String) {
         try {
             val bytes = IOUtils.toByteArray(data)
             LOG.debug("Bufret stream som gav antall bytes: " + bytes.size)
@@ -33,7 +33,7 @@ class GcpStorage(maxFileSizeMB: Int, retrySettings: RetrySettings) {
             }
 
             val blobInfo = BlobInfo.newBuilder(BlobId.of(VEDLEGG_BUCKET, makeKey(directory, key)))
-                    .setContentType(MediaType.APPLICATION_PDF_VALUE).build()
+                    .setContentType(mediaTypeValue).build()
             val blob = storage.create(blobInfo, bytes)
             LOG.debug("Stored file with size {}", blob.getContent().size)
         } catch (e: Exception) {
