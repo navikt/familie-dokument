@@ -37,7 +37,7 @@ class RestExceptionHandler {
     @ExceptionHandler(GcpDocumentNotFoundException::class)
     protected fun handleGcpDocumentNotFoundException(ex: GcpDocumentNotFoundException, req: ServletWebRequest): Any {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(HttpStatus.NO_CONTENT)
                 .body<Map<String, Any?>>(lagErrorBody(HttpStatus.NO_CONTENT, ex, req))
     }
 

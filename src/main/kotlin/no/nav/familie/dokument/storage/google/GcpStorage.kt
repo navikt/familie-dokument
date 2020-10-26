@@ -1,25 +1,14 @@
 package no.nav.familie.dokument.storage.google
 
-import com.google.api.gax.retrying.RetrySettings
 import com.google.cloud.storage.*
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import org.slf4j.LoggerFactory
 import java.io.InputStream
 
-class GcpStorage(val bucketName: String, maxFileSizeMB: Int, retrySettings: RetrySettings) {
+class GcpStorage(val bucketName: String, maxFileSizeMB: Int, val storage: Storage) {
 
     private val maxFileSizeAfterEncryption: Int = (maxFileSizeMB.toDouble() * 1000.0 * 1000.0 * ENCRYPTION_SIZE_FACTOR).toInt()
-    private val storage: Storage
-
-    init {
-        storage = StorageOptions
-                .newBuilder()
-                .setRetrySettings(retrySettings)
-                .build()
-                .service
-        LOG.info("Google Storage intialized")
-    }
 
     fun makeKey(directory: String, key: String) = "${directory}_${key}"
 
