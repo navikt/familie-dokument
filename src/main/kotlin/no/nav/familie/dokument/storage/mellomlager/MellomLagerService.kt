@@ -16,7 +16,7 @@ class MellomLagerService internal constructor(
         delegate.put(directory, key, ByteArrayInputStream(data.toByteArray()))
     }
 
-    override fun get(directory: String, key: String): String {
+    override fun get(directory: String, key: String): String{
         return String(delegate[directory, key])
     }
 

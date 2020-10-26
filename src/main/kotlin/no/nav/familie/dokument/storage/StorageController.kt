@@ -42,7 +42,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         log.debug("Dokument lastet opp med størrelse (bytes): " + bytes.size)
 
         if (bytes.size > maxFileSizeInBytes) {
-            throw IllegalArgumentException(HttpStatus.PAYLOAD_TOO_LARGE.toString())
+            throw IllegalArgumentException("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
         val directory = contextHolder.hentFnr()
@@ -50,12 +50,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         val uuid = UUID.randomUUID().toString()
 
         val file = ByteArrayInputStream(bytes)
-        try {
-            storage.put(directory, uuid, file)
-        } catch (e: RuntimeException) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
-        }
-
+        storage.put(directory, uuid, file)
         return ResponseEntity.ok(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name))
     }
 
@@ -64,14 +59,9 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         val directory = contextHolder.hentFnr()
-        return try {
-            val data = storage[directory, dokumentId]
-            log.debug("Loaded file with {}", data)
-            ResponseEntity.ok(Ressurs.Companion.success(data))
-        } catch (e: RuntimeException) {
-            secureLogger.error("Henting av vedlegg feilet", e)
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(e.message))
-        }
+        val data = storage[directory, dokumentId]
+        log.debug("Loaded file with {}", data)
+        return ResponseEntity.ok(Ressurs.Companion.success(data))
     }
 
     @Unprotected

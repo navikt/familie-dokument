@@ -1,7 +1,5 @@
 package no.nav.familie.dokument.storage
 
-import com.amazonaws.SdkClientException
-import com.amazonaws.services.s3.model.AmazonS3Exception
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -14,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
+import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 
 internal class StonadControllerTest {
@@ -41,28 +40,9 @@ internal class StonadControllerTest {
     @Test
     internal fun `skal feile ved mellomlagring dersom søknaden ikke er gyldig json`() {
         val ugyldigJson = "Jeg gikk en tur på stien"
-        assertThrows<IllegalStateException> { stonadController.mellomlagreSøknad(StonadController.StønadParameter.valueOf("overgangsstonad"), ugyldigJson) }
-    }
-
-    @Test
-    internal fun `skal feile ved mellomlagring dersom s3 kaster exception`() {
-        val json = """{"a": 1}"""
-        every { storageMock.put(any(), any(), any()) } throws SdkClientException("Noe gikk galt")
-        Assertions.assertThat(stonadController.mellomlagreSøknad(StonadController.StønadParameter.valueOf("overgangsstonad"), json).statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-    }
-
-    @Test
-    internal fun `skal returnere 204 dersom objektet ikke finnes i S3`() {
-        val amazonNotFoundException = AmazonS3Exception("Noe gikk galt")
-        amazonNotFoundException.statusCode = 404
-        every { storageMock.get(any(), any()) } throws amazonNotFoundException
-        Assertions.assertThat(stonadController.hentMellomlagretSøknad(StonadController.StønadParameter.valueOf("overgangsstonad")).statusCode).isEqualTo(HttpStatus.NO_CONTENT)
-    }
-
-    @Test
-    internal fun `skal kaste 500 dersom noe uventet feil oppstår`() {
-        val uventetFeil = RuntimeException("Noe gikk galt")
-        every { storageMock.get(any(), any()) } throws uventetFeil
-        Assertions.assertThat(stonadController.hentMellomlagretSøknad(StonadController.StønadParameter.valueOf("overgangsstonad")).statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+        assertThrows<IllegalArgumentException> {
+            stonadController.mellomlagreSøknad(StonadController.StønadParameter.valueOf("overgangsstonad"),
+                                               ugyldigJson)
+        }
     }
 }

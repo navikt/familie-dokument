@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("api/soknad")
@@ -34,53 +35,32 @@ class StonadController(@Autowired val storage: MellomLagerService,
         validerGyldigJson(søknad)
         val directory = contextHolder.hentFnr()
 
-        try {
-            storage.put(directory, stønad.stønadKey, søknad)
-        } catch (e: RuntimeException) {
-            secureLogger.warn("Kunne ikke mellomlagre overgangsstønad for $directory", e)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
-        }
-
+        storage.put(directory, stønad.stønadKey, søknad)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
         val directory = contextHolder.hentFnr()
-        return try {
-            val data = storage[directory, stønad.stønadKey]
-            ResponseEntity.ok(data)
-        } catch (e: RuntimeException) {
-            if (e is AmazonS3Exception && e.statusCode == 404) {
-                ResponseEntity.noContent().build()
-            } else {
-                secureLogger.info("Noe gikk galt", e)
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
-            }
-        }
+        val data = storage[directory, stønad.stønadKey]
+        return if(data!= null) ResponseEntity.ok(data) else ResponseEntity.noContent().build()
     }
 
     @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun slettMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
         val directory = contextHolder.hentFnr()
-        return try {
-            log.debug("Sletter mellomlagret overgangsstønad")
-            storage.delete(directory, stønad.stønadKey)
-            ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-        } catch (e: RuntimeException) {
-            secureLogger.warn("Kunne ikke slette mellomlagret overgangsstønad for $directory", e)
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
-        }
+        log.debug("Sletter mellomlagret overgangsstønad")
+        storage.delete(directory, stønad.stønadKey)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     private fun validerGyldigJson(verdi: String) {
         try {
             objectMapper.readTree(verdi);
         } catch (e: Exception) {
-            error("Forsøker å mellomlagre søknad som ikke er gyldig json-verdi")
+            throw IllegalArgumentException("Forsøker å mellomlagre søknad som ikke er gyldig json-verdi")
         }
     }
-
 
     enum class StønadParameter(val stønadKey: String) {
         overgangsstonad("overgangsstønad"),

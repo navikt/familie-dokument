@@ -45,7 +45,7 @@ class GcpStorage(val bucketName: String, maxFileSizeMB: Int, retrySettings: Retr
             storage.get(bucketName, makeKey(directory, key)).getContent()
         } catch (e: StorageException) {
             if (HttpStatus.SC_NOT_FOUND == e.code) {
-                throw e
+                throw GcpDocumentNotFoundException(directory, key)
             }
             throw e
         }
@@ -62,3 +62,5 @@ class GcpStorage(val bucketName: String, maxFileSizeMB: Int, retrySettings: Retr
         private val ENCRYPTION_SIZE_FACTOR = 1.5
     }
 }
+
+class GcpDocumentNotFoundException(val directory: String, val key: String) : RuntimeException("Finner ikke dokumentet i Google Storage")
