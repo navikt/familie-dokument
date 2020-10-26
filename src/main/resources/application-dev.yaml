@@ -12,7 +12,6 @@ no.nav.security.jwt:
     discoveryurl: http://metadata
     accepted_audience: aud-localhost
     cookie_name: localhost-idtoken
-    proxyurl:
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL: #mockes ut lokalt
