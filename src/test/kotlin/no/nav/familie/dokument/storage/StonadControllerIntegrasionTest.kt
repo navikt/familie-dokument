@@ -53,10 +53,9 @@ class StonadControllerIntegrasionTest {
         val blob = mockk<Blob>()
         var captured = ByteArray(0)
         every{storageMock.create(any(), capture(slot))} answers{
-            captured= slot.captured
+            every{blob.getContent()} returns slot.captured
             blob
         }
-        every{blob.getContent()} returns captured
 
         mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
@@ -83,11 +82,7 @@ class StonadControllerIntegrasionTest {
     fun `Skal returnere 500 hvis Google Storage feil`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
-        val slot = slot<ByteArray>()
-        val blob = mockk<Blob>()
-        var captured = ByteArray(0)
-        every{storageMock.create(any(), capture(slot))} throws StorageException(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
-        every{blob.getContent()} returns captured
+        every{storageMock.create(any(), any<ByteArray>())} throws StorageException(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
 
         mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
