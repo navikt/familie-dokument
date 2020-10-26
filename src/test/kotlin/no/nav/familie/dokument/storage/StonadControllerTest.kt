@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
 import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
 
 internal class StonadControllerTest {
 
