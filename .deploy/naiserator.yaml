@@ -61,6 +61,8 @@ spec:
       value: teamfamilie
     - name: GCP_STORAGE_BUCKETNAME
       value: {{bucket_name}}
+  envFrom:
+    - configmap: loginservice-idporten
   #
   # the following spec is only available when running in GCP.
   #
