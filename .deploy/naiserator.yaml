@@ -12,6 +12,7 @@ spec:
   port: 8082
   envFrom:
     - secret: {{ secret }}
+    - configmap: loginservice-idporten
   liveness:
     path: /internal/status/isAlive
     initialDelay: 30
@@ -61,8 +62,6 @@ spec:
       value: teamfamilie
     - name: GCP_STORAGE_BUCKETNAME
       value: {{bucket_name}}
-  envFrom:
-    - configmap: loginservice-idporten
   #
   # the following spec is only available when running in GCP.
   #
