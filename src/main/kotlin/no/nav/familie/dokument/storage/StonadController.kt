@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage
 
 import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.familie.dokument.storage.google.GcpDocumentNotFoundException
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -41,9 +42,12 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
-        val directory = contextHolder.hentFnr()
-        val data = storage[directory, stønad.stønadKey]
-        return if(data!= null) ResponseEntity.ok(data) else ResponseEntity.noContent().build()
+        return try {
+            val directory = contextHolder.hentFnr()
+            ResponseEntity.ok(storage[directory, stønad.stønadKey])
+        }catch(e: GcpDocumentNotFoundException){
+            ResponseEntity.noContent().build()
+        }
     }
 
     @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])

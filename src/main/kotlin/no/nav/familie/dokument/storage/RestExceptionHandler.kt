@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage
 
-import no.nav.familie.dokument.storage.google.GcpDocumentNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -32,13 +31,6 @@ class RestExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body<Map<String, Any?>>(lagErrorBody(HttpStatus.INTERNAL_SERVER_ERROR, ex, req))
-    }
-
-    @ExceptionHandler(GcpDocumentNotFoundException::class)
-    protected fun handleGcpDocumentNotFoundException(ex: GcpDocumentNotFoundException, req: ServletWebRequest): Any {
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .body<Map<String, Any?>>(lagErrorBody(HttpStatus.NO_CONTENT, ex, req))
     }
 
     private fun lagErrorBody(

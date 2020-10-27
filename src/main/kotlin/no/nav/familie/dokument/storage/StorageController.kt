@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
+import no.nav.familie.dokument.storage.google.GcpDocumentNotFoundException
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
@@ -21,7 +22,7 @@ import java.util.*
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
-                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int)  {
+                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int) {
 
     private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
@@ -29,16 +30,15 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     @PostMapping(path = ["{bucket}"],
                  consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
                  produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun addAttachment(@PathVariable("bucket")bucket: String,
+    fun addAttachment(@PathVariable("bucket") bucket: String,
                       @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
 
         if (multipartFile.isEmpty) {
-            log.info("Dokumentet som lastes opp er tomt - size: [{}] ", multipartFile.size)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            throw IllegalArgumentException("Dokumentet som lastes opp er tomt - size: [${multipartFile.size}] ")
         }
 
         val bytes = multipartFile.bytes
-        val maxFileSizeInBytes = maxFileSizeInMb*1024*1024
+        val maxFileSizeInBytes = maxFileSizeInMb * 1024 * 1024
         log.debug("Dokument lastet opp med størrelse (bytes): " + bytes.size)
 
         if (bytes.size > maxFileSizeInBytes) {
@@ -51,17 +51,21 @@ class StorageController(@Autowired val storage: AttachmentStorage,
 
         val file = ByteArrayInputStream(bytes)
         storage.put(directory, uuid, file)
-        return ResponseEntity.ok(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name))
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name))
     }
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
-                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
-        val directory = contextHolder.hentFnr()
-        val data = storage[directory, dokumentId]
-        log.debug("Loaded file with {}", data)
-        return ResponseEntity.ok(Ressurs.Companion.success(data))
+                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<ByteArray> {
+        return try {
+            val directory = contextHolder.hentFnr()
+            val data = storage[directory, dokumentId]
+            log.debug("Loaded file with {}", data)
+            ResponseEntity.ok(data)
+        } catch (e: GcpDocumentNotFoundException) {
+            ResponseEntity.noContent().build()
+        }
     }
 
     @Unprotected
@@ -71,6 +75,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     }
 
     companion object {
+
         private val log = LoggerFactory.getLogger(StorageController::class.java)
     }
 

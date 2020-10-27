@@ -1,4 +1,4 @@
-package no.nav.familie.dokument.storage
+package no.nav.familie.dokument.storage.integrationTest
 
 import com.google.cloud.storage.Blob
 import io.mockk.every
@@ -11,10 +11,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
-import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
@@ -23,6 +19,10 @@ import org.springframework.test.web.servlet.post
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
 import io.mockk.slot
+import no.nav.familie.dokument.config.IntegrationTestConfig
+import no.nav.familie.dokument.storage.RestExceptionHandler
+import no.nav.familie.dokument.storage.StonadController
+import no.nav.familie.dokument.storage.hentFnr
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.get
 
@@ -32,7 +32,7 @@ import org.springframework.test.web.servlet.get
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,
     RestExceptionHandler::class,
-    StonadControllerIntegrationTestConfig::class])
+    IntegrationTestConfig::class])
 @WebMvcTest
 @ActiveProfiles("integration-test")
 class StonadControllerIntegrasionTest {
@@ -51,7 +51,6 @@ class StonadControllerIntegrasionTest {
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
         val slot = slot<ByteArray>()
         val blob = mockk<Blob>()
-        var captured = ByteArray(0)
         every{storageMock.create(any(), capture(slot))} answers{
             every{blob.getContent()} returns slot.captured
             blob
@@ -94,7 +93,7 @@ class StonadControllerIntegrasionTest {
     }
 
     @Test
-    fun `Skal lese søknad som er lagret`() {
+    fun `Skal lese søknad ut som er lagret`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
         val slot = slot<ByteArray>()
@@ -137,25 +136,5 @@ class StonadControllerIntegrasionTest {
 
     companion object{
         val TEST_FNR= "TestFnr"
-    }
-}
-
-@Profile("integration-test")
-@Configuration
-class StonadControllerIntegrationTestConfig {
-
-    @Bean
-    @Primary
-    fun tokenValidationContextHolderMock(): TokenValidationContextHolder {
-        val tokenValidationContextHolder =  mockk<TokenValidationContextHolder>()
-        every{tokenValidationContextHolder.tokenValidationContext} returns mockk()
-        return tokenValidationContextHolder
-    }
-
-    @Bean
-    @Primary
-    fun storageMock(): Storage{
-        val storageMock = mockk<Storage>()
-        return storageMock
     }
 }
