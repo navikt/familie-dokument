@@ -8,14 +8,12 @@ import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
 import org.springframework.stereotype.Service
-import java.awt.geom.AffineTransform
-import java.awt.image.AffineTransformOp
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
-// Kopi av https://github.com/navikt/pdfgen/blob/master/src/main/kotlin/no/nav/pdfgen/Utils.kt
+// Delvis kopi av https://github.com/navikt/pdfgen/blob/master/src/main/kotlin/no/nav/pdfgen/Utils.kt
 @Service
 class ImageConversionService {
 
@@ -46,13 +44,16 @@ class ImageConversionService {
         if (image.height >= image.width) {
             return image
         }
+        val width: Int = image.width
+        val height: Int = image.height
 
-        val rotateTransform = AffineTransform.getRotateInstance(Math.toRadians(90.0),
-                                                                (image.height / 2f).toDouble(),
-                                                                (image.height / 2f).toDouble())
+        val dest = BufferedImage(height, width, image.type)
 
-        return AffineTransformOp(rotateTransform, AffineTransformOp.TYPE_BILINEAR)
-                .filter(image, BufferedImage(image.height, image.width, image.type))
+        val graphics2D = dest.createGraphics()
+        graphics2D.translate((height - width) / 2, (height - width) / 2)
+        graphics2D.rotate(Math.PI / 2, height / 2.toDouble(), width / 2.toDouble())
+        graphics2D.drawRenderedImage(image, null)
+        return dest
     }
 
     private fun scale(image: PDImageXObject, page: PDPage): ImageSize {
