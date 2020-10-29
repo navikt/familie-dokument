@@ -1,5 +1,6 @@
 package no.nav.familie.dokument
 
+import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.LoggerFactory
 import org.springframework.core.NestedExceptionUtils
@@ -35,7 +36,7 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(Throwable::class)
-    fun handleThrowable(throwable: Throwable): ResponseEntity<String> {
+    fun handleThrowable(throwable: Throwable): ResponseEntity<Ressurs<String>> {
         val responseStatus = throwable::class.annotations.find { it is ResponseStatus }?.let { it as ResponseStatus }
         if (responseStatus != null) {
             return håndtertResponseStatusFeil(throwable, responseStatus)
@@ -43,17 +44,17 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         return uventetFeil(throwable)
     }
 
-    private fun uventetFeil(throwable: Throwable): ResponseEntity<String> {
+    private fun uventetFeil(throwable: Throwable): ResponseEntity<Ressurs<String>> {
         secureLogger.error("En feil har oppstått", throwable)
         logger.error("En feil har oppstått - throwable=${rootCause(throwable)} ")
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Uventet feil")
+                .body(Ressurs.failure("Uventet feil"))
     }
 
     // Denne håndterer eks JwtTokenUnauthorizedException
     private fun håndtertResponseStatusFeil(throwable: Throwable,
-                                           responseStatus: ResponseStatus): ResponseEntity<String> {
+                                           responseStatus: ResponseStatus): ResponseEntity<Ressurs<String>> {
         val status = if (responseStatus.value != HttpStatus.INTERNAL_SERVER_ERROR) responseStatus.value else responseStatus.code
         val loggMelding = "En håndtert feil har oppstått" +
                           " throwable=${rootCause(throwable)}" +
@@ -61,8 +62,9 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
                           " status=$status"
 
         loggFeil(throwable, loggMelding)
-        return ResponseEntity.status(status).body("Håndtert feil")
+        return ResponseEntity.status(status).body(Ressurs.failure("Håndtert feil"))
     }
+
 
     private fun loggFeil(throwable: Throwable, loggMelding: String) {
         when (throwable) {
