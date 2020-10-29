@@ -1,56 +1,75 @@
 package no.nav.familie.dokument.storage.attachment
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import no.nav.familie.http.client.HttpClientUtil
-import no.nav.familie.http.client.HttpRequestUtil
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
-import org.eclipse.jetty.http.HttpHeader
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Component
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
+import org.apache.pdfbox.util.Matrix
+import org.springframework.stereotype.Service
+import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import javax.imageio.ImageIO
 
-import java.io.IOException
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
+// Delvis kopi av https://github.com/navikt/pdfgen/blob/master/src/main/kotlin/no/nav/pdfgen/Utils.kt
+@Service
+class ImageConversionService {
 
-@Component
-class ImageConversionService(@Value("\${SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL}") private val imageToPdfEndpointBaseUrl: URI,
-                                      private val contextHolder: TokenValidationContextHolder) {
+    private data class ImageSize(val width: Float, val height: Float)
 
-    private val client: HttpClient = HttpClientUtil.create()
+    fun convert(input: ByteArray): ByteArray {
+        return PDDocument().use { document ->
+            val imageStream = ByteArrayInputStream(input)
+            val page = PDPage(PDRectangle.A4)
+            document.addPage(page)
+            val image = toPortait(ImageIO.read(imageStream))
 
-    fun convert(bytes: ByteArray, detectedType: Format): ByteArray {
-        try {
-            val request = HttpRequestUtil.createRequest(contextHolder.tokenValidationContext.getJwtToken("selvbetjening").tokenAsString)
-                    .header(HttpHeader.CONTENT_TYPE.asString(), detectedType.mimeType)
-                    .uri(URI.create(imageToPdfEndpointBaseUrl.toString() + "v1/genpdf/image/kontantstotte"))
-                    .POST(HttpRequest.BodyPublishers.ofByteArray(bytes))
-                    .build()
+            val quality = 1.0f
 
-            val response = client.send(request, HttpResponse.BodyHandlers.ofByteArray())
+            val pdImage = JPEGFactory.createFromImage(document, image, quality)
+            val imageSize = scale(pdImage, page)
 
-            if (HttpStatus.Series.SUCCESSFUL != HttpStatus.Series.resolve(response.statusCode())) {
-                throw RuntimeException("Response fra pdf-generator: " + response.statusCode() + ". Response.entity: " + String(response.body()))
+            PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false).use {
+                it.drawImage(pdImage, Matrix(imageSize.width, 0f, 0f, imageSize.height, 0f, 0f))
             }
-
-            log.info("Konvertert bilde({}) til pdf", detectedType.mimeType)
-
-            return response.body()
-        } catch (e: JsonProcessingException) {
-            throw RuntimeException("Feiler under konvertering av innsending til json. " + e.message)
-        } catch (e: InterruptedException) {
-            throw RuntimeException("Timer ut under innsending. " + e.message)
-        } catch (e: IOException) {
-            throw RuntimeException("Ukjent IO feil i " + javaClass.name + "." + e.message)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            document.save(byteArrayOutputStream)
+            byteArrayOutputStream.toByteArray()
         }
-
     }
 
-    companion object {
+    private fun toPortait(image: BufferedImage): BufferedImage {
+        if (image.height >= image.width) {
+            return image
+        }
+        val width: Int = image.width
+        val height: Int = image.height
 
-        private val log = LoggerFactory.getLogger(ImageConversionService::class.java)
+        val dest = BufferedImage(height, width, image.type)
+
+        val graphics2D = dest.createGraphics()
+        graphics2D.translate((height - width) / 2, (height - width) / 2)
+        graphics2D.rotate(Math.PI / 2, height / 2.toDouble(), width / 2.toDouble())
+        graphics2D.drawRenderedImage(image, null)
+        return dest
+    }
+
+    private fun scale(image: PDImageXObject, page: PDPage): ImageSize {
+        var width = image.width.toFloat()
+        var height = image.height.toFloat()
+
+        if (width > page.cropBox.width) {
+            width = page.cropBox.width
+            height = width * image.height.toFloat() / image.width.toFloat()
+        }
+
+        if (height > page.cropBox.height) {
+            height = page.cropBox.height
+            width = height * image.width.toFloat() / image.height.toFloat()
+        }
+
+        return ImageSize(width, height)
     }
 }
