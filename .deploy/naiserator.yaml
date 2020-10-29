@@ -36,11 +36,11 @@ spec:
     cpuThresholdPercentage: 80
   resources:
     limits:
-      memory: "1024Mi"
-      cpu: "1000m"
+      memory: 4Gi
+      cpu: "1"
     requests:
-      memory: "512Mi"
-      cpu: "500m"
+      memory: 2Gi
+      cpu: 500m
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
 {{#each ingresses as |url|}}
     - {{url}}

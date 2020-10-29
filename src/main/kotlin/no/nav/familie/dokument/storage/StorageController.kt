@@ -49,8 +49,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
 
         val uuid = UUID.randomUUID().toString()
 
-        val file = ByteArrayInputStream(bytes)
-        storage.put(directory, uuid, file)
+        storage.put(directory, uuid, bytes)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name))
     }
 
