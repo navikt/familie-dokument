@@ -34,7 +34,6 @@
         </repository>
     </repositories>
 
-
     <dependencies>
         <!-- Spring Boot -->
         <dependency>
