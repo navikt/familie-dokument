@@ -65,11 +65,11 @@ class TestStorageConfiguration {
             @Autowired storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
         val slot = slot<String>()
         val slotPut = slot<String>()
-        val slotInputStream = slot<InputStream>()
+        val slotByteArray = slot<ByteArray>()
         val storage: AttachmentStorage = mockk()
 
-        every { storage.put(capture(slotPut), any(), capture(slotInputStream)) } answers {
-            lokalStorageAttachment[slotPut.captured] = slotInputStream.captured.readAllBytes()
+        every { storage.put(capture(slotPut), any(), capture(slotByteArray)) } answers {
+            lokalStorageAttachment[slotPut.captured] = slotByteArray.captured
         }
         every { storage[capture(slot), any()] } answers {
             lokalStorageAttachment.getOrElse(slot.captured, {
