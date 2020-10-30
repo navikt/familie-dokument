@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'master'
+      - 'gcp'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/familie-dokument:${{ github.sha }}
