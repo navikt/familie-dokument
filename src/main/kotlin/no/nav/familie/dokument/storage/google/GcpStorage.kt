@@ -23,10 +23,9 @@ class GcpStorage(val bucketName: String, maxFileSizeMB: Int, val storage: Storag
 
             val blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, makeKey(directory, key)))
                     .setContentType(mediaTypeValue).build()
-            val blob = storage.create(blobInfo, bytes)
-            LOG.debug("Stored file with size {}", blob.getContent().size)
+            storage.create(blobInfo, bytes)
         } catch (e: Exception) {
-            throw RuntimeException("Feil oppsto ved bufring av stream.", e)
+            throw RuntimeException("Feil oppsto ved lagring av fil mot gcp.", e)
         }
     }
 
