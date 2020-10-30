@@ -3,8 +3,7 @@ name: Build, og deploy (dev og prod)
 on:
   push:
     branches:
-      - 'master'
-      - 'gcp'
+      - 'gcp-temp'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/familie-dokument:${{ github.sha }}
