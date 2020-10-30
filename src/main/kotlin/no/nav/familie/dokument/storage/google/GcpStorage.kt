@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage.google
 
 import com.google.cloud.storage.*
+import no.nav.familie.dokument.GcpDocumentNotFound
 import org.apache.commons.io.IOUtils
 import org.apache.http.HttpStatus
 import org.slf4j.LoggerFactory
@@ -34,7 +35,7 @@ class GcpStorage(val bucketName: String, maxFileSizeMB: Int, val storage: Storag
             storage.get(bucketName, makeKey(directory, key)).getContent()
         } catch (e: StorageException) {
             if (HttpStatus.SC_NOT_FOUND == e.code) {
-                throw GcpDocumentNotFoundException(directory, key)
+                throw GcpDocumentNotFound()
             }
             throw e
         }
@@ -51,5 +52,3 @@ class GcpStorage(val bucketName: String, maxFileSizeMB: Int, val storage: Storag
         private val ENCRYPTION_SIZE_FACTOR = 1.5
     }
 }
-
-class GcpDocumentNotFoundException(val directory: String, val key: String) : RuntimeException("Finner ikke dokumentet i Google Storage")

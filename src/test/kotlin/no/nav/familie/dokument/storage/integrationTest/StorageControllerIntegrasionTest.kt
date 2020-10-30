@@ -1,17 +1,16 @@
 package no.nav.familie.dokument.storage.integrationTest
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.cloud.storage.Blob
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
-import no.nav.familie.dokument.storage.RestExceptionHandler
-import no.nav.familie.dokument.storage.StonadController
 import no.nav.familie.dokument.storage.StorageController
 import no.nav.familie.dokument.storage.attachment.AttachmentConfiguration
-import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration
 import no.nav.familie.dokument.storage.hentFnr
@@ -28,22 +27,16 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.multipart
-import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.web.multipart.MultipartFile
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
-import java.io.IOException
 import kotlin.test.assertEquals
-
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = [StorageController::class,
     AttachmentConfiguration::class,
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,
-    RestExceptionHandler::class,
+    ApiExceptionHandler::class,
     IntegrationTestConfig::class])
 @WebMvcTest
 @ActiveProfiles("integration-test")
@@ -108,6 +101,11 @@ class StorageControllerIntegrasionTest {
         every { storageMock.get(any(), any<String>(), *anyVararg()) } returns blob
     }
 
+    class RessurData{
+        lateinit var data: ByteArray
+        lateinit var status: Ressurs.Status
+    }
+
     @Test
     fun `Skal lese vedlegg ut som er lagret`() {
         initMockWithoutArtificialErrors()
@@ -122,7 +120,9 @@ class StorageControllerIntegrasionTest {
             status { isOk }
         }.andReturn().response.contentAsByteArray
 
-        assertEquals(vedlegg.bytes.size, output.size)
+        val content = objectMapper.readValue(output, RessurData::class.java)
+        assertEquals(Ressurs.Status.SUKSESS, content.status)
+        assertEquals(vedlegg.bytes.size, content.data.size)
     }
 
     @Test

@@ -1,5 +1,7 @@
 package no.nav.familie.dokument.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.cloud.storage.Storage
 import io.mockk.every
 import io.mockk.mockk
@@ -9,7 +11,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper
 
 @Profile("integration-test")
 @Configuration
@@ -36,7 +37,9 @@ class IntegrationTestConfig {
     }
 
     @Bean
-    fun objectMapper(): ObjectMapper{
-        return ObjectMapper()
+    fun objectMapper(): ObjectMapper {
+        val objectMapper= ObjectMapper()
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper
     }
 }

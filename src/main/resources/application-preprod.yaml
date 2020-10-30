@@ -3,6 +3,9 @@ cors:
     - "https://familie-ef-soknad.nais.oera-q.local"
     - "https://www-q0.nav.no/familie/alene-med-barn/soknad"
     - "https://familie-ef-soknad-api.nais.oera-q.local"
+    - "https://familie-ba-sak.dev.adeo.no"
+    - "https://familie-ba-soknad-api.dev-nav.no"
+    - "https://familie-ba-mottak.dev.adeo.no"
 
 no.nav.security.jwt:
   issuers: selvbetjening

@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.post
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
 import io.mockk.slot
+import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
-import no.nav.familie.dokument.storage.RestExceptionHandler
 import no.nav.familie.dokument.storage.StonadController
 import no.nav.familie.dokument.storage.hentFnr
 import org.springframework.http.HttpStatus
@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.get
     MellomLagerService::class,
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,
-    RestExceptionHandler::class,
+    ApiExceptionHandler::class,
     IntegrationTestConfig::class])
 @WebMvcTest
 @ActiveProfiles("integration-test")

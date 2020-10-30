@@ -1,8 +1,8 @@
 package no.nav.familie.dokument.storage
 
-import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.familie.dokument.storage.google.GcpDocumentNotFoundException
+import no.nav.familie.dokument.GcpDocumentNotFound
+import no.nav.familie.dokument.InvalidJsonSoknad
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("api/soknad")
@@ -23,7 +22,6 @@ class StonadController(@Autowired val storage: MellomLagerService,
                        @Autowired val objectMapper: ObjectMapper) {
 
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
-    private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
     @PostMapping(
             path = ["/{stonad}"],
@@ -45,7 +43,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         return try {
             val directory = contextHolder.hentFnr()
             ResponseEntity.ok(storage[directory, stønad.stønadKey])
-        }catch(e: GcpDocumentNotFoundException){
+        }catch(e: GcpDocumentNotFound){
             ResponseEntity.noContent().build()
         }
     }
@@ -62,7 +60,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         try {
             objectMapper.readTree(verdi);
         } catch (e: Exception) {
-            throw IllegalArgumentException("Forsøker å mellomlagre søknad som ikke er gyldig json-verdi")
+            throw InvalidJsonSoknad("Forsøker å mellomlagre søknad som ikke er gyldig json-verdi")
         }
     }
 

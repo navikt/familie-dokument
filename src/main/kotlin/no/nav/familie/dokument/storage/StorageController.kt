@@ -1,7 +1,8 @@
 package no.nav.familie.dokument.storage
 
+import no.nav.familie.dokument.GcpDocumentNotFound
+import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
-import no.nav.familie.dokument.storage.google.GcpDocumentNotFoundException
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
@@ -14,7 +15,6 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.io.ByteArrayInputStream
 import java.util.*
 
 @RestController
@@ -34,7 +34,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                       @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
 
         if (multipartFile.isEmpty) {
-            throw IllegalArgumentException("Dokumentet som lastes opp er tomt - size: [${multipartFile.size}] ")
+            throw InvalidDocumentSize("Dokumentet som lastes opp er tomt - size: [${multipartFile.size}] ")
         }
 
         val bytes = multipartFile.bytes
@@ -42,7 +42,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
         log.debug("Dokument lastet opp med størrelse (bytes): " + bytes.size)
 
         if (bytes.size > maxFileSizeInBytes) {
-            throw IllegalArgumentException("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
+            throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
         val directory = contextHolder.hentFnr()
@@ -56,13 +56,13 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
-                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<ByteArray> {
+                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         return try {
             val directory = contextHolder.hentFnr()
             val data = storage[directory, dokumentId]
             log.debug("Loaded file with {}", data)
-            ResponseEntity.ok(data)
-        } catch (e: GcpDocumentNotFoundException) {
+            ResponseEntity.ok(Ressurs.success(data))
+        } catch (e: GcpDocumentNotFound) {
             ResponseEntity.noContent().build()
         }
     }
