@@ -40,12 +40,8 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
-        return try {
-            val directory = contextHolder.hentFnr()
-            ResponseEntity.ok(storage[directory, stønad.stønadKey])
-        }catch(e: GcpDocumentNotFound){
-            ResponseEntity.noContent().build()
-        }
+        val directory = contextHolder.hentFnr()
+        return ResponseEntity.ok(storage[directory, stønad.stønadKey])
     }
 
     @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])

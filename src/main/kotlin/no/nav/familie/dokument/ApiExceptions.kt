@@ -10,5 +10,5 @@ class InvalidJsonSoknad(msg: String): IllegalArgumentException(msg)
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class InvalidDocumentSize(msg: String): IllegalArgumentException(msg)
 
-@ResponseStatus(HttpStatus.NO_CONTENT)
+@ResponseStatus(HttpStatus.NOT_FOUND)
 class GcpDocumentNotFound : RuntimeException("Finner ikke dokumentet i Google Storage")
