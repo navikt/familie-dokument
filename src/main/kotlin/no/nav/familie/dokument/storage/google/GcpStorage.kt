@@ -30,14 +30,8 @@ class GcpStorage(val bucketName: String, maxFileSizeMB: Int, val storage: Storag
     }
 
     operator fun get(directory: String, key: String): ByteArray {
-        return try {
-            storage.get(bucketName, makeKey(directory, key)).getContent()
-        } catch (e: StorageException) {
-            if (HttpStatus.SC_NOT_FOUND == e.code) {
-                throw GcpDocumentNotFound()
-            }
-            throw e
-        }
+        val blob = storage.get(BlobId.of(bucketName, makeKey(directory, key))) ?: throw GcpDocumentNotFound()
+        return blob.getContent()
     }
 
     fun delete(directory: String, key: String) {

@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage.integrationTest
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.cloud.storage.Blob
+import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
 import io.mockk.every
@@ -98,7 +99,7 @@ class StorageControllerIntegrasionTest {
             blob
         }
 
-        every { storageMock.get(any(), any<String>(), *anyVararg()) } returns blob
+        every { storageMock.get(any<BlobId>()) } returns blob
     }
 
     class RessurData{
@@ -128,8 +129,7 @@ class StorageControllerIntegrasionTest {
     @Test
     fun `Skal returnere 404 for å hent ukjent dokument`() {
         every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
-        every { storageMock.get(any(), any<String>(), *anyVararg()) } throws StorageException(HttpStatus.NOT_FOUND.value(),
-                                                                                              "Not Found")
+        every { storageMock.get(any<BlobId>()) } returns null
 
         mockMvc.get("/api/mapper/familie-dokument-test/ukjent-id") {
             accept = MediaType.APPLICATION_JSON

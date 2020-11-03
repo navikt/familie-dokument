@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage.integrationTest
 
 import com.google.cloud.storage.Blob
+import com.google.cloud.storage.BlobId
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
@@ -104,7 +105,7 @@ class StonadControllerIntegrasionTest {
             blob
         }
 
-        every{storageMock.get(any(), any<String>(), *anyVararg()) } returns blob
+        every{storageMock.get(any<BlobId>()) } returns blob
 
         mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
@@ -125,7 +126,7 @@ class StonadControllerIntegrasionTest {
     @Test
     fun `Skal returnere 404 for å hent ukjent dokument`() {
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
-        every{storageMock.get(any(), any<String>(), *anyVararg()) } throws StorageException(HttpStatus.NOT_FOUND.value(), "Not Found")
+        every{storageMock.get(any<BlobId>()) } returns null
 
         mockMvc.get("/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
