@@ -33,7 +33,7 @@ cors:
     - "https://familie-ba-sak.nais.adeo.no"
     - "https://familie-ba-soknad-api.nais.oera.no"
     - "https://familie-ba-mottak.nais.adeo.no"
-    -
+
 no.nav.security.jwt:
   issuers: selvbetjening
   issuer.selvbetjening:
