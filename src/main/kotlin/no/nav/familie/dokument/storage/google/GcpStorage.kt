@@ -24,14 +24,19 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
 
             val blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, makeKey(directory, key)))
                     .setContentType(mediaTypeValue).build()
+            val start = System.currentTimeMillis()
             storage.create(blobInfo, bytes)
+            LOG.info("Lagring av tok {}ms", (System.currentTimeMillis() - start))
         } catch (e: Exception) {
             throw RuntimeException("Feil oppsto ved lagring av fil mot gcp.", e)
         }
     }
 
     operator fun get(directory: String, key: String): ByteArray {
-        val blob = storage.get(BlobId.of(bucketName, makeKey(directory, key))) ?: throw GcpDocumentNotFound()
+        val start = System.currentTimeMillis()
+        val get = storage.get(BlobId.of(bucketName, makeKey(directory, key)))
+        LOG.info("Henting av tok {}ms", (System.currentTimeMillis() - start))
+        val blob = get ?: throw GcpDocumentNotFound()
         return blob.getContent()
     }
 
