@@ -57,14 +57,10 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
-        return try {
-            val directory = contextHolder.hentFnr()
-            val data = storage[directory, dokumentId]
-            log.debug("Loaded file with {}", data)
-            ResponseEntity.ok(Ressurs.success(data))
-        } catch (e: GcpDocumentNotFound) {
-            ResponseEntity.noContent().build()
-        }
+        val directory = contextHolder.hentFnr()
+        val data = storage[directory, dokumentId]
+        log.debug("Loaded file with {}", data)
+        return ResponseEntity.ok(Ressurs.success(data))
     }
 
     @Unprotected
