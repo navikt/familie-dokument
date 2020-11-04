@@ -4,6 +4,7 @@ import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
 import no.nav.familie.dokument.GcpDocumentNotFound
+import no.nav.familie.dokument.TimeLogger
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.InputStream
@@ -18,30 +19,26 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
         try {
             val bytes = IOUtils.toByteArray(data)
             LOG.debug("Bufret stream som gav antall bytes: ${bytes.size}")
-            if(bytes.size > maxFileSizeAfterEncryption){
+            if (bytes.size > maxFileSizeAfterEncryption) {
                 throw RuntimeException("GcpStorage feil: vedlegg overskrider filstørrelsesgrensen")
             }
 
             val blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, makeKey(directory, key)))
                     .setContentType(mediaTypeValue).build()
-            val start = System.currentTimeMillis()
-            storage.create(blobInfo, bytes)
-            LOG.info("Lagring av tok {}ms", (System.currentTimeMillis() - start))
+            TimeLogger.log({ storage.create(blobInfo, bytes) }, "GcpStorage::put")
         } catch (e: Exception) {
             throw RuntimeException("Feil oppsto ved lagring av fil mot gcp.", e)
         }
     }
 
     operator fun get(directory: String, key: String): ByteArray {
-        val start = System.currentTimeMillis()
-        val get = storage.get(BlobId.of(bucketName, makeKey(directory, key)))
-        LOG.info("Henting av tok {}ms", (System.currentTimeMillis() - start))
+        val get = TimeLogger.log({ storage.get(BlobId.of(bucketName, makeKey(directory, key))) }, "GcpStorage::get")
         val blob = get ?: throw GcpDocumentNotFound()
         return blob.getContent()
     }
 
     fun delete(directory: String, key: String) {
-        storage.delete(BlobId.of(bucketName, makeKey(directory, key)))
+        TimeLogger.log({ storage.delete(BlobId.of(bucketName, makeKey(directory, key))) }, "GcpStorage::delete")
         LOG.debug("Deleted file from bucket $key")
     }
 

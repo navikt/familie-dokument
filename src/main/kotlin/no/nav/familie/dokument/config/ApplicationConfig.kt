@@ -29,6 +29,14 @@ class ApplicationConfig {
     }
 
     @Bean
+    fun loggerFilter(): FilterRegistrationBean<LoggerFilter> {
+        val filterRegistration = FilterRegistrationBean<LoggerFilter>()
+        filterRegistration.filter = LoggerFilter()
+        filterRegistration.order = 2
+        return filterRegistration
+    }
+
+    @Bean
     @Primary
     fun objectMapper(): ObjectMapper {
         return objectMapper;

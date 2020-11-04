@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.storage.attachment
 
+import no.nav.familie.dokument.TimeLogger
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -20,11 +21,15 @@ class ImageConversionService {
     private data class ImageSize(val width: Float, val height: Float)
 
     fun convert(input: ByteArray): ByteArray {
+        return TimeLogger.log({ convertByteArray(input) }, "ImageConversionService::convert")
+    }
+
+    private fun convertByteArray(input: ByteArray): ByteArray {
         return PDDocument().use { document ->
             val imageStream = ByteArrayInputStream(input)
             val page = PDPage(PDRectangle.A4)
             document.addPage(page)
-            val image = toPortait(ImageIO.read(imageStream))
+            val image = TimeLogger.log({ toPortait(ImageIO.read(imageStream)) }, "ImageConversionService::toPortait")
 
             val quality = 1.0f
 
