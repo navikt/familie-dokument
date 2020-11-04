@@ -29,7 +29,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
             produces = [MediaType.APPLICATION_JSON_VALUE])
     fun mellomlagreSøknad(@PathVariable("stonad") stønad: StønadParameter,
                           @RequestBody(required = true) søknad: String): ResponseEntity<Unit> {
-        log.debug("Mellomlagrer søknad om overgangsstønad")
+        log.info("Mellomlagrer søknad om overgangsstønad")
 
         validerGyldigJson(søknad)
         val directory = contextHolder.hentFnr()
@@ -40,6 +40,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
+        log.info("Henter mellomlagret søknad")
         val directory = contextHolder.hentFnr()
         return ResponseEntity.ok(storage[directory, stønad.stønadKey])
     }

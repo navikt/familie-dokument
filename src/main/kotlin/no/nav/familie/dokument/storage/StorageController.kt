@@ -32,7 +32,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                  produces = [MediaType.APPLICATION_JSON_VALUE])
     fun addAttachment(@PathVariable("bucket") bucket: String,
                       @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
-
+        log.info("Lagrer vedlegg")
         if (multipartFile.isEmpty) {
             throw InvalidDocumentSize("Dokumentet som lastes opp er tomt - size: [${multipartFile.size}] ")
         }
@@ -57,9 +57,9 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
+        log.info("Henter vedlegg")
         val directory = contextHolder.hentFnr()
         val data = storage[directory, dokumentId]
-        log.debug("Loaded file with {}", data)
         return ResponseEntity.ok(Ressurs.success(data))
     }
 
