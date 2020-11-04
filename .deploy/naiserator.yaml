@@ -49,9 +49,6 @@ spec:
     outbound:
       external:
         - host: login.microsoftonline.com
-        {{#each externalHosts as |host|}}
-        - host: {{host}}
-        {{/each}}
   azure:
     application:
       enabled: true
