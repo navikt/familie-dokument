@@ -1,5 +1,6 @@
 {
   "ingresses": ["https://familie-dokument.prod-gcp.nais.io", "https://familie-dokument.nav.no"],
+  "externalHosts": [],
   "bucket_name" : "familie-dokument",
   "spring_profile" : "prod",
   "secret" : "familie-dokument-secret"
