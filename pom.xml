@@ -19,7 +19,7 @@
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>11</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>1.20200703124425_7e616f5</felles.version>
+        <felles.version>1.20201104091530_e00f4c4</felles.version>
         <aws-java-sdk-s3.version>1.11.820</aws-java-sdk-s3.version>
         <kotlin.version>1.4.0</kotlin.version>
         <mockk.version>1.9.3</mockk.version>
@@ -127,13 +127,6 @@
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-spring</artifactId>
             <version>${token-validation-spring.version}</version>
-        </dependency>
-
-        <!-- Storage -->
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-            <version>${aws-java-sdk-s3.version}</version>
         </dependency>
 
         <dependency>

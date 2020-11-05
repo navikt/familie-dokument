@@ -18,7 +18,7 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
         try {
             val bytes = IOUtils.toByteArray(data)
             LOG.debug("Bufret stream som gav antall bytes: ${bytes.size}")
-            if(bytes.size > maxFileSizeAfterEncryption){
+            if (bytes.size > maxFileSizeAfterEncryption) {
                 throw RuntimeException("GcpStorage feil: vedlegg overskrider filstørrelsesgrensen")
             }
 

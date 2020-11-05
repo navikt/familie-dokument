@@ -3,6 +3,7 @@ package no.nav.familie.dokument.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.log.filter.LogFilter
+import no.nav.familie.log.filter.RequestTimeFilter
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
 import org.springframework.boot.web.servlet.FilterRegistrationBean
@@ -25,6 +26,14 @@ class ApplicationConfig {
         val filterRegistration = FilterRegistrationBean<LogFilter>()
         filterRegistration.filter = LogFilter()
         filterRegistration.order = 1
+        return filterRegistration
+    }
+
+    @Bean
+    fun requestTimeFilter(): FilterRegistrationBean<RequestTimeFilter> {
+        val filterRegistration = FilterRegistrationBean<RequestTimeFilter>()
+        filterRegistration.filter = RequestTimeFilter()
+        filterRegistration.order = 2
         return filterRegistration
     }
 

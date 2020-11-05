@@ -1,7 +1,6 @@
 package no.nav.familie.dokument.storage
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.familie.dokument.GcpDocumentNotFound
 import no.nav.familie.dokument.InvalidJsonSoknad
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
@@ -60,6 +59,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         }
     }
 
+    @Suppress("unused")
     enum class StønadParameter(val stønadKey: String) {
         overgangsstonad("overgangsstønad"),
         barnetilsyn("barnetilsyn"),

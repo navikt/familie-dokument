@@ -1,10 +1,10 @@
 package no.nav.familie.dokument.storage.encryption
 
+import java.io.InputStream
+import java.security.GeneralSecurityException
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.spec.GCMParameterSpec
-import java.io.InputStream
-import java.security.GeneralSecurityException
 
 class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
 
