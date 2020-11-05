@@ -32,9 +32,16 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
     }
 
     operator fun get(directory: String, key: String): ByteArray {
+        TimeLogger.log({
+                           try {
+                               storage.readAllBytes(BlobId.of(bucketName, makeKey(directory, key)))
+                           } catch (e: Exception) {
+                               LOG.info("Feilet: ${e.cause} ${e.message}")
+                           }
+                       }, "GcpStorage::readAllBytes")
         val get = TimeLogger.log({ storage.get(BlobId.of(bucketName, makeKey(directory, key))) }, "GcpStorage::get")
         val blob = get ?: throw GcpDocumentNotFound()
-        return blob.getContent()
+        return TimeLogger.log({ blob.getContent() }, "GcpStorage::getContent")
     }
 
     fun delete(directory: String, key: String) {
