@@ -53,7 +53,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         val directory = contextHolder.hentFnr()
         log.debug("Sletter mellomlagret overgangsstønad")
         storage.delete(directory, stønad.stønadKey)
-        return ResponseEntity.notFound().build()
+        return ResponseEntity.noContent().build()
     }
 
     private fun validerGyldigJson(verdi: String) {
