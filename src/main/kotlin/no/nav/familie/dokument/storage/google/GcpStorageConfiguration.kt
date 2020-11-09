@@ -28,7 +28,7 @@ class GcpStorageConfiguration {
     }
 
     @Bean
-    fun storage(retrySettings: RetrySettings): Storage{
+    fun storage(retrySettings: RetrySettings): Storage {
         val storage = StorageOptions
                 .newBuilder()
                 .setRetrySettings(retrySettings)

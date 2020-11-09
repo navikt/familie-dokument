@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage.encryption
 
-import no.nav.familie.dokument.storage.google.GcpStorage
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.ATTACHMENT_GCP_STORAGE
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.STONAD_GCP_STORAGE
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
 
 @Configuration
@@ -28,17 +28,21 @@ class EncryptedStorageConfiguration {
 
     @Bean(ATTACHMENT_ENCRYPTED_STORAGE)
     internal fun attachmentEncryptedStorage(@Autowired contextHolder: TokenValidationContextHolder,
-                                  @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper, encryptor: Encryptor): EncryptedStorage {
+                                            @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper,
+                                            encryptor: Encryptor): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 
+    @Profile("!dev")
     @Bean(STONAD_ENCRYPTED_STORAGE)
     internal fun stonadEncryptedStorage(@Autowired contextHolder: TokenValidationContextHolder,
-                                            @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper, encryptor: Encryptor): EncryptedStorage {
+                                        @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper,
+                                        encryptor: Encryptor): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 
-    companion object{
+    companion object {
+
         const val ATTACHMENT_ENCRYPTED_STORAGE = "attachmentEncryptedStorage"
         const val STONAD_ENCRYPTED_STORAGE = "stonadEncryptedStorage"
     }

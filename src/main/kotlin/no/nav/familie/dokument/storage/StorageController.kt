@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage
 
-import no.nav.familie.dokument.GcpDocumentNotFound
 import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.kontrakter.felles.Ressurs
@@ -59,7 +58,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
         val directory = contextHolder.hentFnr()
         val data = storage[directory, dokumentId]
-        log.debug("Loaded file with {}", data)
+        log.debug("Loaded file $dokumentId")
         return ResponseEntity.ok(Ressurs.success(data))
     }
 

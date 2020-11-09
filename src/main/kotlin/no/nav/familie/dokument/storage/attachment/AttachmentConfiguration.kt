@@ -3,7 +3,6 @@ package no.nav.familie.dokument.storage.attachment
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.ATTACHMENT_ENCRYPTED_STORAGE
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
