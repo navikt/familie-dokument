@@ -124,14 +124,14 @@ class StonadControllerIntegrasionTest {
     }
 
     @Test
-    fun `Skal returnere 404 for å hent ukjent dokument`() {
+    fun `Skal returnere 201 for å hent ukjent dokument`() {
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
         every{storageMock.get(any<BlobId>()) } returns null
 
         mockMvc.get("/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isNotFound }
+            status { isNoContent }
         }
     }
 

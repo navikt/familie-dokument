@@ -44,7 +44,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         return try {
             ResponseEntity.ok(storage[directory, stønad.stønadKey])
         } catch (e: GcpDocumentNotFound) {
-            ResponseEntity.notFound().build()
+            ResponseEntity.noContent().build()
         }
     }
 
