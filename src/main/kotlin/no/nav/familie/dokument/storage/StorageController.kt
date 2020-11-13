@@ -49,9 +49,8 @@ class StorageController(@Autowired val storage: AttachmentStorage,
 
         val uuid = UUID.randomUUID().toString()
 
-        val file = ByteArrayInputStream(bytes)
         try {
-            storage.put(directory, uuid, file)
+            storage.put(directory, uuid, bytes)
         } catch (e: RuntimeException) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()
         }

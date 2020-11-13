@@ -1,9 +1,8 @@
 package no.nav.familie.dokument.storage.attachment
 
 import org.apache.tika.Tika
-import java.lang.RuntimeException
 
-class AttachmentToStorableFormatConverter internal constructor(private val imageConversionService: ImageConversionService) {
+class AttachmentToStorableFormatConverter(private val imageConversionService: ImageConversionService) {
 
     fun toStorageFormat(input: ByteArray): ByteArray {
         val detectedType = Format.fromMimeType(Tika().detect(input))
@@ -12,7 +11,7 @@ class AttachmentToStorableFormatConverter internal constructor(private val image
         return if (Format.PDF == detectedType) {
             input
         } else {
-            imageConversionService.convert(input, detectedType)
+            imageConversionService.convert(input)
         }
     }
 

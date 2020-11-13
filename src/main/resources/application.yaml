@@ -24,7 +24,6 @@ attachment.max.size.mb: 20
 
 FAMILIE_DOKUMENT_S3_REGION: us-east-1
 FAMILIE_DOKUMENT_S3_ENDPOINT: http://objectstore.rook-ceph
-SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL: http://pdf-gen.default/api/
 
 cors:
   allowed_origins:
@@ -35,7 +34,7 @@ cors:
 no.nav.security.jwt:
   issuers: selvbetjening
   issuer.selvbetjening:
-    discoveryurl: https://login.microsoftonline.com/navnob2c.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_idporten
-    accepted_audience: ${ACCEPTEDAUDIENCE}
+    discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
+    accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     proxyurl: http://webproxy-nais.nav.no:8088
     cookie_name: selvbetjening-idtoken
