@@ -104,11 +104,10 @@ class PdfGenerartorTest {
     @Test
     @Throws(IOException::class)
     fun testPdfGeneration() {
-        val html = getDocument("minimal1.html")
-        val css = getDocument("minimal1.css")
-        val pdf = pdfService.lagPdf(html, css)
+        val html = getDocument("eksempel1.html")
+        val pdf = pdfService.lagPdf(html)
         Assert.assertTrue(isPdf(pdf))
-        Assert.assertTrue(pdfsAreEqual("minimal1.pdf", pdf))
+        Assert.assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
     }
 
     companion object {

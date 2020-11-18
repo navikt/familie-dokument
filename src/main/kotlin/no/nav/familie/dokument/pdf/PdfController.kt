@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage
 
-import no.nav.familie.dokument.pdf.HtmlDokument
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.http.HttpStatus
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController
 class PdfController(val pdfService: PdfService) {
 
     @PostMapping
-    fun lagPdf(@RequestBody htmlDokument: HtmlDokument): ResponseEntity<*> {
+    fun lagPdf(@RequestBody html: String): ResponseEntity<*> {
         return ResponseEntity(
-            pdfService.lagPdf(htmlDokument.html, htmlDokument.css),
+            pdfService.lagPdf(html),
             pdfService.lagPdfHeadere("dokument"),
             HttpStatus.OK
         )
