@@ -38,10 +38,14 @@ class PdfService() {
         val cssNavn = UUID.randomUUID()
         xhtmlDokument.head().append("<link rel='stylesheet' type='text/css' href='${cssNavn}.css'>")
         val tempFolder = lagMidlerditigMappe()
-        val midlertidigCssFile = lagCssFil(tempFolder.absolutePath, cssNavn, css)
-        val pdf = genererPdf(xhtmlDokument, tempFolder.toURI().toString())
-        midlertidigCssFile.delete()
-        return pdf
+        try {
+            val midlertidigCssFile = lagCssFil(tempFolder.absolutePath, cssNavn, css)
+            val pdf = genererPdf(xhtmlDokument, tempFolder.toURI().toString())
+            midlertidigCssFile.delete()
+            return pdf
+        } catch (e: IOException) {
+            throw RuntimeException("Feil ved generering av pdf", e)
+        }
     }
 
     private fun lagMidlerditigMappe(): File {
@@ -51,7 +55,7 @@ class PdfService() {
         return tempFolder
     }
 
-    private fun lagCssFil(tempFolderPath: String, cssNavn: UUID?, css: String): File {
+    private fun lagCssFil(tempFolderPath: String, cssNavn: UUID, css: String): File {
         val midlertidigCssFil = File("${tempFolderPath}/${cssNavn}.css")
         midlertidigCssFil.writeBytes(css.toByteArray(StandardCharsets.UTF_8))
         return midlertidigCssFil
