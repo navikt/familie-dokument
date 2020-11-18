@@ -20,7 +20,7 @@ class PdfController(val pdfService: PdfService) {
     fun lagPdf(@RequestBody htmlDokument: HtmlDokument): ResponseEntity<*> {
         return ResponseEntity(
             pdfService.lagPdf(htmlDokument.html, htmlDokument.css),
-            pdfService.lagPdfHeadere("brev"),
+            pdfService.lagPdfHeadere("dokument"),
             HttpStatus.OK
         )
     }

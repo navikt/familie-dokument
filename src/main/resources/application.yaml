@@ -38,3 +38,6 @@ no.nav.security.jwt:
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     proxyurl: http://webproxy-nais.nav.no:8088
     cookie_name: selvbetjening-idtoken
+
+pdf:
+  path.content.root: ./content/

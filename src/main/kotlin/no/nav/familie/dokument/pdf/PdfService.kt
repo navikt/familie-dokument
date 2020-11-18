@@ -7,6 +7,8 @@ import org.jsoup.helper.W3CDom
 import org.jsoup.nodes.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -19,10 +21,11 @@ import java.nio.file.Path
 import java.util.*
 
 @Service
-class PdfService() {
+class PdfService @Autowired constructor(
+    @param:Value("\${pdf.path.content.root}") private val contentRoot: Path
+) {
 
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
-    val contentRoot = Path.of("./content/")
 
     fun lagPdf(html: String, css: String?): ByteArray {
         log.debug("Generer pdf")
