@@ -178,6 +178,20 @@
             <version>${token-validation-spring.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- PDFgen -->
+        <dependency>
+            <groupId>com.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-core</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-pdfbox</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <!-- PDFgen -->
     </dependencies>
 
     <build>
