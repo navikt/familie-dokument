@@ -8,10 +8,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import org.springframework.util.FileCopyUtils
 import org.w3c.dom.Document
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -63,7 +65,8 @@ class PdfService @Autowired constructor(
                     BaseRendererBuilder.FontStyle.ITALIC,
                     true
                 )
-                //.usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
+                .useColorProfile(colorProfile)
+                .usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
                 .withW3cDocument(w3cDokument, "")
                 .toStream(outputStream)
                 .buildPdfRenderer()
@@ -82,5 +85,15 @@ class PdfService @Autowired constructor(
         headers.contentDisposition = contentDisposition.build()
         headers.cacheControl = "must-revalidate, post-check=0, pre-check=0"
         return headers
+    }
+
+    companion object {
+
+        @get:Throws(IOException::class)
+        val colorProfile: ByteArray
+            get() {
+                val cpr = ClassPathResource("sRGB.icc")
+                return FileCopyUtils.copyToByteArray(cpr.inputStream)
+            }
     }
 }
