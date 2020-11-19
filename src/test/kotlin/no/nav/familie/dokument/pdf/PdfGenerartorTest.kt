@@ -28,7 +28,7 @@ class PdfGenerartorTest {
 
     private fun getDocument(fixtureName: String): String {
         return IOUtils.toString(
-            this.javaClass.getResourceAsStream("$PDF_RESOURSE_PATH/$fixtureName"),
+            this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
             StandardCharsets.UTF_8
         )
     }
@@ -90,7 +90,7 @@ class PdfGenerartorTest {
             System.err.println("Found problems with test case ($resource):")
             System.err.println(problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
                                    .collect(Collectors.joining("\n    ", "[\n    ", "\n]")))
-            System.err.println("For test case (" + resource + ") writing failure artifacts to '" + TEST_OUTPUT_PATH + "'")
+            System.err.println("For test case ($resource) writing failure artifacts to '$TEST_OUTPUT_PATH'")
             val outPdf = File(TEST_OUTPUT_PATH, "$resource---actual.pdf")
             Files.write(outPdf.toPath(), actualPdfBytes)
         }
