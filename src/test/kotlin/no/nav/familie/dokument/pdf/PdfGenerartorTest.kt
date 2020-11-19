@@ -16,7 +16,7 @@ import javax.imageio.ImageIO
 
 class PdfGenerartorTest {
 
-    private val pdfService = PdfService(testContentPath!!)
+    private val pdfService = PdfService(testContentRoot)
 
     @Throws(IOException::class)
     private fun getDocument(fixtureName: String): String {
@@ -113,16 +113,10 @@ class PdfGenerartorTest {
     companion object {
 
         private const val TEST_OUTPUT_PATH = "target/regression-tests/"
-        private const val PDF_RESOURSE_PATH = "/pdf"
-        val testContentPath: Path?
-            get() = try {
-                Paths.get(
-                    this::class.java.protectionDomain.codeSource.location.toURI()
-                ).resolve(
-                    Paths.get("pdf")
-                ).toAbsolutePath()
-            } catch (e: URISyntaxException) {
-                null
-            }
+        private const val PDF_RESOURSE_PATH = "pdf"
+        val testContentRoot = Paths.get(
+            this::
+            class.java.protectionDomain.codeSource.location.toURI()
+        ).toAbsolutePath()
     }
 }
