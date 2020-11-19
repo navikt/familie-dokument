@@ -76,7 +76,6 @@ class PdfService @Autowired constructor(
 
     companion object {
 
-        @get:Throws(IOException::class)
         val colorProfile: ByteArray
             get() {
                 val cpr = ClassPathResource("sRGB.icc")
