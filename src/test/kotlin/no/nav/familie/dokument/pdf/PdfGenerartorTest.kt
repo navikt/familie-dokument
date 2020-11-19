@@ -70,7 +70,6 @@ class PdfGenerartorTest {
         return false
     }
 
-    @Throws(IOException::class)
     private fun pdfsAreEqual(resource: String, actualPdfBytes: ByteArray): Boolean {
         Files.createDirectories(Paths.get(TEST_OUTPUT_PATH))
 
