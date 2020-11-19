@@ -1,15 +1,13 @@
 package no.nav.familie.dokument.pdf
 
 import com.openhtmltopdf.pdfboxout.visualtester.PdfVisualTester
+import no.nav.familie.dokument.TestUtil.toByteArray
 import org.apache.commons.io.IOUtils
 import org.junit.Assert
 import org.junit.Test
 import java.io.File
-import java.io.IOException
-import java.net.URISyntaxException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.stream.Collectors
 import javax.imageio.ImageIO
@@ -77,9 +75,8 @@ class PdfGenerartorTest {
         Files.createDirectories(Paths.get(TEST_OUTPUT_PATH))
 
         // Load expected PDF document from resources, change class below.
-        var expectedPdfBytes: ByteArray
-        PdfGenerartorTest::class.java.getResourceAsStream("$PDF_RESOURSE_PATH/$resource")
-            .use { expectedIs -> expectedPdfBytes = IOUtils.toByteArray(expectedIs) }
+        val expectedPdfBytes = toByteArray("$PDF_RESOURSE_PATH/$resource")
+
         // Get a list of results.
         val problems = PdfVisualTester.comparePdfDocuments(
             expectedPdfBytes, actualPdfBytes, resource, false
