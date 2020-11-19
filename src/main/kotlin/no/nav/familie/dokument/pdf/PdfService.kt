@@ -6,8 +6,6 @@ import org.jsoup.Jsoup
 import org.jsoup.helper.W3CDom
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
@@ -15,12 +13,9 @@ import org.w3c.dom.Document
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
-import java.nio.file.Path
 
 @Service
-class PdfService @Autowired constructor(
-    @param:Value("\${pdf.path.content.root}") private val contentRoot: Path
-) {
+class PdfService {
 
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -35,7 +30,7 @@ class PdfService @Autowired constructor(
     }
 
     private fun getFont(fontName: String): File {
-        return File(this::class.java.classLoader.getResource("/fonts/$fontName")!!.file)
+        return ClassPathResource("/fonts/$fontName").file
     }
 
     fun genererPdf(w3cDokument: Document, outputStream: ByteArrayOutputStream) {

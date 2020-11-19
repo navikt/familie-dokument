@@ -14,7 +14,7 @@ import javax.imageio.ImageIO
 
 class PdfGenerartorTest {
 
-    private val pdfService = PdfService(testContentRoot)
+    private val pdfService = PdfService()
 
     @Test
     fun testPdfGeneration() {
@@ -107,6 +107,5 @@ class PdfGenerartorTest {
 
         private const val TEST_OUTPUT_PATH = "target/regression-tests/"
         private const val PDF_RESOURSE_PATH = "pdf"
-        val testContentRoot = Paths.get(this::class.java.protectionDomain.codeSource.location.toURI()).toAbsolutePath()
     }
 }
