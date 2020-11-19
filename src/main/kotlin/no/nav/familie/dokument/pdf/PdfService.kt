@@ -9,13 +9,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
-import org.springframework.http.ContentDisposition
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import org.w3c.dom.Document
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
 import java.nio.file.Path
 
@@ -36,8 +34,8 @@ class PdfService @Autowired constructor(
         return pdfOutputStream.toByteArray()
     }
 
-    private fun getFont(contentRoot: Path, fontName: String): Path {
-        return contentRoot.resolve("fonts/$fontName")
+    private fun getFont(fontName: String): File {
+        return File(this::class.java.classLoader.getResource("/fonts/$fontName")!!.file)
     }
 
     fun genererPdf(w3cDokument: Document, outputStream: ByteArrayOutputStream) {
@@ -45,21 +43,21 @@ class PdfService @Autowired constructor(
         try {
             builder
                 .useFont(
-                    getFont(contentRoot, "SourceSansPro-Regular.ttf").toFile(),
+                    getFont("SourceSansPro-Regular.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.NORMAL,
                     true
                 )
                 .useFont(
-                    getFont(contentRoot, "SourceSansPro-Bold.ttf").toFile(),
+                    getFont("SourceSansPro-Bold.ttf"),
                     "Source Sans Pro",
                     700,
                     BaseRendererBuilder.FontStyle.OBLIQUE,
                     true
                 )
                 .useFont(
-                    getFont(contentRoot, "SourceSansPro-It.ttf").toFile(),
+                    getFont("SourceSansPro-It.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.ITALIC,
