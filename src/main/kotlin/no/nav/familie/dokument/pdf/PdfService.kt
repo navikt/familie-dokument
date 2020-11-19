@@ -74,17 +74,6 @@ class PdfService @Autowired constructor(
         }
     }
 
-    fun lagPdfHeadere(malNavn: String): HttpHeaders {
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_PDF
-        val filename = "$malNavn.pdf"
-        val contentDisposition = ContentDisposition.builder("attachment")
-        contentDisposition.filename(filename)
-        headers.contentDisposition = contentDisposition.build()
-        headers.cacheControl = "must-revalidate, post-check=0, pre-check=0"
-        return headers
-    }
-
     companion object {
 
         @get:Throws(IOException::class)
