@@ -18,7 +18,14 @@ class PdfGenerartorTest {
 
     private val pdfService = PdfService(testContentRoot)
 
-    @Throws(IOException::class)
+    @Test
+    fun testPdfGeneration() {
+        val html = getDocument("eksempel1.html")
+        val pdf = pdfService.lagPdf(html)
+        Assert.assertTrue(isPdf(pdf))
+        Assert.assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
+    }
+
     private fun getDocument(fixtureName: String): String {
         return IOUtils.toString(
             this.javaClass.getResourceAsStream("$PDF_RESOURSE_PATH/$fixtureName"),
@@ -99,15 +106,6 @@ class PdfGenerartorTest {
         }
         return problems.isEmpty()
 
-    }
-
-    @Test
-    @Throws(IOException::class)
-    fun testPdfGeneration() {
-        val html = getDocument("eksempel1.html")
-        val pdf = pdfService.lagPdf(html)
-        Assert.assertTrue(isPdf(pdf))
-        Assert.assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
     }
 
     companion object {
