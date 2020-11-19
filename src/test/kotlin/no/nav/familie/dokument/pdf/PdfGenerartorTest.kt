@@ -87,8 +87,7 @@ class PdfGenerartorTest {
             System.err.println(problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
                                    .collect(Collectors.joining("\n    ", "[\n    ", "\n]")))
             System.err.println("For test case ($resource) writing failure artifacts to '$TEST_OUTPUT_PATH'")
-            val outPdf = File(TEST_OUTPUT_PATH, "$resource---actual.pdf")
-            Files.write(outPdf.toPath(), actualPdfBytes)
+            File(TEST_OUTPUT_PATH, "$resource---actual.pdf").writeBytes(actualPdfBytes)
         }
         for (result in problems) {
             if (result.testImages != null) {
