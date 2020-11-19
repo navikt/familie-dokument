@@ -91,11 +91,11 @@ class PdfGenerartorTest {
         }
         for (result in problems) {
             if (result.testImages != null) {
-                var output = File(TEST_OUTPUT_PATH, resource + "---" + result.pageNumber + "---diff.png")
+                var output = File(TEST_OUTPUT_PATH, "$resource---${result.pageNumber}---diff.png")
                 ImageIO.write(result.testImages.createDiff(), "png", output)
-                output = File(TEST_OUTPUT_PATH, resource + "---" + result.pageNumber + "---actual.png")
+                output = File(TEST_OUTPUT_PATH, "$resource---${result.pageNumber}---actual.png")
                 ImageIO.write(result.testImages.actual, "png", output)
-                output = File(TEST_OUTPUT_PATH, resource + "---" + result.pageNumber + "---expected.png")
+                output = File(TEST_OUTPUT_PATH, "$resource---${result.pageNumber}---expected.png")
                 ImageIO.write(result.testImages.expected, "png", output)
             }
         }
