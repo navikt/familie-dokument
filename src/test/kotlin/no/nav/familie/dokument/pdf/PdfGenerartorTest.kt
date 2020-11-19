@@ -82,7 +82,7 @@ class PdfGenerartorTest {
         )
 
         // Get a list of results.
-        if (!problems.isEmpty()) {
+        if (problems.isNotEmpty()) {
             System.err.println("Found problems with test case ($resource):")
             System.err.println(problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
                                    .collect(Collectors.joining("\n    ", "[\n    ", "\n]")))
