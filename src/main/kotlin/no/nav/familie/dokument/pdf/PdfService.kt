@@ -2,6 +2,7 @@ package no.nav.familie.dokument.pdf
 
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import org.jsoup.Jsoup
 import org.jsoup.helper.W3CDom
 import org.slf4j.Logger
@@ -59,6 +60,7 @@ class PdfService {
                     true
                 )
                 .useColorProfile(colorProfile)
+                .useSVGDrawer(BatikSVGDrawer())
                 .usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
                 .withW3cDocument(w3cDokument, "")
                 .toStream(outputStream)
