@@ -41,7 +41,11 @@ class StonadController(@Autowired val storage: MellomLagerService,
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
         val directory = contextHolder.hentFnr()
-        return ResponseEntity.ok(storage[directory, stønad.stønadKey])
+        return try {
+            ResponseEntity.ok(storage[directory, stønad.stønadKey])
+        } catch (e: GcpDocumentNotFound) {
+            ResponseEntity.noContent().build()
+        }
     }
 
     @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -49,7 +53,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         val directory = contextHolder.hentFnr()
         log.debug("Sletter mellomlagret overgangsstønad")
         storage.delete(directory, stønad.stønadKey)
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        return ResponseEntity.noContent().build()
     }
 
     private fun validerGyldigJson(verdi: String) {
@@ -60,6 +64,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
         }
     }
 
+    @Suppress("unused")
     enum class StønadParameter(val stønadKey: String) {
         overgangsstonad("overgangsstønad"),
         barnetilsyn("barnetilsyn"),

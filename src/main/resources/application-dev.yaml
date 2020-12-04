@@ -14,7 +14,6 @@ no.nav.security.jwt:
     cookie_name: localhost-idtoken
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
-SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL: #mockes ut lokalt
 
 gcp.storage.bucketname: not-a-real-name
 

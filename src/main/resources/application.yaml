@@ -23,17 +23,17 @@ management:
 attachment.max.size.mb: 20
 storage_service.timeout.ms: 3000
 
-SOKNAD_PDF_SVG_SUPPORT_GENERATOR_URL: http://pdf-gen.default/api/
-
 cors:
   allowed_origins:
     - "https://familie-ef-soknad.nais.oera.no"
-    - "https://www.nav.no/familie/alene-med-barn/soknad"
+    - "https://www.nav.no"
     - "https://familie-ef-soknad-api.nais.oera.no"
     - "https://familie-ba-sak.nais.adeo.no"
     - "https://familie-ba-soknad-api.nais.oera.no"
     - "https://familie-ba-mottak.nais.adeo.no"
-    -
+    - "https://familie-ba-mottak.nais.adeo.no"
+    - "https://familie-dokument.intern.nav.no"
+
 no.nav.security.jwt:
   issuers: selvbetjening
   issuer.selvbetjening:
