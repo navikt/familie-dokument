@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.pdf
 
+import com.openhtmltopdf.extend.FSSupplier
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import org.w3c.dom.Document
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.IOException
+import java.io.InputStream
 
 @Service
 class PdfService {
@@ -30,8 +31,11 @@ class PdfService {
         return pdfOutputStream.toByteArray()
     }
 
-    private fun getFont(fontName: String): File {
-        return ClassPathResource("/fonts/$fontName").file
+    private class FontSupplier(val fontName: String) : FSSupplier<InputStream> {
+
+        override fun supply(): InputStream {
+            return ClassPathResource("/fonts/$fontName").inputStream
+        }
     }
 
     fun genererPdf(w3cDokument: Document, outputStream: ByteArrayOutputStream) {
@@ -39,21 +43,21 @@ class PdfService {
         try {
             builder
                 .useFont(
-                    getFont("SourceSansPro-Regular.ttf"),
+                    FontSupplier("SourceSansPro-Regular.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.NORMAL,
                     true
                 )
                 .useFont(
-                    getFont("SourceSansPro-Bold.ttf"),
+                    FontSupplier("SourceSansPro-Bold.ttf"),
                     "Source Sans Pro",
                     700,
                     BaseRendererBuilder.FontStyle.OBLIQUE,
                     true
                 )
                 .useFont(
-                    getFont("SourceSansPro-It.ttf"),
+                    FontSupplier("SourceSansPro-It.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.ITALIC,
