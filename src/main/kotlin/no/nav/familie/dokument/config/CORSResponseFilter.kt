@@ -1,11 +1,9 @@
 package no.nav.familie.dokument.config
 
-import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.io.IOException
-import java.util.*
 import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -39,10 +37,6 @@ class CORSResponseFilter(val corsProperties: CorsProperties) : Filter {
     }
 
     private fun erCorsOk(request: HttpServletRequest): Boolean {
-        val headerNames: Enumeration<String> = request.headerNames
-        while (headerNames.hasMoreElements()) {
-            LoggerFactory.getLogger(this::class.java).info("Header: " + request.getHeader(headerNames.nextElement()))
-        }
         val (allowedOrigins) = corsProperties
         return allowedOrigins.contains(request.getHeader("Origin"))
     }
