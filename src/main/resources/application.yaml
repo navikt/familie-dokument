@@ -32,7 +32,6 @@ cors:
     - "https://familie-ba-soknad-api.nais.oera.no"
     - "https://familie-ba-mottak.nais.adeo.no"
     - "https://familie-ba-mottak.nais.adeo.no"
-    - "https://familie-brev.dev.intern.nav.no"
     - "https://familie-brev.intern.nav.no"
 
 no.nav.security.jwt:

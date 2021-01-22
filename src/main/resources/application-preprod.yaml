@@ -7,6 +7,7 @@ cors:
     - "https://familie-ba-soknad-api.dev-nav.no"
     - "https://familie-ba-mottak.dev.adeo.no"
     - "https://familie-brev.dev.intern.nav.no"
+    - "http://familie-brev.dev.intern.nav.no"
 
 no.nav.security.jwt:
   issuers: selvbetjening
