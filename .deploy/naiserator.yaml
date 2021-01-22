@@ -49,7 +49,6 @@ spec:
     inbound:
       rules:
         - application: familie-brev
-          namespace: teamfamilie
     outbound:
       external:
         - host: login.microsoftonline.com
