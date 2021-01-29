@@ -5,9 +5,7 @@ import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
+import io.mockk.*
 import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
 import no.nav.familie.dokument.storage.StorageController

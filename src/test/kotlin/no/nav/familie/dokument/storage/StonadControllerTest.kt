@@ -8,11 +8,13 @@ import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
-import java.lang.IllegalArgumentException
+import java.security.MessageDigest
+import java.util.*
 
 internal class StonadControllerTest {
 
@@ -23,7 +25,7 @@ internal class StonadControllerTest {
     internal fun setUp() {
         storageMock = mockk<MellomLagerService>()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
-        stonadController = StonadController(storageMock, contextHolderMock, objectMapper)
+        stonadController = StonadController(storageMock, contextHolderMock, objectMapper, "pepper")
 
         every { contextHolderMock.hentFnr() } returns "12345678901"
         every { storageMock.put(any(), any(), any()) } just Runs
@@ -44,4 +46,7 @@ internal class StonadControllerTest {
                                                ugyldigJson)
         }
     }
+
+
+
 }

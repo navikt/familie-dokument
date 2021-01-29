@@ -21,9 +21,12 @@ import java.util.*
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
-                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int) {
+                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
+                        @Value("\${FAMILIE_DOKUMENT_FNR_SECRET_SALT}")
+                        val pepper: String) {
 
     private val secureLogger = LoggerFactory.getLogger("secureLogger")
+
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(path = ["{bucket}"],
@@ -44,7 +47,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
             throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
-        val directory = contextHolder.hentFnr()
+        val directory = contextHolder.hentFnrHash(pepper)
 
         val uuid = UUID.randomUUID().toString()
 
@@ -56,7 +59,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
-        val directory = contextHolder.hentFnr()
+        val directory = contextHolder.hentFnrHash(pepper)
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
         return ResponseEntity.ok(Ressurs.success(data))
