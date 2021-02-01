@@ -72,4 +72,4 @@ spec:
     buckets:
       - name: {{bucket_name}}
         cascadingDelete: false
-        retentionPeriodDays: 1
+        retentionPeriodDays: 2
