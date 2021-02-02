@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -34,15 +35,13 @@ internal class TokenValidationContextHolderExtentionTest {
         every { tokenValidationContextHolderMock.hentFnr() } returns fnr
         val directory =
                 tokenValidationContextHolderMock.hentFnrHash(pepper)
-        Assertions.assertThat(directory).hasSize(44)
-        println("Size: ${directory.length}")
-
+        assertThat(directory).hasSize(44)
     }
 
     @Test
     internal fun `Hent mappe for bruker skal returnere noe`() {
         val directory = tokenValidationContextHolderMock.hentFnrHash("pepper")
-        Assertions.assertThat(directory).isNotBlank
+        assertThat(directory).isNotBlank
     }
 
     @Test
@@ -56,7 +55,7 @@ internal class TokenValidationContextHolderExtentionTest {
     internal fun `Hent mappe for bruker skal returnere samme directory ved likt pepper`() {
         val directory = tokenValidationContextHolderMock.hentFnrHash("pepper")
         val directory2 = tokenValidationContextHolderMock.hentFnrHash("pepper")
-        Assertions.assertThat(directory).isEqualTo(directory2)
+        assertThat(directory).isEqualTo(directory2)
     }
 
 
@@ -64,6 +63,6 @@ internal class TokenValidationContextHolderExtentionTest {
     internal fun `Hent mappe for bruker skal returnere ulikt directory ved ulikt pepper`() {
         val directory = tokenValidationContextHolderMock.hentFnrHash("pepper")
         val directory2 = tokenValidationContextHolderMock.hentFnrHash("salt")
-        Assertions.assertThat(directory).isNotEqualTo(directory2)
+        assertThat(directory).isNotEqualTo(directory2)
     }
 }
