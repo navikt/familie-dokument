@@ -11,6 +11,7 @@ import no.nav.familie.dokument.config.IntegrationTestConfig
 import no.nav.familie.dokument.storage.StorageController
 import no.nav.familie.dokument.storage.attachment.AttachmentConfiguration
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
+import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration
 import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.kontrakter.felles.Ressurs
@@ -36,7 +37,8 @@ import kotlin.test.assertEquals
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,
     ApiExceptionHandler::class,
-    IntegrationTestConfig::class])
+    IntegrationTestConfig::class,
+    Hasher::class])
 @WebMvcTest
 @ActiveProfiles("integration-test")
 class StorageControllerIntegrasionTest {

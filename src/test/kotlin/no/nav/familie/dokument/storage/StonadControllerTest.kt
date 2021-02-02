@@ -4,6 +4,7 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
@@ -25,7 +26,7 @@ internal class StonadControllerTest {
     internal fun setUp() {
         storageMock = mockk<MellomLagerService>()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
-        stonadController = StonadController(storageMock, contextHolderMock, objectMapper, "pepper")
+        stonadController = StonadController(storageMock, contextHolderMock, objectMapper, Hasher("pepper"))
 
         every { contextHolderMock.hentFnr() } returns "12345678901"
         every { storageMock.put(any(), any(), any()) } just Runs

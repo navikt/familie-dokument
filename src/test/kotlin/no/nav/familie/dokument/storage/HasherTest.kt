@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.*
@@ -9,14 +10,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-internal class TokenValidationContextHolderExtentionTest {
+internal class HasherTest {
 
-    private val tokenValidationContextHolderMock = mockk<TokenValidationContextHolder>()
 
-    @BeforeEach
-    internal fun setUp() {
-        every { tokenValidationContextHolderMock.hentFnr() } returns "test_fnr"
-    }
+    private val hasher = Hasher("pepper")
+
+    private val test_fnr = "test_fnr"
+
+
 
     @Test
     internal fun `Mappenavn for bruker skal være 44 lang`() {
@@ -32,37 +33,44 @@ internal class TokenValidationContextHolderExtentionTest {
     }
 
     private fun assertThatDigestHarLengde44(fnr: String, pepper: String) {
-        every { tokenValidationContextHolderMock.hentFnr() } returns fnr
-        val directory =
-                tokenValidationContextHolderMock.hentFnrHash(pepper)
+        val directory = hasher.lagFnrDigest(test_fnr)
+
         assertThat(directory).hasSize(44)
+        print(directory)
     }
 
     @Test
     internal fun `Hent mappe for bruker skal returnere noe`() {
-        val directory = tokenValidationContextHolderMock.hentFnrHash("pepper")
+        val directory = hasher.lagFnrDigest(test_fnr)
         assertThat(directory).isNotBlank
     }
 
     @Test
-    internal fun `Hent mappe for brukermå ha pepper`() {
+    internal fun `Hent mappe for bruker må ha pepper`() {
+        val utenPepper = Hasher("  ")
         assertThrows<IllegalArgumentException> {
-            tokenValidationContextHolderMock.hentFnrHash("  ")
+            utenPepper.lagFnrDigest(test_fnr)
+        }
+    }
+
+    @Test
+    internal fun `Hent mappe for bruker må ha fnr`() {
+        assertThrows<IllegalArgumentException> {
+            hasher.lagFnrDigest("   ")
         }
     }
 
     @Test
     internal fun `Hent mappe for bruker skal returnere samme directory ved likt pepper`() {
-        val directory = tokenValidationContextHolderMock.hentFnrHash("pepper")
-        val directory2 = tokenValidationContextHolderMock.hentFnrHash("pepper")
+        val directory =  hasher.lagFnrDigest(test_fnr)
+        val directory2 =  hasher.lagFnrDigest(test_fnr)
         assertThat(directory).isEqualTo(directory2)
     }
 
-
     @Test
     internal fun `Hent mappe for bruker skal returnere ulikt directory ved ulikt pepper`() {
-        val directory = tokenValidationContextHolderMock.hentFnrHash("pepper")
-        val directory2 = tokenValidationContextHolderMock.hentFnrHash("salt")
+        val directory =  hasher.lagFnrDigest(test_fnr)
+        val directory2 = hasher.lagFnrDigest("test_fnr2")
         assertThat(directory).isNotEqualTo(directory2)
     }
 }

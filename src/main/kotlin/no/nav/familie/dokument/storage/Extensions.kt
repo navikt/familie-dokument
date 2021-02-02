@@ -11,13 +11,3 @@ fun TokenValidationContextHolder.hentFnr(): String {
     return this.tokenValidationContext.getJwtToken("selvbetjening").subject
 }
 
-fun TokenValidationContextHolder.hentFnrHash(pepper: String): String {
-    require(pepper.isNotBlank(), { "Pepper kan ikke være tom" })
-    return lagDigest("${hentFnr()}$pepper}")
-}
-
-fun lagDigest(s: String): String {
-    val instance = MessageDigest.getInstance("SHA-256")
-    val digest = instance.digest(s.toByteArray())
-    return Base64.getEncoder().encodeToString(digest)
-}
