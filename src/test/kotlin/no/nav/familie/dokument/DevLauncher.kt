@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Import
 
-@SpringBootApplication(scanBasePackages = ["no.nav.familie.dokument", "no.nav.familie.dokument.storage.encryption"])
+@SpringBootApplication(scanBasePackages = ["no.nav.familie.dokument"])
 @Import(TokenGeneratorConfiguration::class)
 @EnableJwtTokenValidation
 class DevLauncher
