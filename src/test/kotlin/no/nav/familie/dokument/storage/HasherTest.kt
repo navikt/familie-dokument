@@ -1,23 +1,14 @@
 package no.nav.familie.dokument.storage
 
-import io.mockk.every
-import io.mockk.mockk
 import no.nav.familie.dokument.storage.encryption.Hasher
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class HasherTest {
 
-
     private val hasher = Hasher("pepper")
-
     private val test_fnr = "test_fnr"
-
-
 
     @Test
     internal fun `Mappenavn for bruker skal være 44 lang`() {
@@ -33,8 +24,8 @@ internal class HasherTest {
     }
 
     private fun assertThatDigestHarLengde44(fnr: String, pepper: String) {
-        val directory = hasher.lagFnrDigest(test_fnr)
-
+        val testHasher = Hasher(pepper)
+        val directory = testHasher.lagFnrDigest(fnr)
         assertThat(directory).hasSize(44)
         print(directory)
     }
@@ -62,14 +53,14 @@ internal class HasherTest {
 
     @Test
     internal fun `Hent mappe for bruker skal returnere samme directory ved likt pepper`() {
-        val directory =  hasher.lagFnrDigest(test_fnr)
-        val directory2 =  hasher.lagFnrDigest(test_fnr)
+        val directory = hasher.lagFnrDigest(test_fnr)
+        val directory2 = hasher.lagFnrDigest(test_fnr)
         assertThat(directory).isEqualTo(directory2)
     }
 
     @Test
     internal fun `Hent mappe for bruker skal returnere ulikt directory ved ulikt pepper`() {
-        val directory =  hasher.lagFnrDigest(test_fnr)
+        val directory = hasher.lagFnrDigest(test_fnr)
         val directory2 = hasher.lagFnrDigest("test_fnr2")
         assertThat(directory).isNotEqualTo(directory2)
     }
