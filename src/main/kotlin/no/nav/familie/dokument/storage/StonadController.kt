@@ -10,7 +10,6 @@ import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -37,7 +36,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
         validerGyldigJson(søknad)
 
-        val directory = hasher.lagFnrDigest(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         storage.put(directory, stønad.stønadKey, søknad)
         return ResponseEntity.status(HttpStatus.CREATED).build()
@@ -45,7 +44,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
-        val directory = hasher.lagFnrDigest(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         return try {
             ResponseEntity.ok(storage[directory, stønad.stønadKey])
@@ -56,7 +55,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
     @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun slettMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
-        val directory = hasher.lagFnrDigest(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         log.debug("Sletter mellomlagret overgangsstønad")
         storage.delete(directory, stønad.stønadKey)
@@ -66,7 +65,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
 
     private fun validerGyldigJson(verdi: String) {
         try {
-            objectMapper.readTree(verdi);
+            objectMapper.readTree(verdi)
         } catch (e: Exception) {
             throw InvalidJsonSoknad("Forsøker å mellomlagre søknad som ikke er gyldig json-verdi")
         }

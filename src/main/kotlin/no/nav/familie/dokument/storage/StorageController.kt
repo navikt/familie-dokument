@@ -47,7 +47,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
             throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
-        val directory = hasher.lagFnrDigest(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         val uuid = UUID.randomUUID().toString()
 
@@ -59,7 +59,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
-        val directory = hasher.lagFnrDigest(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
         return ResponseEntity.ok(Ressurs.success(data))

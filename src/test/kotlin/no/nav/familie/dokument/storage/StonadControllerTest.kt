@@ -26,7 +26,7 @@ internal class StonadControllerTest {
     internal fun setUp() {
         storageMock = mockk<MellomLagerService>()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
-        stonadController = StonadController(storageMock, contextHolderMock, objectMapper, Hasher("pepper"))
+        stonadController = StonadController(storageMock, contextHolderMock, objectMapper, Hasher("hammeligSalt"))
 
         every { contextHolderMock.hentFnr() } returns "12345678901"
         every { storageMock.put(any(), any(), any()) } just Runs
@@ -36,7 +36,7 @@ internal class StonadControllerTest {
     internal fun `skal mellomlagre søknad om overgangsstønad`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
         val response = stonadController.mellomlagreSøknad(StonadController.StønadParameter.valueOf("overgangsstonad"), gyldigJson)
-        Assertions.assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
     }
 
     @Test

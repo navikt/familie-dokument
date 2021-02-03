@@ -14,7 +14,7 @@ no.nav.security.jwt:
     cookie_name: localhost-idtoken
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
-FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenPepper
+FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt
 
 gcp.storage.bucketname: not-a-real-name
 

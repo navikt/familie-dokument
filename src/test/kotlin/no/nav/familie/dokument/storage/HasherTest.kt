@@ -7,8 +7,8 @@ import org.junit.jupiter.api.assertThrows
 
 internal class HasherTest {
 
-    private val hasher = Hasher("pepper")
-    private val test_fnr = "test_fnr"
+    private val hasher = Hasher("sectretSalt")
+    private val testFnr = "test_fnr"
 
     @Test
     internal fun `Mappenavn for bruker skal være 44 lang`() {
@@ -23,45 +23,45 @@ internal class HasherTest {
                                     "983745987345987345987345987345987345987345987345987345987345987345987345987999fhjdfhsdægijep9seån0 guwenpgijsenøgpijsneæ pgnposeæpgroinæpsot")
     }
 
-    private fun assertThatDigestHarLengde44(fnr: String, pepper: String) {
-        val testHasher = Hasher(pepper)
-        val directory = testHasher.lagFnrDigest(fnr)
+    private fun assertThatDigestHarLengde44(fnr: String, hemmeligSalt: String) {
+        val testHasher = Hasher(hemmeligSalt)
+        val directory = testHasher.lagFnrHash(fnr)
         assertThat(directory).hasSize(44)
         print(directory)
     }
 
     @Test
     internal fun `Hent mappe for bruker skal returnere noe`() {
-        val directory = hasher.lagFnrDigest(test_fnr)
+        val directory = hasher.lagFnrHash(testFnr)
         assertThat(directory).isNotBlank
     }
 
     @Test
-    internal fun `Hent mappe for bruker må ha pepper`() {
-        val utenPepper = Hasher("  ")
+    internal fun `Hent mappe for bruker må ha hemmelig salt`() {
+        val utenHemmligSalt = Hasher("  ")
         assertThrows<IllegalArgumentException> {
-            utenPepper.lagFnrDigest(test_fnr)
+            utenHemmligSalt.lagFnrHash(testFnr)
         }
     }
 
     @Test
     internal fun `Hent mappe for bruker må ha fnr`() {
         assertThrows<IllegalArgumentException> {
-            hasher.lagFnrDigest("   ")
+            hasher.lagFnrHash("   ")
         }
     }
 
     @Test
-    internal fun `Hent mappe for bruker skal returnere samme directory ved likt pepper`() {
-        val directory = hasher.lagFnrDigest(test_fnr)
-        val directory2 = hasher.lagFnrDigest(test_fnr)
+    internal fun `Hent mappe for bruker skal returnere samme directory ved likt hemmelig salt`() {
+        val directory = hasher.lagFnrHash(testFnr)
+        val directory2 = hasher.lagFnrHash(testFnr)
         assertThat(directory).isEqualTo(directory2)
     }
 
     @Test
-    internal fun `Hent mappe for bruker skal returnere ulikt directory ved ulikt pepper`() {
-        val directory = hasher.lagFnrDigest(test_fnr)
-        val directory2 = hasher.lagFnrDigest("test_fnr2")
+    internal fun `Hent mappe for bruker skal returnere ulikt directory ved ulikt hemmelig salt`() {
+        val directory = hasher.lagFnrHash(testFnr)
+        val directory2 = hasher.lagFnrHash("test_fnr2")
         assertThat(directory).isNotEqualTo(directory2)
     }
 }
