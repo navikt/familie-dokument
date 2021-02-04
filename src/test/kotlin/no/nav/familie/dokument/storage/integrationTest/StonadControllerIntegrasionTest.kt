@@ -23,6 +23,7 @@ import io.mockk.slot
 import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
 import no.nav.familie.dokument.storage.StonadController
+import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.hentFnr
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.get
@@ -33,7 +34,8 @@ import org.springframework.test.web.servlet.get
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,
     ApiExceptionHandler::class,
-    IntegrationTestConfig::class])
+    IntegrationTestConfig::class,
+    Hasher::class])
 @WebMvcTest
 @ActiveProfiles("integration-test")
 class StonadControllerIntegrasionTest {

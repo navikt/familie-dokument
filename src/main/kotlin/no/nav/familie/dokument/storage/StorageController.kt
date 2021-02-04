@@ -2,6 +2,7 @@ package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
+import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
@@ -21,9 +22,11 @@ import java.util.*
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
-                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int) {
+                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
+                        @Autowired val hasher: Hasher) {
 
     private val secureLogger = LoggerFactory.getLogger("secureLogger")
+
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(path = ["{bucket}"],
@@ -44,7 +47,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
             throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
-        val directory = contextHolder.hentFnr()
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         val uuid = UUID.randomUUID().toString()
 
@@ -56,7 +59,7 @@ class StorageController(@Autowired val storage: AttachmentStorage,
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
-        val directory = contextHolder.hentFnr()
+        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
         return ResponseEntity.ok(Ressurs.success(data))
