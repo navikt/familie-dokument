@@ -18,15 +18,12 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @RestController
-@RequestMapping("api/mapper")
+@RequestMapping("familie/dokument/api/mapper", "api/mapper")
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
 class StorageController(@Autowired val storage: AttachmentStorage,
                         @Autowired val contextHolder: TokenValidationContextHolder,
                         @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
                         @Autowired val hasher: Hasher) {
-
-    private val secureLogger = LoggerFactory.getLogger("secureLogger")
-
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(path = ["{bucket}"],

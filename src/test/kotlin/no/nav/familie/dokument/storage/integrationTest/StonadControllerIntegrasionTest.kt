@@ -59,7 +59,7 @@ class StonadControllerIntegrasionTest {
             blob
         }
 
-        mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
+        mockMvc.post("/familie/dokument/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
             content = gyldigJson
             accept = MediaType.APPLICATION_JSON
@@ -71,7 +71,7 @@ class StonadControllerIntegrasionTest {
     @Test
     fun `Skal returnere 400 for søknad som er ugyldig json`() {
         val ugyldigJson = """ { "søknad""""
-        mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
+        mockMvc.post("/familie/dokument/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
             content = ugyldigJson
             accept = MediaType.APPLICATION_JSON
@@ -86,7 +86,7 @@ class StonadControllerIntegrasionTest {
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
         every{storageMock.create(any(), any<ByteArray>())} throws StorageException(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
 
-        mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
+        mockMvc.post("/familie/dokument/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
             content = gyldigJson
             accept = MediaType.APPLICATION_JSON
@@ -109,7 +109,7 @@ class StonadControllerIntegrasionTest {
 
         every{storageMock.get(any<BlobId>()) } returns blob
 
-        mockMvc.post("/api/soknad/{stonad}", "barnetilsyn") {
+        mockMvc.post("/familie/dokument/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
             content = gyldigJson
             accept = MediaType.APPLICATION_JSON
@@ -117,7 +117,7 @@ class StonadControllerIntegrasionTest {
             status { isCreated }
         }
 
-        mockMvc.get("/api/soknad/barnetilsyn") {
+        mockMvc.get("/familie/dokument/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
@@ -130,7 +130,7 @@ class StonadControllerIntegrasionTest {
         every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
         every{storageMock.get(any<BlobId>()) } returns null
 
-        mockMvc.get("/api/soknad/barnetilsyn") {
+        mockMvc.get("/familie/dokument/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isNoContent }
