@@ -5,6 +5,10 @@ import no.nav.familie.dokument.TestUtil.toByteArray
 import org.apache.commons.io.IOUtils
 import org.junit.Assert
 import org.junit.Test
+import org.verapdf.pdfa.Foundries
+import org.verapdf.pdfa.VeraGreenfieldFoundryProvider
+import org.verapdf.pdfa.flavours.PDFAFlavour
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -21,6 +25,7 @@ class PdfGenerartorTest {
         val html = getDocument("eksempel1.html")
         val pdf = pdfService.lagPdf(html)
         Assert.assertTrue(isPdf(pdf))
+        Assert.assertTrue(isPDF_2_ACompliant(pdf))
         Assert.assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
     }
 
@@ -101,6 +106,14 @@ class PdfGenerartorTest {
         }
         return problems.isEmpty()
 
+    }
+
+    private fun isPDF_2_ACompliant(pdf: ByteArray): Boolean {
+        VeraGreenfieldFoundryProvider.initialise();
+        val pdfaFlavour = PDFAFlavour.PDFA_2_U
+        val validator = Foundries.defaultInstance().createValidator(pdfaFlavour, false)
+        val parser = Foundries.defaultInstance().createParser(ByteArrayInputStream(pdf))
+        return validator.validate(parser).isCompliant
     }
 
     companion object {

@@ -95,7 +95,7 @@ class PdfService {
 
         try {
             val dc = xmp.createAndAddDublinCoreSchema()
-            dc.addCreator("pdfgen")
+            dc.addCreator("navikt/familie-dokument")
             dc.addDate(cal)
 
             val id = xmp.createAndAddPFAIdentificationSchema()
