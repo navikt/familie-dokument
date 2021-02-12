@@ -3,3 +3,5 @@
 target
 lib
 .DS_Store
+secret-dev.yaml
+secret.yaml

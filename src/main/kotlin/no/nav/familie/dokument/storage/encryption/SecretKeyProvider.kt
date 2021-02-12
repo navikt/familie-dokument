@@ -1,11 +1,11 @@
 package no.nav.familie.dokument.storage.encryption
 
+import java.security.NoSuchAlgorithmException
+import java.security.spec.InvalidKeySpecException
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
-import java.security.NoSuchAlgorithmException
-import java.security.spec.InvalidKeySpecException
 
 class SecretKeyProvider(private val passphrase: String) {
 

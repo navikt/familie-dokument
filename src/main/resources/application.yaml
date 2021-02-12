@@ -1,7 +1,7 @@
 server:
   port: 8082
   servlet:
-    context-path: /familie/alene-med-barn/mellomlagring
+    context-path: /
 
 spring:
   autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
@@ -21,20 +21,24 @@ management:
   metrics.export.prometheus.enabled: true
 
 attachment.max.size.mb: 20
-
-FAMILIE_DOKUMENT_S3_REGION: us-east-1
-FAMILIE_DOKUMENT_S3_ENDPOINT: http://objectstore.rook-ceph
+storage_service.timeout.ms: 3000
 
 cors:
   allowed_origins:
     - "https://familie-ef-soknad.nais.oera.no"
-    - "https://www.nav.no/familie/alene-med-barn/soknad"
+    - "https://www.nav.no"
     - "https://familie-ef-soknad-api.nais.oera.no"
+    - "https://familie-ba-sak.nais.adeo.no"
+    - "https://familie-ba-soknad-api.nais.oera.no"
+    - "https://familie-ba-mottak.nais.adeo.no"
+    - "https://familie-ba-mottak.nais.adeo.no"
+    - "https://familie-brev.intern.nav.no"
 
 no.nav.security.jwt:
   issuers: selvbetjening
   issuer.selvbetjening:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
-    proxyurl: http://webproxy-nais.nav.no:8088
     cookie_name: selvbetjening-idtoken
+
+gcp.storage.bucketname: ${GCP_STORAGE_BUCKETNAME}

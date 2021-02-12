@@ -8,6 +8,7 @@ import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+
 @Component
 @Order(0)
 @EnableConfigurationProperties(CorsProperties::class)
@@ -30,7 +31,7 @@ class CORSResponseFilter(val corsProperties: CorsProperties) : Filter {
 
     private fun setCorsHeaders(response: HttpServletResponse, request: HttpServletRequest) {
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"))
-        response.addHeader("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+        response.addHeader("Access-Control-Allow-Headers", "origin, content-type, content-length, accept, authorization")
         response.addHeader("Access-Control-Allow-Credentials", "true")
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
     }
