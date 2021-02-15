@@ -5,8 +5,9 @@ import org.apache.tika.Tika
 class AttachmentToStorableFormatConverter(private val imageConversionService: ImageConversionService) {
 
     fun toStorageFormat(input: ByteArray): ByteArray {
-        val detectedType = Format.fromMimeType(Tika().detect(input))
-                .orElseThrow { RuntimeException("Kunne ikke konvertere vedleggstypen") }
+        val mimeType = Tika().detect(input)
+        val detectedType = Format.fromMimeType(mimeType)
+                .orElseThrow { RuntimeException("Kunne ikke konvertere vedleggstypen $mimeType") }
 
         return if (Format.PDF == detectedType) {
             input
