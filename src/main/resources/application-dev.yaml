@@ -12,10 +12,10 @@ no.nav.security.jwt:
     discoveryurl: http://metadata
     accepted_audience: aud-localhost
     cookie_name: localhost-idtoken
-    proxyurl:
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
-FAMILIE_DOKUMENT_S3_ACCESSKEY: not-a-real-key
-FAMILIE_DOKUMENT_S3_SECRETKEY: not-a-real-key
+FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt
+
+gcp.storage.bucketname: not-a-real-name
 
 spring.main.allow-bean-definition-overriding": true
