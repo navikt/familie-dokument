@@ -25,7 +25,7 @@ management:
 attachment.max.size.mb: 20
 storage_service.timeout.ms: 3000
 
-CLAM_AV_VIRUS_URL: http://clamav.nais.svc.nais.local/scan
+CLAM_AV_VIRUS_URL: http://clamav.clamav/scan
 
 cors:
   allowed_origins:
