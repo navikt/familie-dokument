@@ -6,6 +6,7 @@ import com.google.cloud.storage.Storage
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.familie.dokument.storage.attachment.ImageConversionService
+import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,10 +26,11 @@ class IntegrationTestConfig {
 
     @Bean
     @Primary
-    fun storageMock(): Storage {
-        val storageMock = mockk<Storage>()
-        return storageMock
-    }
+    fun storageMock(): Storage = mockk()
+
+    @Bean
+    @Primary
+    fun virusScanService(): VirusScanService = mockk(relaxed = true)
 
     @Bean
     fun imageConversionService(): ImageConversionService{
