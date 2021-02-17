@@ -2,7 +2,8 @@ package no.nav.familie.dokument.storage.attachment
 
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
-import org.springframework.beans.factory.annotation.Autowired
+import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.ATTACHMENT_ENCRYPTED_STORAGE
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -20,7 +21,7 @@ class AttachmentConfiguration {
 
     @Bean
     fun attachmentStorage(
-            @Autowired storage: EncryptedStorage,
+            @Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) storage: EncryptedStorage,
             storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
         return AttachmentStorage(storage, storableFormatConverter)
     }

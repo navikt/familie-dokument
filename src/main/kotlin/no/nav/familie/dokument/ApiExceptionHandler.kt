@@ -80,10 +80,10 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity.status(status).body(Ressurs.failure("Håndtert feil"))
     }
 
-
     private fun loggFeil(throwable: Throwable, loggMelding: String) {
         when (throwable) {
             is JwtTokenUnauthorizedException -> logger.debug(loggMelding)
+            is GcpDocumentNotFound -> logger.warn(loggMelding)
             else -> logger.error(loggMelding)
         }
     }
