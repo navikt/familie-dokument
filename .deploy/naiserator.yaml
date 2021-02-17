@@ -49,6 +49,7 @@ spec:
     inbound:
       rules:
         - application: familie-brev
+        - application: familie-ef-blankett
     outbound:
       external:
         - host: login.microsoftonline.com
