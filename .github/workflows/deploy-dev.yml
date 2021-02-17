@@ -1,4 +1,4 @@
-name: Build og Deploy (dev)
+name: Deploy (dev)
 on:
   workflow_dispatch:
 
@@ -10,6 +10,8 @@ jobs:
     name: Deploy til GCP (dev)
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
       - name: Deploy til GCP (dev)
         uses: nais/deploy/actions/deploy@v1
         env:
