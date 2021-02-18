@@ -1,3 +1,5 @@
+application:
+  name: familie-dokument
 server:
   port: 8082
   servlet:
@@ -22,6 +24,8 @@ management:
 
 attachment.max.size.mb: 20
 storage_service.timeout.ms: 3000
+
+CLAM_AV_VIRUS_URL: http://clamav.clamav
 
 cors:
   allowed_origins:

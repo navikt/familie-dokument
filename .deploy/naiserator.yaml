@@ -51,6 +51,9 @@ spec:
         - application: familie-brev
         - application: familie-ef-blankett
     outbound:
+      rules:
+        - application: clamav
+          namespace: clamav
       external:
         - host: login.microsoftonline.com
   azure:
