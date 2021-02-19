@@ -15,6 +15,7 @@ jobs:
       - name: Bygg Docker image
         run: |
           echo ${{ toJSON(github) }}
+
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Read/save maven cache
