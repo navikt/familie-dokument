@@ -1,13 +1,18 @@
 cors:
   allowed_origins:
     - "https://familie-ef-soknad.nais.oera-q.local"
-    - "https://www-q0.nav.no/familie/alene-med-barn/soknad"
+    - "https://www-q0.nav.no"
     - "https://familie-ef-soknad-api.nais.oera-q.local"
+    - "https://familie-ba-sak.dev.adeo.no"
+    - "https://familie-ba-soknad-api.dev-nav.no"
+    - "https://familie-ba-mottak.dev.adeo.no"
+    - "https://familie-brev.dev.intern.nav.no"
+    - "http://familie-brev.dev.intern.nav.no"
+    - "https://familie-ef-blankett.dev.intern.nav.no"
 
 no.nav.security.jwt:
   issuers: selvbetjening
   issuer.selvbetjening:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
-    proxyurl: http://webproxy-nais.nav.no:8088
     cookie_name: selvbetjening-idtoken

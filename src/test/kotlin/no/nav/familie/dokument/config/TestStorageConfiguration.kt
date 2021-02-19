@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.config
 
-import com.amazonaws.services.s3.model.AmazonS3Exception
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -8,10 +7,11 @@ import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.attachment.AttachmentToStorableFormatConverter
 import no.nav.familie.dokument.storage.attachment.ImageConversionService
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
-import no.nav.familie.dokument.storage.s3.S3Storage
+import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.ATTACHMENT_ENCRYPTED_STORAGE
+import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.STONAD_ENCRYPTED_STORAGE
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.*
 import java.io.InputStream
 
@@ -24,8 +24,8 @@ class TestStorageConfiguration {
     val lokalStorage: MutableMap<String, ByteArray> = HashMap()
     val lokalStorageAttachment: MutableMap<String, ByteArray> = HashMap()
 
-    @Bean
     @Primary
+    @Bean(STONAD_ENCRYPTED_STORAGE)
     fun encryptedStorage(): EncryptedStorage {
         val storage: EncryptedStorage = mockk()
 
@@ -34,9 +34,7 @@ class TestStorageConfiguration {
         val slotInputStream = slot<InputStream>()
         every { storage[capture(slotUser), capture(slotKey)] } answers {
             lokalStorage.getOrElse(slotUser.captured + "_" + slotKey.captured, {
-                val e = AmazonS3Exception("Noe gikk galt")
-                e.statusCode = 404
-                throw e
+                throw RuntimeException("Noe gikk galt")
             })
         }
         every { storage.put(capture(slotUser), capture(slotKey), capture(slotInputStream)) } answers {
@@ -45,16 +43,6 @@ class TestStorageConfiguration {
         every { storage.delete(capture(slotUser), capture(slotKey)) } answers {
             lokalStorage.remove(slotUser.captured + "_" + slotKey.captured)
         }
-        return storage
-    }
-
-    @Bean
-    @Primary
-    fun S3Storage(): S3Storage {
-        val storage: S3Storage = mockk()
-
-        every { storage[any(), any()] } returns "filinnhold".toByteArray()
-
         return storage
     }
 
@@ -71,9 +59,8 @@ class TestStorageConfiguration {
 
     @Bean
     @Primary
-    fun attachmentStorage(
-            @Autowired encryptedStorage: EncryptedStorage,
-            @Autowired storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
+    fun attachmentStorage(@Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) encryptedStorage: EncryptedStorage,
+                          storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
         val slot = slot<String>()
         val slotPut = slot<String>()
         val slotByteArray = slot<ByteArray>()
@@ -84,21 +71,11 @@ class TestStorageConfiguration {
         }
         every { storage[capture(slot), any()] } answers {
             lokalStorageAttachment.getOrElse(slot.captured, {
-                val e = AmazonS3Exception("Noe gikk galt")
-                e.statusCode = 404
-                throw e
+                throw RuntimeException("Noe gikk galt")
             })
         }
 
         return storage
-    }
-
-    @Bean
-    fun corsFilter(corsProperties: CorsProperties): FilterRegistrationBean<CORSResponseFilter> {
-        val filterRegistration = FilterRegistrationBean<CORSResponseFilter>()
-        filterRegistration.filter = CORSResponseFilter(corsProperties)
-        filterRegistration.order = 0
-        return filterRegistration
     }
 
 }

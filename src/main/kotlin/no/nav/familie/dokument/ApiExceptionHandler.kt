@@ -7,11 +7,15 @@ import org.springframework.core.NestedExceptionUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.HttpMediaTypeNotAcceptableException
+import org.springframework.web.HttpMediaTypeNotSupportedException
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import java.util.concurrent.TimeoutException
 
 
 @Suppress("unused")
@@ -30,8 +34,13 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
                                          headers: HttpHeaders,
                                          status: HttpStatus,
                                          request: WebRequest): ResponseEntity<Any> {
-        secureLogger.error("En feil har oppstått", ex)
-        logger.error("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
+        if(ex is HttpRequestMethodNotSupportedException || ex is HttpMediaTypeNotSupportedException || ex is HttpMediaTypeNotAcceptableException) {
+            secureLogger.warn("En feil har oppstått", ex)
+            logger.warn("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
+        } else {
+            secureLogger.error("En feil har oppstått", ex)
+            logger.error("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
+        }
         return super.handleExceptionInternal(ex, body, headers, status, request)
     }
 
@@ -45,8 +54,14 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     private fun uventetFeil(throwable: Throwable): ResponseEntity<Ressurs<String>> {
-        secureLogger.error("En feil har oppstått", throwable)
-        logger.error("En feil har oppstått - throwable=${rootCause(throwable)} ")
+        val rootCause = NestedExceptionUtils.getMostSpecificCause(throwable)
+        if(rootCause is TimeoutException) {
+            secureLogger.warn("En feil har oppstått", throwable)
+            logger.warn("En feil har oppstått - throwable=${rootCause.javaClass.simpleName} ")
+        } else {
+            secureLogger.error("En feil har oppstått", throwable)
+            logger.error("En feil har oppstått - throwable=${rootCause.javaClass.simpleName} ")
+        }
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Ressurs.failure("Uventet feil"))
@@ -65,10 +80,10 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity.status(status).body(Ressurs.failure("Håndtert feil"))
     }
 
-
     private fun loggFeil(throwable: Throwable, loggMelding: String) {
         when (throwable) {
             is JwtTokenUnauthorizedException -> logger.debug(loggMelding)
+            is GcpDocumentNotFound -> logger.warn(loggMelding)
             else -> logger.error(loggMelding)
         }
     }

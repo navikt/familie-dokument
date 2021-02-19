@@ -1,4 +1,4 @@
-name: Build, push, and deploy app to dev and prod (sbs)
+name: Build, og deploy (dev og prod)
 
 on:
   push:
@@ -7,10 +7,11 @@ on:
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/familie-dokument:${{ github.sha }}
+  IMAGE_LATEST: docker.pkg.github.com/${{ github.repository }}/familie-dokument:latest
 
 jobs:
-  build:
-    name: Build og push til docker
+  build-and-deploy:
+    name: Build, push til docker, og deploy til GCP (dev)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,32 +30,32 @@ jobs:
       - name: Bygg med maven
         env:
           GITHUB_USERNAME: x-access-token
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         run: mvn -B --no-transfer-progress package --settings .m2/maven-settings.xml --file pom.xml
+      - name: Bygg Docker image
+        run: |
+          docker build -t ${IMAGE} -t ${IMAGE_LATEST} .
       - name: Login to Github Package Registry
         env:
           DOCKER_USERNAME: x-access-token
-          DOCKER_PASSWORD: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_PASSWORD: ${{ secrets.TOKEN_GITHUB }}
         run: |
-          docker build --tag ${IMAGE} .
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-          docker push ${IMAGE}
-  deploy:
-    name: Deploy to NAIS
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Deploy til dev-sbs
+          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+      - name: Push Docker image med versjonstag
+        run: docker push ${IMAGE}
+      - name: Push Docker image med 'latest' tag
+        run: docker push ${IMAGE_LATEST}
+      - name: Deploy til GCP (dev)
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-sbs
-          RESOURCE: app-preprod.yaml
-      - name: Deploy til prod-sbs
+          CLUSTER: dev-gcp
+          RESOURCE: .deploy/naiserator.yaml
+          VARS: .deploy/dev-gcp.json
+      - name: Deploy til GCP (prod)
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-sbs
-          RESOURCE: app-prod.yaml
+          CLUSTER: prod-gcp
+          RESOURCE: .deploy/naiserator.yaml
+          VARS: .deploy/prod-gcp.json
