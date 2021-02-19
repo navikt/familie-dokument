@@ -2,6 +2,7 @@ name: Build (dev)
 on:
   pull_request:
   workflow_dispatch:
+  push:
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/familie-dokument:${{ github.sha }}
@@ -11,6 +12,9 @@ jobs:
     name: Build, push til docker (dev)
     runs-on: ubuntu-latest
     steps:
+      - name: Bygg Docker image
+        run: |
+          echo ${{ toJSON(github) }}
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Read/save maven cache
