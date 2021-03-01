@@ -12,13 +12,20 @@ internal class ImageConversionServiceTest {
 
     @Test
     internal fun `convert jpg`() {
-        val pdfBytes = imageConversionService.convert(toByteArray("dummy/jpg_dummy.jpg"))
+        val pdfBytes = imageConversionService.convert(toByteArray("dummy/jpg_dummy.jpg"), Format.JPEG)
         File("./jpg_pdf.pdf").writeBytes(pdfBytes)
     }
 
     @Test
     internal fun `convert png`() {
-        val pdfBytes = imageConversionService.convert(toByteArray("dummy/png_dummy.png"))
+        val pdfBytes = imageConversionService.convert(toByteArray("dummy/png_dummy.png"), Format.PNG)
         File("./png_pdf.pdf").writeBytes(pdfBytes)
     }
+
+    @Test
+    internal fun `convert png - rotert`() {
+        val pdfBytes = imageConversionService.convert(toByteArray("dummy/png_dummy_rotated.png"), Format.PNG)
+        File("./png_pdf.pdf").writeBytes(pdfBytes)
+    }
+
 }

@@ -16,7 +16,7 @@ class AttachmentConverterTest {
 
     @Before
     fun setUp() {
-        every { imageConversionService.convert(any()) } returns convertedDummy
+        every { imageConversionService.convert(any(), any()) } returns convertedDummy
     }
 
     @Test(expected = RuntimeException::class)
@@ -30,7 +30,7 @@ class AttachmentConverterTest {
         val pdfVedlegg = toByteArray("dummy/pdf_dummy.pdf")
         val storable = converter.toStorageFormat(pdfVedlegg)
         assertThat(storable).isEqualTo(pdfVedlegg)
-        verify(exactly = 0) { imageConversionService.convert(any()) }
+        verify(exactly = 0) { imageConversionService.convert(any(), any()) }
     }
 
     @Test
@@ -46,6 +46,6 @@ class AttachmentConverterTest {
         converted = converter.toStorageFormat(vedlegg)
         assertThat(converted).isEqualTo(convertedDummy)
 
-        verify(exactly = 2) {imageConversionService.convert(any())}
+        verify(exactly = 2) {imageConversionService.convert(any(), any())}
     }
 }
