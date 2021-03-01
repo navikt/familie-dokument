@@ -61,7 +61,7 @@ class ImageConversionService {
      */
     private fun getType(image: BufferedImage, detectedType: Format): Int {
         return if(image.type == BufferedImage.TYPE_CUSTOM && detectedType == Format.PNG) {
-            image.type
+            BufferedImage.TYPE_3BYTE_BGR
         } else {
             image.type
         }

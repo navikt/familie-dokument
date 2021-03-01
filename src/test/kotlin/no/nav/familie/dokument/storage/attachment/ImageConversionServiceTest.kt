@@ -25,7 +25,13 @@ internal class ImageConversionServiceTest {
     @Test
     internal fun `convert png - rotert`() {
         val pdfBytes = imageConversionService.convert(toByteArray("dummy/png_dummy_rotated.png"), Format.PNG)
-        File("./png_pdf.pdf").writeBytes(pdfBytes)
+        File("./png_rotated_pdf.pdf").writeBytes(pdfBytes)
+    }
+
+    @Test
+    internal fun `convert png av type 0`() {
+        val pdfBytes = imageConversionService.convert(toByteArray("dummy/png_type_0.png"), Format.PNG)
+        File("./png_type0_pdf.pdf").writeBytes(pdfBytes)
     }
 
 }
