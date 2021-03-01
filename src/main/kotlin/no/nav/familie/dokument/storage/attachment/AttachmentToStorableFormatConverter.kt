@@ -12,7 +12,7 @@ class AttachmentToStorableFormatConverter(private val imageConversionService: Im
         return if (Format.PDF == detectedType) {
             input
         } else {
-            imageConversionService.convert(input)
+            imageConversionService.convert(input, detectedType)
         }
     }
 

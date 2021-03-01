@@ -19,12 +19,12 @@ class ImageConversionService {
 
     private data class ImageSize(val width: Float, val height: Float)
 
-    fun convert(input: ByteArray): ByteArray {
+    fun convert(input: ByteArray, detectedType: Format): ByteArray {
         return PDDocument().use { document ->
             val imageStream = ByteArrayInputStream(input)
             val page = PDPage(PDRectangle.A4)
             document.addPage(page)
-            val image = toPortait(ImageIO.read(imageStream))
+            val image = toPortait(ImageIO.read(imageStream), detectedType)
 
             val quality = 1.0f
 
@@ -40,20 +40,31 @@ class ImageConversionService {
         }
     }
 
-    private fun toPortait(image: BufferedImage): BufferedImage {
+    private fun toPortait(image: BufferedImage, detectedType: Format): BufferedImage {
         if (image.height >= image.width) {
             return image
         }
         val width: Int = image.width
         val height: Int = image.height
 
-        val dest = BufferedImage(height, width, image.type)
+        val dest = BufferedImage(height, width, getType(image, detectedType))
 
         val graphics2D = dest.createGraphics()
         graphics2D.translate((height - width) / 2, (height - width) / 2)
         graphics2D.rotate(Math.PI / 2, height / 2.toDouble(), width / 2.toDouble())
         graphics2D.drawRenderedImage(image, null)
         return dest
+    }
+
+    /**
+     * En feil i ubuntu slik att hvis det er PNG og type 0 så skal den bli 5
+     */
+    private fun getType(image: BufferedImage, detectedType: Format): Int {
+        return if(image.type == BufferedImage.TYPE_CUSTOM && detectedType == Format.PNG) {
+            BufferedImage.TYPE_3BYTE_BGR
+        } else {
+            image.type
+        }
     }
 
     private fun scale(image: PDImageXObject, page: PDPage): ImageSize {

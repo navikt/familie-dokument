@@ -6,8 +6,8 @@ import java.util.*
 enum class Format(var mimeType: String) {
 
     PDF("application/pdf"),
-    PNG("image/jpeg"),
-    JPG("image/png");
+    PNG("image/png"),
+    JPEG("image/jpeg");
 
     companion object {
 
