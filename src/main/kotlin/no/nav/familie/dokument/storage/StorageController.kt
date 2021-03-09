@@ -45,13 +45,7 @@ class StorageController(val storage: AttachmentStorage,
             throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
-        //TODO slett try catch, kun for bruk i test for å sjekke om dette virker
-        try {
-            virusScanService.scan(bytes, multipartFile.name)
-            log.info("VirusScan ok")
-        } catch (e: Exception) {
-            log.warn("Feilet scanning", e)
-        }
+        virusScanService.scan(bytes, multipartFile.name)
 
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
