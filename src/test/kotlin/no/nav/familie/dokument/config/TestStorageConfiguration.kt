@@ -9,6 +9,7 @@ import no.nav.familie.dokument.storage.attachment.ImageConversionService
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.ATTACHMENT_ENCRYPTED_STORAGE
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.STONAD_ENCRYPTED_STORAGE
+import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -77,5 +78,9 @@ class TestStorageConfiguration {
 
         return storage
     }
+
+    @Bean
+    @Primary
+    fun virusScanService(): VirusScanService = mockk(relaxed = true)
 
 }
