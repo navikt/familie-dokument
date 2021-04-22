@@ -118,7 +118,7 @@ class StorageControllerIntegrasionTest {
         val output = mockMvc.get("/api/mapper/familie-dokument-test/${dokumentId}") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }.andReturn().response.contentAsByteArray
 
         val content = objectMapper.readValue(output, RessurData::class.java)
@@ -134,7 +134,7 @@ class StorageControllerIntegrasionTest {
         mockMvc.get("/api/mapper/familie-dokument-test/ukjent-id") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isNotFound }
+            status { isNotFound() }
         }
     }
 
