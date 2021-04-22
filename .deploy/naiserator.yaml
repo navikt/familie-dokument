@@ -50,6 +50,7 @@ spec:
       rules:
         - application: familie-brev
         - application: familie-ef-blankett
+        - application: soknad-kontantstotte-api
     outbound:
       rules:
         - application: clamav
