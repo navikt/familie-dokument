@@ -5,7 +5,7 @@ cors:
     - "https://familie-ef-soknad-api.nais.oera-q.local"
     - "https://familie-ba-sak.dev.adeo.no"
     - "https://familie-ba-soknad-api.dev.nav.no"
-    - "https://familie-ba-soknad.dev.nav.no/"
+    - "https://familie-ba-soknad.dev.nav.no"
     - "https://familie-ba-mottak.dev.adeo.no"
     - "https://familie-brev.dev.intern.nav.no"
     - "http://familie-brev.dev.intern.nav.no"
