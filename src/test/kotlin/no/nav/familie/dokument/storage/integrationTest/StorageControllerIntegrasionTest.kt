@@ -90,7 +90,11 @@ class StorageControllerIntegrasionTest {
     lateinit var objectMapper: ObjectMapper
 
     private fun initMockWithoutArtificialErrors(){
-        every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
+        every { tokenValidationContextHolderMock.tokenValidationContext.getJwtToken(any()) } returns mockk{
+            every { subject } returns TEST_FNR
+            every { issuer } returns "selvbetjening"
+            every { jwtTokenClaims.allClaims } returns mockk()
+        }
 
         val slot = slot<ByteArray>()
         val blob = mockk<Blob>()
