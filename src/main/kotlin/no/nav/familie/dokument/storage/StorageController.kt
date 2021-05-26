@@ -6,6 +6,7 @@ import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.RequiredIssuers
 import no.nav.security.token.support.core.api.Unprotected
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.LoggerFactory
@@ -19,7 +20,10 @@ import java.util.*
 
 @RestController
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@RequiredIssuers(
+    ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"]),
+    ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+)
 class StorageController(val storage: AttachmentStorage,
                         val virusScanService: VirusScanService,
                         val contextHolder: TokenValidationContextHolder,

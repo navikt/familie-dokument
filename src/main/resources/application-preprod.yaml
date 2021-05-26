@@ -12,8 +12,10 @@ cors:
     - "https://familie-ef-blankett.dev.intern.nav.no"
 
 no.nav.security.jwt:
-  issuers: selvbetjening
   issuer.selvbetjening:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}
     cookie_name: selvbetjening-idtoken
+  issuer.tokenx:
+    discoveryurl: ${TOKEN_X_WELL_KNOWN_URL}
+    accepted_audience: ${TOKEN_X_CLIENT_ID}

@@ -51,6 +51,9 @@ spec:
         - application: familie-brev
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
+        - application: familie-ba-mottak
+          cluster: {{cluster}}
+          namespace: teamfamilie
     outbound:
       rules:
         - application: clamav
@@ -62,6 +65,8 @@ spec:
       enabled: true
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
   secureLogs:
+    enabled: true
+  tokenx:
     enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE

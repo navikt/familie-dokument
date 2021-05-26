@@ -2,5 +2,6 @@
   "ingresses": ["https://familie-dokument.dev.intern.nav.no", "https://familie-dokument.dev.nav.no/familie/dokument"],
   "bucket_name" : "familie-dokument-dev",
   "spring_profile" : "preprod, debug",
-  "secret" : "familie-dokument-secret-dev"
+  "secret" : "familie-dokument-secret-dev",
+  "cluster": "dev-gcp"
 }
