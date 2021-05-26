@@ -3,5 +3,5 @@
   "bucket_name" : "familie-dokument-dev",
   "spring_profile" : "preprod, debug",
   "secret" : "familie-dokument-secret-dev",
-  "cluster": "dev-gcp"
+  "mottak-cluster": "dev-fss"
 }

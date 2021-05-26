@@ -3,5 +3,5 @@
   "bucket_name" : "familie-dokument",
   "spring_profile" : "prod",
   "secret" : "familie-dokument-secret",
-  "cluster": "prod-gcp"
+  "mottak-cluster": "prod-fss"
 }

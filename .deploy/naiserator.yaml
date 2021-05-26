@@ -52,7 +52,7 @@ spec:
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
         - application: familie-ba-mottak
-          cluster: {{cluster}}
+          cluster: {{mottak-cluster}}
           namespace: teamfamilie
     outbound:
       rules:
