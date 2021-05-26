@@ -51,6 +51,7 @@ class StorageController(val storage: AttachmentStorage,
 
         virusScanService.scan(bytes, multipartFile.name)
 
+        tmpTokenDebugLog("selvbetjening")
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         val uuid = UUID.randomUUID().toString()
@@ -63,10 +64,18 @@ class StorageController(val storage: AttachmentStorage,
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(@PathVariable("bucket") bucket: String,
                       @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
+        tmpTokenDebugLog("tokenx")
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
         return ResponseEntity.ok(Ressurs.success(data))
+    }
+
+    private fun tmpTokenDebugLog(issuer: String) {
+        contextHolder.tokenValidationContext.getJwtToken(issuer)?.also {
+            log.info("sub: ${it.subject}, iss: ${it.issuer}, claims: ${it.jwtTokenClaims.allClaims}")
+        }
+        log.info(contextHolder.hentFnr())
     }
 
     @Unprotected
