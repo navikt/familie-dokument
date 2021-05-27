@@ -64,7 +64,7 @@ class StonadControllerIntegrasionTest {
             content = gyldigJson
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
         }
     }
 
@@ -76,7 +76,7 @@ class StonadControllerIntegrasionTest {
             content = ugyldigJson
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }
     }
 
@@ -91,7 +91,7 @@ class StonadControllerIntegrasionTest {
             content = gyldigJson
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isInternalServerError }
+            status { isInternalServerError() }
         }
     }
 
@@ -114,13 +114,13 @@ class StonadControllerIntegrasionTest {
             content = gyldigJson
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
         }
 
         mockMvc.get("/familie/dokument/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content{json(gyldigJson)}
         }
     }
@@ -133,7 +133,7 @@ class StonadControllerIntegrasionTest {
         mockMvc.get("/familie/dokument/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }
     }
 
