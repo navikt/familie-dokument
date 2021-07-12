@@ -75,6 +75,7 @@ class StonadController(@Autowired val storage: MellomLagerService,
     enum class StønadParameter(val stønadKey: String) {
         overgangsstonad("overgangsstønad"),
         barnetilsyn("barnetilsyn"),
-        skolepenger("skolepenger")
+        skolepenger("skolepenger"),
+        barnetrygd("barnetrygd")
     }
 }

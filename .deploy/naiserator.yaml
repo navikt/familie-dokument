@@ -5,6 +5,9 @@ metadata:
   namespace: teamfamilie
   labels:
     team: teamfamilie
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "25M"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
 
 spec:
   image: {{ image }}
@@ -51,6 +54,9 @@ spec:
         - application: familie-brev
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
+        - application: familie-ba-mottak
+          cluster: {{ba-mottak-cluster}}
+          namespace: teamfamilie
     outbound:
       rules:
         - application: clamav
@@ -62,6 +68,8 @@ spec:
       enabled: true
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
   secureLogs:
+    enabled: true
+  tokenx:
     enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE

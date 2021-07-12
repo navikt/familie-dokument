@@ -40,7 +40,6 @@ cors:
     - "https://familie-ef-blankett.intern.nav.no"
 
 no.nav.security.jwt:
-  issuers: selvbetjening
   issuer.selvbetjening:
     discoveryurl: ${LOGINSERVICE_IDPORTEN_DISCOVERY_URL}
     accepted_audience: ${LOGINSERVICE_IDPORTEN_AUDIENCE}

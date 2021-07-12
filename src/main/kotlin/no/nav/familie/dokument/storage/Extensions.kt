@@ -4,6 +4,7 @@ import no.nav.security.token.support.core.context.TokenValidationContextHolder
 
 
 fun TokenValidationContextHolder.hentFnr(): String {
-    return this.tokenValidationContext.getJwtToken("selvbetjening").subject
+    return this.tokenValidationContext.getJwtToken("selvbetjening")?.subject
+        ?: this.tokenValidationContext.getJwtToken("tokenx").subject
 }
 
