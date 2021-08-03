@@ -10,6 +10,7 @@ cors:
     - "https://familie-brev.dev.intern.nav.no"
     - "http://familie-brev.dev.intern.nav.no"
     - "https://familie-ef-blankett.dev.intern.nav.no"
+    - "https://ensligmorellerfar.dev.nav.no"
 
 no.nav.security.jwt:
   issuer.selvbetjening:

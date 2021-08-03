@@ -58,6 +58,9 @@ spec:
         - application: familie-ba-mottak
           cluster: {{ba-mottak-cluster}}
           namespace: teamfamilie
+        - application: familie-ef-mottak
+          cluster: {{ef-mottak-cluster}}
+          namespace: teamfamilie
     outbound:
       rules:
         - application: clamav
