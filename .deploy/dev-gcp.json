@@ -4,5 +4,6 @@
   "spring_profile" : "preprod, debug",
   "secret" : "familie-dokument-secret-dev",
   "ba-mottak-cluster": "dev-fss",
-  "ef-mottak-cluster": "dev-fss"
+  "ef-mottak-cluster": "dev-fss",
+  "ef-soknad-api-cluster": "dev-sbs"
 }
