@@ -49,14 +49,14 @@ class StorageController(val storage: AttachmentStorage,
             throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
         }
 
-        virusScanService.scan(bytes, multipartFile.name)
+        virusScanService.scan(bytes, multipartFile.originalFilename)
 
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         val uuid = UUID.randomUUID().toString()
 
         storage.put(directory, uuid, bytes)
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.name))
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.originalFilename))
     }
 
     /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
