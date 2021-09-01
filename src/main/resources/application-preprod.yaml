@@ -1,8 +1,6 @@
 cors:
   allowed_origins:
-    - "https://familie-ef-soknad.nais.oera-q.local"
     - "https://www-q0.nav.no"
-    - "https://familie-ef-soknad-api.nais.oera-q.local"
     - "https://familie-ba-sak.dev.adeo.no"
     - "https://familie-ba-soknad-api.dev.nav.no"
     - "https://familie-ba-soknad.dev.nav.no"
@@ -11,6 +9,7 @@ cors:
     - "http://familie-brev.dev.intern.nav.no"
     - "https://familie-ef-blankett.dev.intern.nav.no"
     - "https://ensligmorellerfar.dev.nav.no"
+    - "https://familie.dev.nav.no"
 
 no.nav.security.jwt:
   issuer.selvbetjening:
