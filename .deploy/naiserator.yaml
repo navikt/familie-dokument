@@ -54,8 +54,15 @@ spec:
         - application: familie-brev
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
+        - application: familie-ef-soknad-api
+        - application: familie-ef-soknad-api
+          namespace: teamfamilie
+          cluster: {{ef-soknad-api-cluster}}
         - application: familie-ba-mottak
           cluster: {{ba-mottak-cluster}}
+          namespace: teamfamilie
+        - application: familie-ef-mottak
+          cluster: {{ef-mottak-cluster}}
           namespace: teamfamilie
     outbound:
       rules:
@@ -85,4 +92,3 @@ spec:
     buckets:
       - name: {{bucket_name}}
         cascadingDelete: false
-        retentionPeriodDays: 2
