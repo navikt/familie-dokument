@@ -54,6 +54,8 @@ spec:
         - application: familie-brev
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
+          cluster: {{soknad-kontantstotte-cluster}}
+          namespace: default
         - application: familie-ba-mottak
           cluster: {{ba-mottak-cluster}}
           namespace: teamfamilie

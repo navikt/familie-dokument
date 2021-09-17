@@ -3,5 +3,6 @@
   "bucket_name" : "familie-dokument-dev",
   "spring_profile" : "preprod, debug",
   "secret" : "familie-dokument-secret-dev",
-  "ba-mottak-cluster": "dev-fss"
+  "ba-mottak-cluster": "dev-fss",
+  "soknad-kontantstotte-cluster": "dev-sbs"
 }
