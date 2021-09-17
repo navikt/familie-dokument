@@ -5,7 +5,9 @@ import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.Storage
 import com.google.cloud.storage.StorageException
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
 import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
 import no.nav.familie.dokument.storage.StorageController
@@ -16,6 +18,7 @@ import no.nav.familie.dokument.storage.google.GcpStorageConfiguration
 import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -53,8 +56,19 @@ class StorageControllerIntegrasionTest {
     lateinit var storageMock: Storage
 
     @Test
+    internal fun `skal lagre fil med navnet på filen`() {
+        initMockWithoutArtificialErrors()
+        val navn = "gyldig-0.8m.pdf"
+        val vedlegg = leseVedlegg(navn, "application/pdf")
+        val result = mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
+                .andExpect(status().isCreated).andReturn()
+        val filnavn = objectMapper.readValue(result.response.contentAsString, Map::class.java)["filnavn"]
+        assertThat(filnavn).isEqualTo(navn)
+    }
+
+    @Test
     fun `Skal returnere 400 for vedlegg som overstiger størrelsesgrensen`() {
-        val vedlegg= leseVedlegg("ugyldig-2.6m.pdf", "application/pdf")
+        val vedlegg = leseVedlegg("ugyldig-2.6m.pdf", "application/pdf")
         mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
                 .andExpect(status().isBadRequest)
     }
@@ -62,7 +76,7 @@ class StorageControllerIntegrasionTest {
     @Test
     fun `Skal returnere 500 for vedlegg med ustøttet type`() {
         initMockWithoutArtificialErrors()
-        val vedlegg= leseVedlegg("ugyldig.txt", "text")
+        val vedlegg = leseVedlegg("ugyldig.txt", "text")
         mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
                 .andExpect(status().isInternalServerError)
     }
@@ -77,7 +91,7 @@ class StorageControllerIntegrasionTest {
 
     @Test
     fun `Skal returnere 500 hvis Google Storage feil`() {
-        val vedlegg= leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
+        val vedlegg = leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
 
         every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
         every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(HttpStatus.UNAUTHORIZED.value(),
@@ -89,7 +103,7 @@ class StorageControllerIntegrasionTest {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    private fun initMockWithoutArtificialErrors(){
+    private fun initMockWithoutArtificialErrors() {
         every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
 
         val slot = slot<ByteArray>()
@@ -102,7 +116,8 @@ class StorageControllerIntegrasionTest {
         every { storageMock.get(any<BlobId>()) } returns blob
     }
 
-    class RessurData{
+    class RessurData {
+
         lateinit var data: ByteArray
         lateinit var status: Ressurs.Status
     }
@@ -110,10 +125,10 @@ class StorageControllerIntegrasionTest {
     @Test
     fun `Skal lese vedlegg ut som er lagret`() {
         initMockWithoutArtificialErrors()
-        val vedlegg= leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
+        val vedlegg = leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
         val result = mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
                 .andExpect(status().isCreated).andReturn()
-        val dokumentId= objectMapper.readValue(result.response.contentAsString, Map::class.java)["dokumentId"]
+        val dokumentId = objectMapper.readValue(result.response.contentAsString, Map::class.java)["dokumentId"]
 
         val output = mockMvc.get("/api/mapper/familie-dokument-test/${dokumentId}") {
             accept = MediaType.APPLICATION_JSON
@@ -139,6 +154,7 @@ class StorageControllerIntegrasionTest {
     }
 
     companion object {
+
         val TEST_FNR = "TestFnr"
     }
 }

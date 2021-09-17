@@ -5,4 +5,6 @@
   "secret" : "familie-dokument-secret",
   "ba-mottak-cluster": "prod-fss",
   "soknad-kontantstotte-cluster": "prod-sbs"
+  "ef-mottak-cluster": "prod-fss",
+  "ef-soknad-api-cluster": "prod-sbs"
 }
