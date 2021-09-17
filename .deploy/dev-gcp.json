@@ -10,6 +10,5 @@
   "ba-mottak-cluster": "dev-fss",
   "ef-mottak-cluster": "dev-fss",
   "ef-soknad-api-cluster": "dev-sbs",
-  "ba-mottak-cluster": "dev-fss",
   "soknad-kontantstotte-cluster": "dev-sbs"
 }
