@@ -92,3 +92,4 @@ spec:
     buckets:
       - name: {{bucket_name}}
         cascadingDelete: false
+        age: 2
