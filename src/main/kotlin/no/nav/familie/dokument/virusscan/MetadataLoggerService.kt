@@ -5,6 +5,7 @@ import org.apache.tika.Tika
 import org.apache.tika.io.TikaInputStream
 import org.apache.tika.metadata.Metadata
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.stereotype.Service
 
@@ -26,7 +27,17 @@ class MetadataLoggerService {
                 secureLogger.warn("PDF metadata - queue er for liten, ignorerer fil")
                 return
             }
-            taskExecutor.execute { logMetadata(bytes) }
+            val contextMap = MDC.getCopyOfContextMap()
+            taskExecutor.execute {
+                try {
+                    MDC.setContextMap(contextMap)
+                    logMetadata(bytes)
+                } catch (e: Exception) {
+                    secureLogger.warn("Feilet logging av metatdata", e)
+                } finally {
+                    MDC.clear()
+                }
+            }
         } catch (e: Exception) {
             secureLogger.warn("Feilet sjekk av metadata - {}", e.message)
         }
