@@ -58,9 +58,6 @@ accessPolicy:
         cluster: prod-fss
         namespace: teamfamilie
       - application: familie-ef-soknad-api
-      - application: familie-ef-soknad-api
-        namespace: teamfamilie
-        cluster: prod-sbs
       - application: familie-ba-mottak
         cluster: prod-fss
         namespace: teamfamilie

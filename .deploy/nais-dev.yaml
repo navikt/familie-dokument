@@ -56,9 +56,6 @@ accessPolicy:
       - application: soknad-kontantstotte-api
       - application: familie-ef-mottak
       - application: familie-ef-soknad-api
-      - application: familie-ef-soknad-api
-        namespace: teamfamilie
-        cluster: dev-sbs
       - application: familie-ba-mottak
         cluster: dev-fss
         namespace: teamfamilie
