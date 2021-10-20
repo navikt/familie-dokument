@@ -47,47 +47,47 @@ spec:
   ingresses:
     - https://familie-dokument.intern.nav.no
     - https://www.nav.no/familie/dokument
-accessPolicy:
-  inbound:
-    rules:
-      - application: familie-brev
-      - application: familie-ef-blankett
-      - application: soknad-kontantstotte-api
-      - application: familie-ef-mottak
-      - application: familie-ef-mottak
-        cluster: prod-fss
-        namespace: teamfamilie
-      - application: familie-ef-soknad-api
-      - application: familie-ba-mottak
-        cluster: prod-fss
-        namespace: teamfamilie
+  accessPolicy:
+    inbound:
+      rules:
+        - application: familie-brev
+        - application: familie-ef-blankett
+        - application: soknad-kontantstotte-api
+        - application: familie-ef-mottak
+        - application: familie-ef-mottak
+          cluster: prod-fss
+          namespace: teamfamilie
+        - application: familie-ef-soknad-api
+        - application: familie-ba-mottak
+          cluster: prod-fss
+          namespace: teamfamilie
 
-  outbound:
-    rules:
-      - application: clamav
-        namespace: clamav
-    external:
-      - host: login.microsoftonline.com
-azure:
-  application:
+    outbound:
+      rules:
+        - application: clamav
+          namespace: clamav
+      external:
+        - host: login.microsoftonline.com
+  azure:
+    application:
+      enabled: true
+  webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
+  secureLogs:
     enabled: true
-webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
-secureLogs:
-  enabled: true
-tokenx:
-  enabled: true
-env:
-  - name: SPRING_PROFILES_ACTIVE
-    value: prod
-  - name: APP_TEAM
-    value: teamfamilie
-  - name: GCP_STORAGE_BUCKETNAME
-    value: familie-dokument
-#
-# the following spec is only available when running in GCP.
-#
-gcp:
-  buckets:
-    - name: familie-dokument
-      cascadingDelete: false
-      age: 2
+  tokenx:
+    enabled: true
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: prod
+    - name: APP_TEAM
+      value: teamfamilie
+    - name: GCP_STORAGE_BUCKETNAME
+      value: familie-dokument
+  #
+  # the following spec is only available when running in GCP.
+  #
+  gcp:
+    buckets:
+      - name: familie-dokument
+        cascadingDelete: false
+        age: 2
