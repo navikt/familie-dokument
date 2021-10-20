@@ -14,7 +14,7 @@ spec:
   team: teamfamilie
   port: 8082
   envFrom:
-    - secret: familie-dokument-dev
+    - secret: familie-dokument-secret-dev
     - configmap: loginservice-idporten
   liveness:
     path: /internal/status/isAlive
