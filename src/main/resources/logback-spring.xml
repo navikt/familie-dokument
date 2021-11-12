@@ -36,6 +36,8 @@
     <logger name="org.apache.cxf" level="ERROR"/>
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="ERROR"/>
     <logger name="org.apache.wss4j.common.crypto.CryptoBase" level="ERROR"/>
+    <logger name="org.apache.pdfbox.pdmodel.font.PDFont" level="ERROR"/>
+    <logger name="org.apache.pdfbox.pdmodel.font.PDSimpleFont" level="ERROR"/>
     <logger name="org.apache.pdfbox.pdmodel.font.PDType0Font" level="ERROR"/>
     <logger name="org.apache.pdfbox.pdmodel.font.PDType1Font" level="ERROR"/>
     <logger name="org.apache.pdfbox.pdmodel.font.PDTrueTypeFont" level="ERROR"/>
