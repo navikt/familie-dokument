@@ -1,9 +1,0 @@
-{
-  "ingresses": ["https://familie-dokument.intern.nav.no", "https://www.nav.no/familie/dokument"],
-  "bucket_name" : "familie-dokument",
-  "spring_profile" : "prod",
-  "secret" : "familie-dokument-secret",
-  "ba-mottak-cluster": "prod-fss",
-  "ef-mottak-cluster": "prod-fss",
-  "ef-soknad-api-cluster": "prod-sbs"
-}

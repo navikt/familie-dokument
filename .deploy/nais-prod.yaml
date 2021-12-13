@@ -14,7 +14,7 @@ spec:
   team: teamfamilie
   port: 8082
   envFrom:
-    - secret: {{ secret }}
+    - secret: familie-dokument-secret
     - configmap: loginservice-idporten
   liveness:
     path: /internal/status/isAlive
@@ -44,25 +44,22 @@ spec:
     requests:
       memory: 2Gi
       cpu: 500m
-  ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
-{{#each ingresses as |url|}}
-    - {{url}}
-{{/each}}
+  ingresses:
+    - https://familie-dokument.intern.nav.no
+    - https://www.nav.no/familie/dokument
   accessPolicy:
     inbound:
       rules:
         - application: familie-brev
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
-        - application: familie-ef-soknad-api
-        - application: familie-ef-soknad-api
-          namespace: teamfamilie
-          cluster: {{ef-soknad-api-cluster}}
-        - application: familie-ba-mottak
-          cluster: {{ba-mottak-cluster}}
-          namespace: teamfamilie
         - application: familie-ef-mottak
-          cluster: {{ef-mottak-cluster}}
+        - application: familie-ef-mottak
+          cluster: prod-fss
+          namespace: teamfamilie
+        - application: familie-ef-soknad-api
+        - application: familie-ba-mottak
+          cluster: prod-fss
           namespace: teamfamilie
     outbound:
       rules:
@@ -80,15 +77,16 @@ spec:
     enabled: true
   env:
     - name: SPRING_PROFILES_ACTIVE
-      value: {{spring_profile}}
+      value: prod
     - name: APP_TEAM
       value: teamfamilie
     - name: GCP_STORAGE_BUCKETNAME
-      value: {{bucket_name}}
+      value: familie-dokument
   #
   # the following spec is only available when running in GCP.
   #
   gcp:
     buckets:
-      - name: {{bucket_name}}
+      - name: familie-dokument
         cascadingDelete: false
+        age: 2
