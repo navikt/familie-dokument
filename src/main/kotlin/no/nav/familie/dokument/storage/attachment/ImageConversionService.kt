@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
@@ -17,6 +18,8 @@ import javax.imageio.ImageIO
 @Service
 class ImageConversionService {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     private data class ImageSize(val width: Float, val height: Float)
 
     fun convert(input: ByteArray, detectedType: Format): ByteArray {
@@ -24,12 +27,17 @@ class ImageConversionService {
             val imageStream = ByteArrayInputStream(input)
             val page = PDPage(PDRectangle.A4)
             document.addPage(page)
-            val image = toPortait(ImageIO.read(imageStream), detectedType)
+            val image = ImageIO.read(imageStream)
+            val portraitImage = toPortrait(image, detectedType)
 
             val quality = 1.0f
 
-            val pdImage = JPEGFactory.createFromImage(document, image, quality)
+            val pdImage = JPEGFactory.createFromImage(document, portraitImage, quality)
             val imageSize = scale(pdImage, page)
+
+            logger.info("Input format=${detectedType.name} height=${image.height} width=${image.width} " +
+                        "Portrait height=${portraitImage.height} width=${portraitImage.width} " +
+                        "ImageSize height=${imageSize.height} width=${imageSize.width}")
 
             PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false).use {
                 it.drawImage(pdImage, Matrix(imageSize.width, 0f, 0f, imageSize.height, 0f, 0f))
@@ -40,7 +48,7 @@ class ImageConversionService {
         }
     }
 
-    private fun toPortait(image: BufferedImage, detectedType: Format): BufferedImage {
+    private fun toPortrait(image: BufferedImage, detectedType: Format): BufferedImage {
         if (image.height >= image.width) {
             return image
         }
