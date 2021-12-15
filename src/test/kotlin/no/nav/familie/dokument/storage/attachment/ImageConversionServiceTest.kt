@@ -1,6 +1,8 @@
 package no.nav.familie.dokument.storage.attachment
 
+import no.nav.familie.dokument.InvalidImageDimensions
 import no.nav.familie.dokument.TestUtil.toByteArray
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -32,6 +34,13 @@ internal class ImageConversionServiceTest {
     internal fun `convert png av type 0`() {
         val pdfBytes = imageConversionService.convert(toByteArray("dummy/png_type_0.png"), Format.PNG)
         File("./png_type0_pdf.pdf").writeBytes(pdfBytes)
+    }
+
+    @Test
+    internal fun `convert png file too small`() {
+        assertThatThrownBy { imageConversionService.convert(toByteArray("dummy/300_300px.png"), Format.PNG) }
+                .isInstanceOf(InvalidImageDimensions::class.java)
+                .hasMessage("CODE=IMAGE_DIMENSIONS_TOO_SMALL")
     }
 
 }

@@ -1,5 +1,7 @@
 package no.nav.familie.dokument.storage.attachment
 
+import no.nav.familie.dokument.BadRequestCode
+import no.nav.familie.dokument.InvalidImageDimensions
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -28,6 +30,8 @@ class ImageConversionService {
             val page = PDPage(PDRectangle.A4)
             document.addPage(page)
             val image = ImageIO.read(imageStream)
+            if (image.height < 400 && image.width < 400) throw InvalidImageDimensions(BadRequestCode.IMAGE_DIMENSIONS_TOO_SMALL)
+
             val portraitImage = toPortrait(image, detectedType)
 
             val quality = 1.0f
@@ -69,7 +73,7 @@ class ImageConversionService {
      * En feil i ubuntu slik att hvis det er PNG og type 0 så skal den bli 5
      */
     private fun getType(image: BufferedImage, detectedType: Format): Int {
-        return if(image.type == BufferedImage.TYPE_CUSTOM && detectedType == Format.PNG) {
+        return if (image.type == BufferedImage.TYPE_CUSTOM && detectedType == Format.PNG) {
             BufferedImage.TYPE_3BYTE_BGR
         } else {
             image.type
