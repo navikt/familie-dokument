@@ -3,7 +3,7 @@ package no.nav.familie.dokument
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
-open class BadRequestException(code: BadRequestCode): RuntimeException("CODE=${code.name}")
+open class BadRequestException(val code: BadRequestCode): RuntimeException("CODE=${code.name}")
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class InvalidJsonSoknad(msg: String): IllegalArgumentException(msg)
