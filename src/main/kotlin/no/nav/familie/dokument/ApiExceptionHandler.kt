@@ -53,6 +53,15 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         return uventetFeil(throwable)
     }
 
+    @ExceptionHandler(BadRequestException::class)
+    fun handleThrowable(ex: BadRequestException): ResponseEntity<Ressurs<String>> {
+        logger.warn("Bad request - ${ex.javaClass.simpleName}-${ex.code}")
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Ressurs.failure(ex.message))
+
+    }
+
     private fun uventetFeil(throwable: Throwable): ResponseEntity<Ressurs<String>> {
         val rootCause = NestedExceptionUtils.getMostSpecificCause(throwable)
         if(rootCause is TimeoutException) {

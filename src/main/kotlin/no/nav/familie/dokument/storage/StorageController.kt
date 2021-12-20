@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.storage
 
+import no.nav.familie.dokument.BadRequestCode
 import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
@@ -38,7 +39,7 @@ class StorageController(val storage: AttachmentStorage,
                       @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
 
         if (multipartFile.isEmpty) {
-            throw InvalidDocumentSize("Dokumentet som lastes opp er tomt - size: [${multipartFile.size}] ")
+            throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
         }
 
         val bytes = multipartFile.bytes
@@ -46,7 +47,7 @@ class StorageController(val storage: AttachmentStorage,
         log.debug("Dokument lastet opp med størrelse (bytes): " + bytes.size)
 
         if (bytes.size > maxFileSizeInBytes) {
-            throw InvalidDocumentSize("Dokumentstørrelsen(${bytes.size} bytes) overstiger grensen(${maxFileSizeInMb} mb)")
+            throw InvalidDocumentSize(BadRequestCode.IMAGE_TOO_LARGE)
         }
 
         virusScanService.scan(bytes, multipartFile.originalFilename)
