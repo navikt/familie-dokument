@@ -50,12 +50,7 @@ class TestStorageConfiguration {
     @Bean
     @Primary
     fun converter(@Autowired imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
-        val slot = slot<ByteArray>()
-        val converter: AttachmentToStorableFormatConverter = mockk()
-
-        every { converter.toStorageFormat(capture(slot)) } answers { slot.captured }
-
-        return converter
+        return AttachmentToStorableFormatConverter(ImageConversionService())
     }
 
     @Bean
@@ -68,7 +63,8 @@ class TestStorageConfiguration {
         val storage: AttachmentStorage = mockk()
 
         every { storage.put(capture(slotPut), any(), capture(slotByteArray)) } answers {
-            lokalStorageAttachment[slotPut.captured] = slotByteArray.captured
+            val storeable = storableFormatConverter.toStorageFormat(slotByteArray.captured)
+            lokalStorageAttachment[slotPut.captured] = storeable
         }
         every { storage[capture(slot), any()] } answers {
             lokalStorageAttachment.getOrElse(slot.captured, {
