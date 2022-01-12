@@ -4,6 +4,8 @@ import com.openhtmltopdf.extend.FSSupplier
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
+import org.apache.pdfbox.io.MemoryUsageSetting
+import org.apache.pdfbox.multipdf.PDFMergerUtility
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.common.PDMetadata
@@ -23,10 +25,11 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import org.w3c.dom.Document
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.util.*
+import java.util.Calendar
 
 @Service
 class PdfService {
@@ -128,6 +131,15 @@ class PdfService {
         catalog.markInfo = PDMarkInfo(page.cosObject)
         catalog.structureTreeRoot = PDStructureTreeRoot()
         catalog.markInfo.isMarked = true
+    }
+
+    fun mergeDokumenter(dokumenter: List<ByteArray>): ByteArray {
+        val pdfMerger = PDFMergerUtility()
+        dokumenter.forEach { pdfMerger.addSource(ByteArrayInputStream(it)) }
+        val output = ByteArrayOutputStream()
+        pdfMerger.destinationStream = output
+        pdfMerger.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly())
+        return output.toByteArray()
     }
 
     companion object {
