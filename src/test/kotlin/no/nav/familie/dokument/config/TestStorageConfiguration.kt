@@ -57,20 +57,19 @@ class TestStorageConfiguration {
     @Primary
     fun attachmentStorage(@Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) encryptedStorage: EncryptedStorage,
                           storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
-        val slotUserGet = slot<String>()
-        val slotUser = slot<String>()
-        val slotDocumentId = slot<String>()
-        val slotDocumentIdGet = slot<String>()
-        val slotByteArray = slot<ByteArray>()
         val storage: AttachmentStorage = mockk()
 
-        every { storage.put(capture(slotUser), capture(slotDocumentId), capture(slotByteArray)) } answers {
-            val capturedDocumentId = slotDocumentId.captured
-            val storeable = storableFormatConverter.toStorageFormat(slotByteArray.captured)
-            lokalStorageAttachment[slotUser.captured + "_" + capturedDocumentId] = storeable
+        every { storage.put(any(), any(), any()) } answers {
+            val user = firstArg<String>()
+            val documentId = secondArg<String>()
+            val document = thirdArg<ByteArray>()
+            val storeable = storableFormatConverter.toStorageFormat(document)
+            lokalStorageAttachment[user + "_" + documentId] = storeable
         }
-        every { storage[capture(slotUserGet), capture(slotDocumentIdGet)] } answers {
-            lokalStorageAttachment.get(slotUserGet.captured + "_" + slotDocumentIdGet.captured) ?: error("Noe gikk galt")
+        every { storage[any(), any()] } answers {
+            val user = firstArg<String>()
+            val documentId = secondArg<String>()
+            lokalStorageAttachment[user + "_" + documentId] ?: error("Noe gikk galt")
         }
 
         return storage
