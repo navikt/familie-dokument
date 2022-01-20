@@ -50,30 +50,26 @@ class TestStorageConfiguration {
     @Bean
     @Primary
     fun converter(@Autowired imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
-        val slot = slot<ByteArray>()
-        val converter: AttachmentToStorableFormatConverter = mockk()
-
-        every { converter.toStorageFormat(capture(slot)) } answers { slot.captured }
-
-        return converter
+        return AttachmentToStorableFormatConverter(ImageConversionService())
     }
 
     @Bean
     @Primary
     fun attachmentStorage(@Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) encryptedStorage: EncryptedStorage,
                           storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
-        val slot = slot<String>()
-        val slotPut = slot<String>()
-        val slotByteArray = slot<ByteArray>()
         val storage: AttachmentStorage = mockk()
 
-        every { storage.put(capture(slotPut), any(), capture(slotByteArray)) } answers {
-            lokalStorageAttachment[slotPut.captured] = slotByteArray.captured
+        every { storage.put(any(), any(), any()) } answers {
+            val user = firstArg<String>()
+            val documentId = secondArg<String>()
+            val document = thirdArg<ByteArray>()
+            val storeable = storableFormatConverter.toStorageFormat(document)
+            lokalStorageAttachment[user + "_" + documentId] = storeable
         }
-        every { storage[capture(slot), any()] } answers {
-            lokalStorageAttachment.getOrElse(slot.captured, {
-                throw RuntimeException("Noe gikk galt")
-            })
+        every { storage[any(), any()] } answers {
+            val user = firstArg<String>()
+            val documentId = secondArg<String>()
+            lokalStorageAttachment[user + "_" + documentId] ?: error("Noe gikk galt")
         }
 
         return storage

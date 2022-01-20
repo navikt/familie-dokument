@@ -10,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
+import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.StorageController
 import no.nav.familie.dokument.storage.attachment.AttachmentConfiguration
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
@@ -30,12 +31,15 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.UUID
 import kotlin.test.assertEquals
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = [StorageController::class,
+    PdfService::class,
     AttachmentConfiguration::class,
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,
@@ -54,6 +58,8 @@ class StorageControllerIntegrasionTest {
 
     @Autowired
     lateinit var storageMock: Storage
+
+
 
     @Test
     internal fun `skal lagre fil med navnet på filen`() {
@@ -151,6 +157,15 @@ class StorageControllerIntegrasionTest {
         }.andExpect {
             status { isNotFound() }
         }
+    }
+
+    @Test
+    internal fun `skal returnere 400 dersom tom liste sendes inn `() {
+        mockMvc.post("/api/mapper/merge/familie-vedlegg") {
+            contentType = MediaType.APPLICATION_JSON
+            accept = MediaType.APPLICATION_JSON
+            content = "[]"
+        }.andExpect { status { isBadRequest() } }
     }
 
     companion object {
