@@ -13,6 +13,7 @@ import org.threeten.bp.Duration
 @Configuration
 class GcpStorageConfiguration {
 
+    val MAX_FILE_SIZE_FACTOR = 10 // Dersom vi slår sammen flere filer og lagrer ned må vi kunne lagre ned vesentlig større filer enn én og én
     @Bean
     fun retrySettings(@Value("\${storage_service.timeout.ms:3000}") timeoutMs: Long): RetrySettings? {
         return RetrySettings.newBuilder()
@@ -24,7 +25,7 @@ class GcpStorageConfiguration {
     fun gcpStorage(storage: Storage,
                    @Value("\${gcp.storage.bucketname}") bucketName: String,
                    @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int): GcpStorage {
-        return GcpStorage(bucketName, maxFileSizeMB, storage)
+        return GcpStorage(bucketName, maxFileSizeMB * MAX_FILE_SIZE_FACTOR, storage)
     }
 
     @Bean
