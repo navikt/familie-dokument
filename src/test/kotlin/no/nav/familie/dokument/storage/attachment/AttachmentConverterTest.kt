@@ -5,8 +5,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import no.nav.familie.dokument.TestUtil.toByteArray
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class AttachmentConverterTest {
 
@@ -14,15 +15,15 @@ class AttachmentConverterTest {
     private val converter = AttachmentToStorableFormatConverter(imageConversionService)
     private val convertedDummy: ByteArray = toByteArray("dummy/pdf_dummy.pdf")
 
-    @Before
+    @BeforeEach
     fun setUp() {
         every { imageConversionService.convert(any(), any()) } returns convertedDummy
     }
 
-    @Test(expected = RuntimeException::class)
+    @Test
     fun at_ulovlig_format_kaster_exception() {
         val txtVedlegg = toByteArray("dummy/txt_dummy.txt")
-        converter.toStorageFormat(txtVedlegg)
+        assertThatThrownBy { converter.toStorageFormat(txtVedlegg) }.isInstanceOf(RuntimeException::class.java)
     }
 
     @Test

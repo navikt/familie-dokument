@@ -3,8 +3,8 @@ package no.nav.familie.dokument.pdf
 import com.openhtmltopdf.pdfboxout.visualtester.PdfVisualTester
 import no.nav.familie.dokument.TestUtil.toByteArray
 import org.apache.commons.io.IOUtils
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import org.verapdf.pdfa.Foundries
 import org.verapdf.pdfa.VeraGreenfieldFoundryProvider
 import org.verapdf.pdfa.flavours.PDFAFlavour
@@ -24,15 +24,15 @@ class PdfGenerartorTest {
     fun testPdfGeneration() {
         val html = getDocument("eksempel1.html")
         val pdf = pdfService.lagPdf(html)
-        Assert.assertTrue(isPdf(pdf))
-        Assert.assertTrue(isPDF_2_ACompliant(pdf))
-        Assert.assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
+        assertTrue(isPdf(pdf))
+        assertTrue(isPDF_2_ACompliant(pdf))
+        assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
     }
 
     private fun getDocument(fixtureName: String): String {
         return IOUtils.toString(
-            this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
-            StandardCharsets.UTF_8
+                this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
+                StandardCharsets.UTF_8
         )
     }
 
@@ -83,14 +83,14 @@ class PdfGenerartorTest {
 
         // Get a list of results.
         val problems = PdfVisualTester.comparePdfDocuments(
-            expectedPdfBytes, actualPdfBytes, resource, false
+                expectedPdfBytes, actualPdfBytes, resource, false
         )
 
         // Get a list of results.
         if (problems.isNotEmpty()) {
             System.err.println("Found problems with test case ($resource):")
             System.err.println(problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
-                                   .collect(Collectors.joining("\n    ", "[\n    ", "\n]")))
+                                       .collect(Collectors.joining("\n    ", "[\n    ", "\n]")))
             System.err.println("For test case ($resource) writing failure artifacts to '$TEST_OUTPUT_PATH'")
             File(TEST_OUTPUT_PATH, "$resource---actual.pdf").writeBytes(actualPdfBytes)
         }
