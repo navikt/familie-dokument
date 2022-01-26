@@ -56,6 +56,9 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(BadRequestException::class)
     fun handleThrowable(ex: BadRequestException): ResponseEntity<Ressurs<String>> {
         logger.warn("Bad request - ${ex.javaClass.simpleName}-${ex.code}")
+        ex.secureLogMessage?.let {
+            secureLogger.warn("Bad request - ${ex.javaClass.simpleName}-${ex.code} - msg=${ex.secureLogMessage}")
+        }
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Ressurs.failure(ex.message))

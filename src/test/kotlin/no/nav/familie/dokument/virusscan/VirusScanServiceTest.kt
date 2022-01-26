@@ -2,6 +2,8 @@ package no.nav.familie.dokument.virusscan
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.familie.dokument.BadRequestCode
+import no.nav.familie.dokument.BadRequestException
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -33,8 +35,10 @@ internal class VirusScanServiceTest {
 
     @Test
     internal fun `skal kaste exception når klienten finner virus`() {
-        every { virusScanClient.scan(any()) } returns listOf(ScanResult(Result.OK), ScanResult(Result.FOUND))
-        assertThat(Assertions.catchThrowable { virusScanService.scan(byteArrayOf(12), "navn") })
-                .isInstanceOf(VirusScanException::class.java)
+        every { virusScanClient.scan(any()) } returns listOf(ScanResult(Result.FOUND))
+        val throwable = Assertions.catchThrowable { virusScanService.scan(byteArrayOf(12), "navn") }
+        assertThat(throwable).isInstanceOf(BadRequestException::class.java)
+        assertThat((throwable as BadRequestException).code).isEqualTo(BadRequestCode.VIRUS_FOUND)
+        assertThat(throwable.message).isEqualTo("CODE=VIRUS_FOUND")
     }
 }
