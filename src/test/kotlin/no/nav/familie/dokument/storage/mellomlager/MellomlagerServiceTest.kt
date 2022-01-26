@@ -1,14 +1,17 @@
 package no.nav.familie.dokument.storage.mellomlager
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 
 
 class MellomlagerServiceTest {
@@ -17,8 +20,7 @@ class MellomlagerServiceTest {
     private val mellomLagerService = MellomLagerService(delegate)
     private val jsonVerdi = """ { "a": "æøå" } """
 
-    @Before
-    @Throws(IOException::class)
+    @BeforeEach
     fun setUp() {
         every { delegate.put(any(), any(), any()) } just Runs
     }
@@ -37,7 +39,6 @@ class MellomlagerServiceTest {
     }
 
     @Test
-    @Throws(IOException::class)
     fun `skal hente ut søknad om overgangsstønad i mellomlager`() {
         every { delegate[any(), any()] } throws (RuntimeException())
         every { delegate["directory123", "UUID123"] } returns jsonVerdi.toByteArray()

@@ -1,12 +1,17 @@
 package no.nav.familie.dokument.storage.encryption
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.verify
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
 import no.nav.familie.dokument.storage.hentFnr
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 
 class EncryptedStorageTest {
@@ -25,7 +30,7 @@ class EncryptedStorageTest {
     private val encryptedStorage = EncryptedStorage(tokenValidationContextHolder, storage, encryptor)
 
 
-    @Before
+    @BeforeEach
     fun setUpMockedEncryptor() {
 
         every { encryptor.encryptedStream(FNR, any())} returns ENCRYPTED_STREAM
