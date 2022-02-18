@@ -9,7 +9,6 @@ import io.mockk.mockk
 import io.mockk.slot
 import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
-import no.nav.familie.dokument.config.IntegrationTestConfig.Companion.clearTokenValidationContextHolder
 import no.nav.familie.dokument.storage.StonadController
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
 import no.nav.familie.dokument.storage.encryption.Hasher
@@ -17,7 +16,6 @@ import no.nav.familie.dokument.storage.google.GcpStorageConfiguration
 import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -49,11 +47,6 @@ class StonadControllerIntegrasionTest {
 
     @Autowired
     lateinit var storageMock: Storage
-
-    @AfterEach
-    internal fun tearDown() {
-        clearTokenValidationContextHolder(tokenValidationContextHolderMock)
-    }
 
     @Test
     fun `Skal lagre søknad som er gyldig json`() {

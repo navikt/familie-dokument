@@ -3,7 +3,6 @@ package no.nav.familie.dokument.config
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.cloud.storage.Storage
-import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import no.nav.familie.dokument.storage.attachment.ImageConversionService
@@ -22,7 +21,7 @@ class IntegrationTestConfig {
     @Primary
     fun tokenValidationContextHolderMock(): TokenValidationContextHolder {
         val tokenValidationContextHolder = mockk<TokenValidationContextHolder>()
-        clearTokenValidationContextHolder(tokenValidationContextHolder)
+        every { tokenValidationContextHolder.tokenValidationContext } returns mockk()
         return tokenValidationContextHolder
     }
 
@@ -45,13 +44,5 @@ class IntegrationTestConfig {
         val objectMapper = ObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper
-    }
-
-    companion object {
-
-        fun clearTokenValidationContextHolder(tokenValidationContextHolder: TokenValidationContextHolder) {
-            clearMocks(tokenValidationContextHolder)
-            every { tokenValidationContextHolder.tokenValidationContext } returns mockk()
-        }
     }
 }
