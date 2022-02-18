@@ -4,5 +4,7 @@ import no.nav.familie.sikkerhet.EksternBrukerUtils
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 
 
-fun TokenValidationContextHolder.hentFnr() = EksternBrukerUtils.hentFnrFraToken()
+fun TokenValidationContextHolder.hentFnr(): String {
+    return EksternBrukerUtils.hentFnrFraToken()
+}
 
