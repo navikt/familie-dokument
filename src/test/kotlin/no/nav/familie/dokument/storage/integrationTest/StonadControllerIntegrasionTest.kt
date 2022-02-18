@@ -2,31 +2,33 @@ package no.nav.familie.dokument.storage.integrationTest
 
 import com.google.cloud.storage.Blob
 import com.google.cloud.storage.BlobId
+import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageException
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
+import no.nav.familie.dokument.ApiExceptionHandler
+import no.nav.familie.dokument.config.IntegrationTestConfig
+import no.nav.familie.dokument.config.IntegrationTestConfig.Companion.clearTokenValidationContextHolder
+import no.nav.familie.dokument.storage.StonadController
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
+import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration
+import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.post
-import com.google.cloud.storage.Storage
-import com.google.cloud.storage.StorageException
-import io.mockk.slot
-import no.nav.familie.dokument.ApiExceptionHandler
-import no.nav.familie.dokument.config.IntegrationTestConfig
-import no.nav.familie.dokument.storage.StonadController
-import no.nav.familie.dokument.storage.encryption.Hasher
-import no.nav.familie.dokument.storage.hentFnr
-import org.springframework.http.HttpStatus
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = [StonadController::class,
@@ -47,6 +49,11 @@ class StonadControllerIntegrasionTest {
 
     @Autowired
     lateinit var storageMock: Storage
+
+    @AfterEach
+    internal fun tearDown() {
+        clearTokenValidationContextHolder(tokenValidationContextHolderMock)
+    }
 
     @Test
     fun `Skal lagre søknad som er gyldig json`() {

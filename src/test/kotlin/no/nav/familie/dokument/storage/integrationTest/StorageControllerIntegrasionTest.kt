@@ -10,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import no.nav.familie.dokument.ApiExceptionHandler
 import no.nav.familie.dokument.config.IntegrationTestConfig
+import no.nav.familie.dokument.config.IntegrationTestConfig.Companion.clearTokenValidationContextHolder
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.StorageController
 import no.nav.familie.dokument.storage.attachment.AttachmentConfiguration
@@ -20,6 +21,7 @@ import no.nav.familie.dokument.storage.hentFnr
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -34,7 +36,6 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
 import kotlin.test.assertEquals
 
 @AutoConfigureMockMvc
@@ -59,7 +60,10 @@ class StorageControllerIntegrasionTest {
     @Autowired
     lateinit var storageMock: Storage
 
-
+    @AfterEach
+    internal fun tearDown() {
+        clearTokenValidationContextHolder(tokenValidationContextHolderMock)
+    }
 
     @Test
     internal fun `skal lagre fil med navnet på filen`() {
