@@ -34,7 +34,6 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
 import kotlin.test.assertEquals
 
 @AutoConfigureMockMvc
@@ -58,8 +57,6 @@ class StorageControllerIntegrasionTest {
 
     @Autowired
     lateinit var storageMock: Storage
-
-
 
     @Test
     internal fun `skal lagre fil med navnet på filen`() {

@@ -6,16 +6,14 @@ import io.mockk.just
 import io.mockk.mockk
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
+import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
-import java.security.MessageDigest
-import java.util.*
 
 internal class StonadControllerTest {
 
@@ -25,6 +23,7 @@ internal class StonadControllerTest {
     @BeforeEach
     internal fun setUp() {
         storageMock = mockk<MellomLagerService>()
+        setUpMockHentFnr()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
         stonadController = StonadController(storageMock, contextHolderMock, objectMapper, Hasher("hammeligSalt"))
 

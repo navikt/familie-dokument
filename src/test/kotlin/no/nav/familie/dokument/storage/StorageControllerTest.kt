@@ -8,6 +8,7 @@ import io.mockk.slot
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
+import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
 import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
@@ -32,6 +33,7 @@ internal class StorageControllerTest {
 
         val virusScanMock = mockk<VirusScanService>()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
+        setUpMockHentFnr()
         val pdfServiceMock = PdfService()
 
         storageController =
