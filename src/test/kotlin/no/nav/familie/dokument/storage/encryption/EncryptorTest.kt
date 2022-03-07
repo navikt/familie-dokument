@@ -1,13 +1,10 @@
 package no.nav.familie.dokument.storage.encryption
 
-import org.junit.Test
-
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.io.InputStream
-
-import org.assertj.core.api.Assertions.assertThat
 
 class EncryptorTest {
 
@@ -16,7 +13,6 @@ class EncryptorTest {
     private val encryptor = Encryptor(secretKeyProvider)
 
     @Test
-    @Throws(IOException::class)
     fun at_encrypt_og_decrypt_fungerer() {
 
         val encryptedStream = encryptor.encryptedStream(fnr, ByteArrayInputStream(originalTekst.toByteArray()))
@@ -28,7 +24,6 @@ class EncryptorTest {
         assertThat(decrypted).isEqualTo(originalTekst.toByteArray())
     }
 
-    @Throws(IOException::class)
     private fun toByteArray(inputStream: InputStream): ByteArray {
         val buffer = ByteArrayOutputStream()
 

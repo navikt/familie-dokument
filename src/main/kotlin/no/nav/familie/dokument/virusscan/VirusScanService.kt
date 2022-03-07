@@ -1,5 +1,7 @@
 package no.nav.familie.dokument.virusscan
 
+import no.nav.familie.dokument.BadRequestCode
+import no.nav.familie.dokument.BadRequestException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -19,7 +21,8 @@ class VirusScanService(private val client: VirusScanClient,
         val scanResult: ScanResult = scanResults.first()
         logger.debug("Fikk scan result {}", scanResult);
         if (Result.OK != scanResult.result) {
-            throw VirusScanException("Fil ikke godkjent, status=${scanResult.result} fil=$name")
+            throw BadRequestException(BadRequestCode.VIRUS_FOUND,
+                                      "Fil ikke godkjent - virus detektert status=${scanResult.result} fil=$name")
         }
     }
 
