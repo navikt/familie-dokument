@@ -13,6 +13,7 @@ import no.nav.familie.dokument.config.IntegrationTestConfig
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.StorageController
 import no.nav.familie.dokument.storage.attachment.AttachmentConfiguration
+import no.nav.familie.dokument.storage.attachment.FlattenPdfService
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration
@@ -40,6 +41,7 @@ import kotlin.test.assertEquals
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = [StorageController::class,
     PdfService::class,
+    FlattenPdfService::class,
     AttachmentConfiguration::class,
     EncryptedStorageConfiguration::class,
     GcpStorageConfiguration::class,

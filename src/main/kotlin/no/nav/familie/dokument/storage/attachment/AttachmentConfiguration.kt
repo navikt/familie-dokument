@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Profile
 class AttachmentConfiguration {
 
     @Bean
-    internal fun converter(imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
-        return AttachmentToStorableFormatConverter(imageConversionService)
+    internal fun converter(imageConversionService: ImageConversionService, flattenPdfService: FlattenPdfService): AttachmentToStorableFormatConverter {
+        return AttachmentToStorableFormatConverter(imageConversionService, flattenPdfService)
     }
 
     @Bean
