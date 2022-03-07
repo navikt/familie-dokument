@@ -11,13 +11,15 @@ import org.junit.jupiter.api.Test
 
 class AttachmentConverterTest {
 
-    private val imageConversionService : ImageConversionService = mockk()
-    private val converter = AttachmentToStorableFormatConverter(imageConversionService)
+    private val imageConversionService: ImageConversionService = mockk()
+    private val flattenPdfService: FlattenPdfService = mockk()
+    private val converter = AttachmentToStorableFormatConverter(imageConversionService, flattenPdfService)
     private val convertedDummy: ByteArray = toByteArray("dummy/pdf_dummy.pdf")
 
     @BeforeEach
     fun setUp() {
         every { imageConversionService.convert(any(), any()) } returns convertedDummy
+        every { flattenPdfService.convert(any()) } returns convertedDummy
     }
 
     @Test
@@ -32,6 +34,7 @@ class AttachmentConverterTest {
         val storable = converter.toStorageFormat(pdfVedlegg)
         assertThat(storable).isEqualTo(pdfVedlegg)
         verify(exactly = 0) { imageConversionService.convert(any(), any()) }
+        verify(exactly = 1) { flattenPdfService.convert(any()) }
     }
 
     @Test
@@ -47,6 +50,6 @@ class AttachmentConverterTest {
         converted = converter.toStorageFormat(vedlegg)
         assertThat(converted).isEqualTo(convertedDummy)
 
-        verify(exactly = 2) {imageConversionService.convert(any(), any())}
+        verify(exactly = 2) { imageConversionService.convert(any(), any()) }
     }
 }

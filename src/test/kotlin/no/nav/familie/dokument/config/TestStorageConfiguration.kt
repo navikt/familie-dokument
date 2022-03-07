@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.attachment.AttachmentToStorableFormatConverter
+import no.nav.familie.dokument.storage.attachment.FlattenPdfService
 import no.nav.familie.dokument.storage.attachment.ImageConversionService
 import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.ATTACHMENT_ENCRYPTED_STORAGE
@@ -50,7 +51,7 @@ class TestStorageConfiguration {
     @Bean
     @Primary
     fun converter(@Autowired imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
-        return AttachmentToStorableFormatConverter(ImageConversionService())
+        return AttachmentToStorableFormatConverter(ImageConversionService(), FlattenPdfService())
     }
 
     @Bean
