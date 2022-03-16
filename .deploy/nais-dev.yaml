@@ -59,6 +59,7 @@ spec:
           cluster: dev-fss
           namespace: teamfamilie
         - application: familie-ef-soknad-api
+        - application: familie-ef-sak
         - application: familie-ba-mottak
           cluster: dev-fss
           namespace: teamfamilie
