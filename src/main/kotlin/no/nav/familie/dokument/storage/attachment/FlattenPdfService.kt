@@ -17,6 +17,7 @@ class FlattenPdfService {
         return try {
             val loadedPdf = PDDocument.load(input)
             val pdAcroForm: PDAcroForm? = loadedPdf.documentCatalog.acroForm
+            if (loadedPdf.isEncrypted) return input
             pdAcroForm?.let {
                 it.flatten()
                 val byteArrayOutputStream = ByteArrayOutputStream()
