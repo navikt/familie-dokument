@@ -56,6 +56,7 @@ spec:
         - application: soknad-kontantstotte-api
         - application: familie-ef-mottak
         - application: familie-ef-soknad-api
+        - application: familie-ef-sak
         - application: familie-ba-mottak
           cluster: dev-fss
           namespace: teamfamilie
