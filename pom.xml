@@ -27,7 +27,7 @@
         <gcp.version>0.166.0</gcp.version>
         <kontrakter.version>2.0_20210428123956_0739dcf</kontrakter.version>
         <tika.core.version>2.2.1</tika.core.version>
-        <tika.parser.version>1.28</tika.parser.version>
+        <tika.parser.version>1.28.2</tika.parser.version>
         <jsoup.version>1.14.3</jsoup.version>
         <!-- Setter disse til token-support sine versjoner, versjoner(9.x) i spring er ikke kompatibel med oauth2-oidc-sdk -->
         <nimbus-jose-jwt.version>8.20.2</nimbus-jose-jwt.version>
