@@ -30,14 +30,14 @@ internal class HentFnrTest {
     internal fun `skal kaste feil hvis det ikke finnes en token`() {
         mockRequestContextHolder(emptyMap())
         assertThatThrownBy { contextHolder.hentFnr() }
-                .hasMessage("Finner ikke token for ekstern bruker - issuers=[]")
+            .hasMessage("Finner ikke token for ekstern bruker - issuers=[]")
     }
 
     @Test
     internal fun `skal kaste feil hvis det ikke finnes subject eller pid`() {
         mockContext()
         assertThatThrownBy { contextHolder.hentFnr() }
-                .hasMessage("Finner ikke sub/pid på token")
+            .hasMessage("Finner ikke sub/pid på token")
     }
 
     @Test
@@ -73,5 +73,4 @@ internal class HentFnrTest {
         every { requestAttributes.getAttribute(any(), any()) } returns TokenValidationContext(map)
         RequestContextHolder.setRequestAttributes(requestAttributes)
     }
-
 }

@@ -56,31 +56,31 @@ class PdfService {
     fun genererPdf(w3cDokument: Document, outputStream: ByteArrayOutputStream) {
         try {
             val builder = PdfRendererBuilder()
-                    .useFastMode()
-                    .useFont(
-                            FontSupplier("SourceSansPro-Regular.ttf"),
-                            "Source Sans Pro",
-                            400,
-                            BaseRendererBuilder.FontStyle.NORMAL,
-                            true
-                    )
-                    .useFont(
-                            FontSupplier("SourceSansPro-Bold.ttf"),
-                            "Source Sans Pro",
-                            700,
-                            BaseRendererBuilder.FontStyle.OBLIQUE,
-                            true
-                    )
-                    .useFont(
-                            FontSupplier("SourceSansPro-It.ttf"),
-                            "Source Sans Pro",
-                            400,
-                            BaseRendererBuilder.FontStyle.ITALIC,
-                            true
-                    )
-                    .useSVGDrawer(BatikSVGDrawer())
-                    .withW3cDocument(w3cDokument, "")
-                    .buildPdfRenderer()
+                .useFastMode()
+                .useFont(
+                    FontSupplier("SourceSansPro-Regular.ttf"),
+                    "Source Sans Pro",
+                    400,
+                    BaseRendererBuilder.FontStyle.NORMAL,
+                    true
+                )
+                .useFont(
+                    FontSupplier("SourceSansPro-Bold.ttf"),
+                    "Source Sans Pro",
+                    700,
+                    BaseRendererBuilder.FontStyle.OBLIQUE,
+                    true
+                )
+                .useFont(
+                    FontSupplier("SourceSansPro-It.ttf"),
+                    "Source Sans Pro",
+                    400,
+                    BaseRendererBuilder.FontStyle.ITALIC,
+                    true
+                )
+                .useSVGDrawer(BatikSVGDrawer())
+                .withW3cDocument(w3cDokument, "")
+                .buildPdfRenderer()
             builder.createPDFWithoutClosing()
             builder.pdfDocument.conform()
             builder.pdfDocument.save(outputStream)

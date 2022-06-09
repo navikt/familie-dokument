@@ -12,15 +12,23 @@ internal class HasherTest {
 
     @Test
     internal fun `Mappenavn for bruker skal være 44 lang`() {
-        assertThatDigestHarLengde44("12345678911",
-                                    "kjhsfdglkjhsdfglkjhdfsgoiwue4toq43htrw4o8ue0fj3qå08q4ofjewåowe80fjwpe4ofij")
+        assertThatDigestHarLengde44(
+            "12345678911",
+            "kjhsfdglkjhsdfglkjhdfsgoiwue4toq43htrw4o8ue0fj3qå08q4ofjewåowe80fjwpe4ofij"
+        )
 
-        assertThatDigestHarLengde44("9999999999999",
-                                    "983745987345987345987345987345987345987345987345987345987345987345987345987")
-        assertThatDigestHarLengde44("9999999999999",
-                                    "983745987345987345987345987345987345987345987345987345987345987345987345987")
-        assertThatDigestHarLengde44("9999999999999999999999999999",
-                                    "983745987345987345987345987345987345987345987345987345987345987345987345987999fhjdfhsdægijep9seån0 guwenpgijsenøgpijsneæ pgnposeæpgroinæpsot")
+        assertThatDigestHarLengde44(
+            "9999999999999",
+            "983745987345987345987345987345987345987345987345987345987345987345987345987"
+        )
+        assertThatDigestHarLengde44(
+            "9999999999999",
+            "983745987345987345987345987345987345987345987345987345987345987345987345987"
+        )
+        assertThatDigestHarLengde44(
+            "9999999999999999999999999999",
+            "983745987345987345987345987345987345987345987345987345987345987345987345987999fhjdfhsdægijep9seån0 guwenpgijsenøgpijsneæ pgnposeæpgroinæpsot"
+        )
     }
 
     private fun assertThatDigestHarLengde44(fnr: String, hemmeligSalt: String) {

@@ -39,8 +39,7 @@ internal class ImageConversionServiceTest {
     @Test
     internal fun `convert png file too small`() {
         assertThatThrownBy { imageConversionService.convert(toByteArray("dummy/300_300px.png"), Format.PNG) }
-                .isInstanceOf(InvalidImageDimensions::class.java)
-                .hasMessage("CODE=IMAGE_DIMENSIONS_TOO_SMALL")
+            .isInstanceOf(InvalidImageDimensions::class.java)
+            .hasMessage("CODE=IMAGE_DIMENSIONS_TOO_SMALL")
     }
-
 }

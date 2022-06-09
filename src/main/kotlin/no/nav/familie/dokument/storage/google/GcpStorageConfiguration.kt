@@ -17,24 +17,26 @@ class GcpStorageConfiguration {
     @Bean
     fun retrySettings(@Value("\${storage_service.timeout.ms:3000}") timeoutMs: Long): RetrySettings? {
         return RetrySettings.newBuilder()
-                .setTotalTimeout(Duration.ofMillis(timeoutMs))
-                .build()
+            .setTotalTimeout(Duration.ofMillis(timeoutMs))
+            .build()
     }
 
     @Bean
-    fun gcpStorage(storage: Storage,
-                   @Value("\${gcp.storage.bucketname}") bucketName: String,
-                   @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int): GcpStorage {
+    fun gcpStorage(
+        storage: Storage,
+        @Value("\${gcp.storage.bucketname}") bucketName: String,
+        @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int
+    ): GcpStorage {
         return GcpStorage(bucketName, maxFileSizeMB * MAX_FILE_SIZE_FACTOR, storage)
     }
 
     @Bean
     fun storage(retrySettings: RetrySettings): Storage {
         val storage = StorageOptions
-                .newBuilder()
-                .setRetrySettings(retrySettings)
-                .build()
-                .service
+            .newBuilder()
+            .setRetrySettings(retrySettings)
+            .build()
+            .service
         LOG.info("Google Storage intialized")
         return storage
     }

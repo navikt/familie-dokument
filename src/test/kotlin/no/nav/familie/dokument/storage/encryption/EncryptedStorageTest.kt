@@ -23,26 +23,24 @@ class EncryptedStorageTest {
     private val DIRECTORY = "directory"
     private val KEY = "UUID"
 
-    private val storage : GcpStorageWrapper = mockk()
-    private val tokenValidationContextHolder : TokenValidationContextHolder = mockk()
-    private val encryptor : Encryptor = mockk()
+    private val storage: GcpStorageWrapper = mockk()
+    private val tokenValidationContextHolder: TokenValidationContextHolder = mockk()
+    private val encryptor: Encryptor = mockk()
 
     private val encryptedStorage = EncryptedStorage(tokenValidationContextHolder, storage, encryptor)
-
 
     @BeforeEach
     fun setUpMockedEncryptor() {
 
-        every { encryptor.encryptedStream(FNR, any())} returns ENCRYPTED_STREAM
-        every { encryptor.decrypt(FNR, eq(ENCRYPTED_DATA))} returns UNENCRYPTED_DATA
-        every { storage.put(eq(DIRECTORY),eq(KEY),any()) } just Runs
+        every { encryptor.encryptedStream(FNR, any()) } returns ENCRYPTED_STREAM
+        every { encryptor.decrypt(FNR, eq(ENCRYPTED_DATA)) } returns UNENCRYPTED_DATA
+        every { storage.put(eq(DIRECTORY), eq(KEY), any()) } just Runs
 
         mockkStatic("no.nav.familie.dokument.storage.ExtensionsKt")
 
         every {
             tokenValidationContextHolder.hentFnr()
         } returns FNR
-
     }
 
     @Test
@@ -51,18 +49,17 @@ class EncryptedStorageTest {
         encryptedStorage.put(DIRECTORY, KEY, ByteArrayInputStream(UNENCRYPTED_DATA))
 
         verify {
-            storage.put(DIRECTORY, KEY,ENCRYPTED_STREAM)
+            storage.put(DIRECTORY, KEY, ENCRYPTED_STREAM)
         }
     }
 
     @Test
     fun encrypts_after_get() {
 
-        every { storage[DIRECTORY, KEY]  } returns ENCRYPTED_DATA
+        every { storage[DIRECTORY, KEY] } returns ENCRYPTED_DATA
 
         val fetchedData = encryptedStorage[DIRECTORY, KEY]
 
         assertThat(fetchedData).isEqualTo(UNENCRYPTED_DATA)
     }
-
 }

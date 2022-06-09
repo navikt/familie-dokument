@@ -37,14 +37,12 @@ internal class StorageControllerTest {
         val pdfServiceMock = PdfService()
 
         storageController =
-                StorageController(storageMock, virusScanMock, contextHolderMock, 10, Hasher("Hemmelig salt"), pdfServiceMock)
+            StorageController(storageMock, virusScanMock, contextHolderMock, 10, Hasher("Hemmelig salt"), pdfServiceMock)
 
         every { contextHolderMock.hentFnr() } returns "12345678910"
         every { storageMock.get(any(), dokument1.toString()) } returns leseVedlegg("vedlegg", "gyldig-0.8m.pdf")
         every { storageMock.get(any(), dokument2.toString()) } returns leseVedlegg("pdf", "eksempel1.pdf")
         every { storageMock.get(any(), dokument3.toString()) } returns leseVedlegg("vedlegg", "gyldig-0.8m.pdf")
-
-
     }
 
     @Test
@@ -62,7 +60,6 @@ internal class StorageControllerTest {
     }
 
     private fun leseVedlegg(mappeNavn: String, navn: String): ByteArray {
-        return StorageControllerTest::class.java.getResource("/${mappeNavn}/${navn}").readBytes()
+        return StorageControllerTest::class.java.getResource("/$mappeNavn/$navn").readBytes()
     }
-
 }

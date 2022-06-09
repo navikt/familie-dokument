@@ -14,9 +14,12 @@ import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.context.annotation.*
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+import org.springframework.context.annotation.Primary
+import org.springframework.context.annotation.Profile
 import java.io.InputStream
-
 
 @Profile("dev")
 @Configuration
@@ -56,8 +59,10 @@ class TestStorageConfiguration {
 
     @Bean
     @Primary
-    fun attachmentStorage(@Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) encryptedStorage: EncryptedStorage,
-                          storableFormatConverter: AttachmentToStorableFormatConverter): AttachmentStorage {
+    fun attachmentStorage(
+        @Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) encryptedStorage: EncryptedStorage,
+        storableFormatConverter: AttachmentToStorableFormatConverter
+    ): AttachmentStorage {
         val storage: AttachmentStorage = mockk()
 
         every { storage.put(any(), any(), any()) } answers {
@@ -79,5 +84,4 @@ class TestStorageConfiguration {
     @Bean
     @Primary
     fun virusScanService(): VirusScanService = mockk(relaxed = true)
-
 }

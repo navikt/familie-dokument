@@ -23,14 +23,14 @@ internal class VirusScanServiceTest {
     internal fun `skal kaste exception når klienten returnerer tom liste med result`() {
         every { virusScanClient.scan(any()) } returns listOf()
         assertThat(Assertions.catchThrowable { virusScanService.scan(byteArrayOf(12), "navn") })
-                .isInstanceOf(VirusScanException::class.java)
+            .isInstanceOf(VirusScanException::class.java)
     }
 
     @Test
     internal fun `skal kaste exception når klienten returnerer fler enn 1 result`() {
         every { virusScanClient.scan(any()) } returns listOf(ScanResult(Result.OK), ScanResult(Result.OK))
         assertThat(Assertions.catchThrowable { virusScanService.scan(byteArrayOf(12), "navn") })
-                .isInstanceOf(VirusScanException::class.java)
+            .isInstanceOf(VirusScanException::class.java)
     }
 
     @Test

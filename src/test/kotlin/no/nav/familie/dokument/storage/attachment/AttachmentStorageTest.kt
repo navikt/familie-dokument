@@ -15,7 +15,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
-
 class AttachmentStorageTest {
 
     private val delegate: EncryptedStorage = mockk()
@@ -24,7 +23,6 @@ class AttachmentStorageTest {
 
     private val pdfByteArray = toByteArray("dummy/pdf_dummy.pdf")
     private val pdfByteString = toByteArray("dummy/pdf_dummy.pdf").toString(StandardCharsets.UTF_8)
-
 
     @BeforeEach
     fun setUp() {

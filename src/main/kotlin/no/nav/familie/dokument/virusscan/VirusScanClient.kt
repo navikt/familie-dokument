@@ -8,7 +8,7 @@ import java.net.URI
 
 @Service
 class VirusScanClient(operations: RestOperations, private val config: VirusScanConfig) :
-        AbstractPingableRestClient(operations, "virusscan") {
+    AbstractPingableRestClient(operations, "virusscan") {
 
     private val scanUri = UriComponentsBuilder.fromUri(config.uri).path("scan").build().toUri()
 
@@ -22,5 +22,4 @@ class VirusScanClient(operations: RestOperations, private val config: VirusScanC
 
     override val pingUri: URI
         get() = UriComponentsBuilder.fromUri(config.uri).path("liveness").build().toUri()
-
 }
