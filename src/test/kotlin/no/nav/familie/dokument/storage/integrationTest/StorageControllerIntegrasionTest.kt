@@ -38,15 +38,19 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.assertEquals
 
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = [StorageController::class,
-    PdfService::class,
-    FlattenPdfService::class,
-    AttachmentConfiguration::class,
-    EncryptedStorageConfiguration::class,
-    GcpStorageConfiguration::class,
-    ApiExceptionHandler::class,
-    IntegrationTestConfig::class,
-    Hasher::class])
+@ContextConfiguration(
+    classes = [
+        StorageController::class,
+        PdfService::class,
+        FlattenPdfService::class,
+        AttachmentConfiguration::class,
+        EncryptedStorageConfiguration::class,
+        GcpStorageConfiguration::class,
+        ApiExceptionHandler::class,
+        IntegrationTestConfig::class,
+        Hasher::class
+    ]
+)
 @WebMvcTest
 @ActiveProfiles("integration-test")
 class StorageControllerIntegrasionTest {
@@ -66,7 +70,7 @@ class StorageControllerIntegrasionTest {
         val navn = "gyldig-0.8m.pdf"
         val vedlegg = leseVedlegg(navn, "application/pdf")
         val result = mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
-                .andExpect(status().isCreated).andReturn()
+            .andExpect(status().isCreated).andReturn()
         val filnavn = objectMapper.readValue(result.response.contentAsString, Map::class.java)["filnavn"]
         assertThat(filnavn).isEqualTo(navn)
     }
@@ -75,7 +79,7 @@ class StorageControllerIntegrasionTest {
     fun `Skal returnere 400 for vedlegg som overstiger størrelsesgrensen`() {
         val vedlegg = leseVedlegg("ugyldig-2.6m.pdf", "application/pdf")
         mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
-                .andExpect(status().isBadRequest)
+            .andExpect(status().isBadRequest)
     }
 
     @Test
@@ -83,14 +87,14 @@ class StorageControllerIntegrasionTest {
         initMockWithoutArtificialErrors()
         val vedlegg = leseVedlegg("ugyldig.txt", "text")
         mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
-                .andExpect(status().isInternalServerError)
+            .andExpect(status().isInternalServerError)
     }
 
     private fun leseVedlegg(navn: String, type: String): MockMultipartFile {
         val name = "file"
         val originalFileName = navn
         val contentType = type
-        val content = StorageControllerIntegrasionTest::class.java.getResource("/vedlegg/${navn}").readBytes()
+        val content = StorageControllerIntegrasionTest::class.java.getResource("/vedlegg/$navn").readBytes()
         return MockMultipartFile(name, originalFileName, contentType, content)
     }
 
@@ -99,10 +103,12 @@ class StorageControllerIntegrasionTest {
         val vedlegg = leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
 
         every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
-        every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(HttpStatus.UNAUTHORIZED.value(),
-                                                                                      "Unauthorized");
+        every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(
+            HttpStatus.UNAUTHORIZED.value(),
+            "Unauthorized"
+        )
         mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
-                .andExpect(status().isInternalServerError)
+            .andExpect(status().isInternalServerError)
     }
 
     @Autowired
@@ -132,10 +138,10 @@ class StorageControllerIntegrasionTest {
         initMockWithoutArtificialErrors()
         val vedlegg = leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
         val result = mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
-                .andExpect(status().isCreated).andReturn()
+            .andExpect(status().isCreated).andReturn()
         val dokumentId = objectMapper.readValue(result.response.contentAsString, Map::class.java)["dokumentId"]
 
-        val output = mockMvc.get("/api/mapper/familie-dokument-test/${dokumentId}") {
+        val output = mockMvc.get("/api/mapper/familie-dokument-test/$dokumentId") {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk() }

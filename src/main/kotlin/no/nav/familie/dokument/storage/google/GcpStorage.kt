@@ -12,7 +12,7 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
 
     private val maxFileSizeAfterEncryption: Int = (maxFileSizeMB.toDouble() * 1000.0 * 1000.0 * ENCRYPTION_SIZE_FACTOR).toInt()
 
-    fun makeKey(directory: String, key: String) = "${directory}_${key}"
+    fun makeKey(directory: String, key: String) = "${directory}_$key"
 
     fun put(directory: String, key: String, data: InputStream, mediaTypeValue: String) {
         try {
@@ -23,7 +23,7 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
             }
 
             val blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, makeKey(directory, key)))
-                    .setContentType(mediaTypeValue).build()
+                .setContentType(mediaTypeValue).build()
             storage.create(blobInfo, bytes)
         } catch (e: Exception) {
             throw RuntimeException("Feil oppsto ved lagring av fil mot gcp.", e)

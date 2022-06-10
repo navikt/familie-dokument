@@ -1,6 +1,5 @@
 package no.nav.familie.dokument
 
-
 import no.nav.security.token.support.core.JwtTokenConstants
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
@@ -14,7 +13,11 @@ import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.Response
@@ -51,52 +54,52 @@ class ApiFeilIntegrationTest {
     @Test
     fun `skal få 200 når autentisert og vi bruker get`() {
         val response = webTarget().path("/ok")
-                .request()
-                .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-                .get()
+            .request()
+            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
+            .get()
         assertEquals(Response.Status.OK.statusCode, response.status)
     }
 
     @Test
     fun `skal få 400 når man sender inn feil type objekt, liste i stedet for objekt`() {
         val response = webTarget().path("/ok")
-                .request()
-                .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-                .post(Entity.json("{}"))
+            .request()
+            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
+            .post(Entity.json("{}"))
         assertEquals(Response.Status.BAD_REQUEST.statusCode, response.status)
     }
 
     @Test // Tester handleExceptionInternal
     fun `skal få 415 når man sender inn feil type Content-Type`() {
         val response = webTarget().path("/ok")
-                .request()
-                .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-                .post(Entity.text("Hei"))
+            .request()
+            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
+            .post(Entity.text("Hei"))
         assertEquals(Response.Status.UNSUPPORTED_MEDIA_TYPE.statusCode, response.status)
     }
 
     @Test
     fun `skal få 401 når ikke autentisert `() {
         val response = webTarget().path("/ok")
-                .request()
-                .get()
+            .request()
+            .get()
         assertEquals(Response.Status.UNAUTHORIZED.statusCode, response.status)
     }
 
     @Test
     fun `skal få 404 når endepunkt ikke eksisterer`() {
         val response = webTarget().path("/eksistererIkke")
-                .request()
-                .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-                .get()
+            .request()
+            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
+            .get()
         assertEquals(Response.Status.NOT_FOUND.statusCode, response.status)
     }
 
     @Test
     fun `skal få 500 når endepunkt kaster feil`() {
         val response = webTarget().path("/feil")
-                .request()
-                .get()
+            .request()
+            .get()
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.statusCode, response.status)
     }
 
@@ -105,6 +108,4 @@ class ApiFeilIntegrationTest {
     private fun client() = ClientBuilder.newClient().register(LoggingFeature::class.java)
 
     private fun serializedJWTToken() = JwtTokenGenerator.createSignedJWT(tokenSubject).serialize()
-
 }
-

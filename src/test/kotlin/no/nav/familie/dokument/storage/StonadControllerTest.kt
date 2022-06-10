@@ -42,11 +42,10 @@ internal class StonadControllerTest {
     internal fun `skal feile ved mellomlagring dersom søknaden ikke er gyldig json`() {
         val ugyldigJson = "Jeg gikk en tur på stien"
         assertThrows<IllegalArgumentException> {
-            stonadController.mellomlagreSøknad(StonadController.StønadParameter.valueOf("overgangsstonad"),
-                                               ugyldigJson)
+            stonadController.mellomlagreSøknad(
+                StonadController.StønadParameter.valueOf("overgangsstonad"),
+                ugyldigJson
+            )
         }
     }
-
-
-
 }

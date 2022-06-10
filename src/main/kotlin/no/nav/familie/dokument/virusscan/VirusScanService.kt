@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class VirusScanService(private val client: VirusScanClient,
-                       private val metadataLoggerService: MetadataLoggerService) {
+class VirusScanService(
+    private val client: VirusScanClient,
+    private val metadataLoggerService: MetadataLoggerService
+) {
 
     private val logger = LoggerFactory.getLogger(VirusScanService::class.java)
 
@@ -19,11 +21,12 @@ class VirusScanService(private val client: VirusScanClient,
             throw VirusScanException("Uventet respons med lengde ${scanResults.size}, forventet lengde er 1")
         }
         val scanResult: ScanResult = scanResults.first()
-        logger.debug("Fikk scan result {}", scanResult);
+        logger.debug("Fikk scan result {}", scanResult)
         if (Result.OK != scanResult.result) {
-            throw BadRequestException(BadRequestCode.VIRUS_FOUND,
-                                      "Fil ikke godkjent - virus detektert status=${scanResult.result} fil=$name")
+            throw BadRequestException(
+                BadRequestCode.VIRUS_FOUND,
+                "Fil ikke godkjent - virus detektert status=${scanResult.result} fil=$name"
+            )
         }
     }
-
 }

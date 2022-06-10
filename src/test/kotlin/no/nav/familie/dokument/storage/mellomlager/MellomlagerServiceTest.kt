@@ -13,7 +13,6 @@ import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
-
 class MellomlagerServiceTest {
 
     private val delegate: EncryptedStorage = mockk()

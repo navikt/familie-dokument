@@ -6,9 +6,11 @@ import no.nav.familie.dokument.storage.hentFnr
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import java.io.InputStream
 
-class EncryptedStorage constructor(private val contextHolder: TokenValidationContextHolder,
-                                   private val delegate: GcpStorageWrapper,
-                                   private val encryptor: Encryptor) : Storage<InputStream, ByteArray> {
+class EncryptedStorage constructor(
+    private val contextHolder: TokenValidationContextHolder,
+    private val delegate: GcpStorageWrapper,
+    private val encryptor: Encryptor
+) : Storage<InputStream, ByteArray> {
 
     override fun put(directory: String, key: String, data: InputStream) {
         delegate.put(directory, key, encryptor.encryptedStream(contextHolder.hentFnr(), data))
@@ -21,5 +23,4 @@ class EncryptedStorage constructor(private val contextHolder: TokenValidationCon
     override fun delete(directory: String, key: String) {
         delegate.delete(directory, key)
     }
-
 }

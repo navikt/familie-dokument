@@ -44,13 +44,13 @@ class ApplicationConfig {
 
     @Bean
     fun restOperations(consumerIdClientInterceptor: ConsumerIdClientInterceptor): RestOperations =
-            RestTemplateBuilder()
-                    .additionalInterceptors(consumerIdClientInterceptor)
-                    .build()
+        RestTemplateBuilder()
+            .additionalInterceptors(consumerIdClientInterceptor)
+            .build()
 
     @Bean
     @Primary
     fun objectMapper(): ObjectMapper {
-        return objectMapper;
+        return objectMapper
     }
 }

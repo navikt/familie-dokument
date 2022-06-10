@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage.attachment
 
-import java.util.*
+import java.util.Arrays
+import java.util.Optional
 
 @Suppress("unused")
 enum class Format(var mimeType: String) {

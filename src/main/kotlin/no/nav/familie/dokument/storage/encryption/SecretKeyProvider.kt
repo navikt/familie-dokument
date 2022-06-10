@@ -16,5 +16,4 @@ class SecretKeyProvider(private val passphrase: String) {
         val key = factory.generateSecret(spec)
         return SecretKeySpec(key.encoded, "AES")
     }
-
 }

@@ -23,7 +23,6 @@ class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
         } catch (e: GeneralSecurityException) {
             throw RuntimeException("Kunne ikke opprette cipher", e)
         }
-
     }
 
     private fun initCipher(cipherTransformation: Int, fnr: String): Cipher {
@@ -34,12 +33,10 @@ class Encryptor(private val secretKeyProvider: SecretKeyProvider) {
         } catch (e: GeneralSecurityException) {
             throw RuntimeException("Kunne ikke opprette cipher", e)
         }
-
     }
 
     companion object {
 
         private val ALGORITHM = "AES/GCM/NoPadding"
     }
-
 }

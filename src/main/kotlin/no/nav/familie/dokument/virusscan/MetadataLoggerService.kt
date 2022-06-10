@@ -49,26 +49,28 @@ class MetadataLoggerService {
             val tika = Tika()
             val mimeType = tika.detect(TikaInputStream.get(bytes))
             Format.fromMimeType(mimeType)
-                    .orElseThrow { RuntimeException("Kunne ikke konvertere vedleggstypen $mimeType") }
-                    .takeIf { Format.PDF == it }
-                    ?.let {
-                        val metadata = Metadata()
-                        tika.parse(TikaInputStream.get(bytes), metadata)
-                        secureLogger.info("PDF metadata - {} ms={}", pdfMedata(metadata), (System.currentTimeMillis() - start))
-                    }
+                .orElseThrow { RuntimeException("Kunne ikke konvertere vedleggstypen $mimeType") }
+                .takeIf { Format.PDF == it }
+                ?.let {
+                    val metadata = Metadata()
+                    tika.parse(TikaInputStream.get(bytes), metadata)
+                    secureLogger.info("PDF metadata - {} ms={}", pdfMedata(metadata), (System.currentTimeMillis() - start))
+                }
         } catch (e: Exception) {
             secureLogger.warn("Feilet sjekk av metadata - {}", e.message)
         }
     }
 
     private fun pdfMedata(metadata: Metadata): String {
-        return listOf("pdf:PDFVersion",
-                      "xmp:CreatorTool",
-                      "producer",
-                      "pdf:encrypted",
-                      "creator",
-                      "xmpTPg:NPages",
-                      "Creation-Date",
-                      "Last-Modified").joinToString(" ") { "$it=${metadata.get(it)}" }
+        return listOf(
+            "pdf:PDFVersion",
+            "xmp:CreatorTool",
+            "producer",
+            "pdf:encrypted",
+            "creator",
+            "xmpTPg:NPages",
+            "Creation-Date",
+            "Last-Modified"
+        ).joinToString(" ") { "$it=${metadata.get(it)}" }
     }
 }

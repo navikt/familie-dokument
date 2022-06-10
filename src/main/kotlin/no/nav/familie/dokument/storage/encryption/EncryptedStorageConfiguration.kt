@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 
-
 @Configuration
 class EncryptedStorageConfiguration {
 
@@ -22,22 +21,27 @@ class EncryptedStorageConfiguration {
 
     @Bean
     internal fun secretKeyProvider(
-            @Value("\${FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD}") passphrase: String): SecretKeyProvider {
+        @Value("\${FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD}") passphrase: String
+    ): SecretKeyProvider {
         return SecretKeyProvider(passphrase)
     }
 
     @Bean(ATTACHMENT_ENCRYPTED_STORAGE)
-    internal fun attachmentEncryptedStorage(@Autowired contextHolder: TokenValidationContextHolder,
-                                            @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper,
-                                            encryptor: Encryptor): EncryptedStorage {
+    internal fun attachmentEncryptedStorage(
+        @Autowired contextHolder: TokenValidationContextHolder,
+        @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper,
+        encryptor: Encryptor
+    ): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 
     @Profile("!dev")
     @Bean(STONAD_ENCRYPTED_STORAGE)
-    internal fun stonadEncryptedStorage(@Autowired contextHolder: TokenValidationContextHolder,
-                                        @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper,
-                                        encryptor: Encryptor): EncryptedStorage {
+    internal fun stonadEncryptedStorage(
+        @Autowired contextHolder: TokenValidationContextHolder,
+        @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper,
+        encryptor: Encryptor
+    ): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 

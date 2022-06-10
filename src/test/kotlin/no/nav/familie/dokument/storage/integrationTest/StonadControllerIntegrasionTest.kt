@@ -29,13 +29,17 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = [StonadController::class,
-    MellomLagerService::class,
-    EncryptedStorageConfiguration::class,
-    GcpStorageConfiguration::class,
-    ApiExceptionHandler::class,
-    IntegrationTestConfig::class,
-    Hasher::class])
+@ContextConfiguration(
+    classes = [
+        StonadController::class,
+        MellomLagerService::class,
+        EncryptedStorageConfiguration::class,
+        GcpStorageConfiguration::class,
+        ApiExceptionHandler::class,
+        IntegrationTestConfig::class,
+        Hasher::class
+    ]
+)
 @WebMvcTest
 @ActiveProfiles("integration-test")
 class StonadControllerIntegrasionTest {
@@ -51,11 +55,11 @@ class StonadControllerIntegrasionTest {
     @Test
     fun `Skal lagre søknad som er gyldig json`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
-        every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
+        every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
         val slot = slot<ByteArray>()
         val blob = mockk<Blob>()
-        every{storageMock.create(any(), capture(slot))} answers{
-            every{blob.getContent()} returns slot.captured
+        every { storageMock.create(any(), capture(slot)) } answers {
+            every { blob.getContent() } returns slot.captured
             blob
         }
 
@@ -83,8 +87,8 @@ class StonadControllerIntegrasionTest {
     @Test
     fun `Skal returnere 500 hvis Google Storage feil`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
-        every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
-        every{storageMock.create(any(), any<ByteArray>())} throws StorageException(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
+        every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
+        every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(HttpStatus.UNAUTHORIZED.value(), "Unauthorized")
 
         mockMvc.post("/familie/dokument/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
@@ -98,16 +102,16 @@ class StonadControllerIntegrasionTest {
     @Test
     fun `Skal lese søknad ut som er lagret`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
-        every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
+        every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
         val slot = slot<ByteArray>()
         val blob = mockk<Blob>()
 
-        every{storageMock.create(any(), capture(slot))} answers{
-            every{blob.getContent()} returns slot.captured
+        every { storageMock.create(any(), capture(slot)) } answers {
+            every { blob.getContent() } returns slot.captured
             blob
         }
 
-        every{storageMock.get(any<BlobId>()) } returns blob
+        every { storageMock.get(any<BlobId>()) } returns blob
 
         mockMvc.post("/familie/dokument/api/soknad/{stonad}", "barnetilsyn") {
             contentType = MediaType.APPLICATION_JSON
@@ -121,14 +125,14 @@ class StonadControllerIntegrasionTest {
             accept = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk() }
-            content{json(gyldigJson)}
+            content { json(gyldigJson) }
         }
     }
 
     @Test
     fun `Skal returnere 201 for å hent ukjent dokument`() {
-        every{tokenValidationContextHolderMock.hentFnr()} returns TEST_FNR
-        every{storageMock.get(any<BlobId>()) } returns null
+        every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
+        every { storageMock.get(any<BlobId>()) } returns null
 
         mockMvc.get("/familie/dokument/api/soknad/barnetilsyn") {
             accept = MediaType.APPLICATION_JSON
@@ -137,7 +141,7 @@ class StonadControllerIntegrasionTest {
         }
     }
 
-    companion object{
-        val TEST_FNR= "TestFnr"
+    companion object {
+        val TEST_FNR = "TestFnr"
     }
 }

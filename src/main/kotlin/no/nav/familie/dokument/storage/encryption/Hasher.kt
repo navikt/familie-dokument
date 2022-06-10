@@ -3,11 +3,13 @@ package no.nav.familie.dokument.storage.encryption
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.security.MessageDigest
-import java.util.*
+import java.util.Base64
 
 @Component
-class Hasher(@Value("\${FAMILIE_DOKUMENT_FNR_SECRET_SALT}")
-             val hemmeligSalt: String) {
+class Hasher(
+    @Value("\${FAMILIE_DOKUMENT_FNR_SECRET_SALT}")
+    val hemmeligSalt: String
+) {
 
     fun lagFnrHash(fnr: String): String {
         require(hemmeligSalt.isNotBlank(), { "hemmeligSalt kan ikke være tom" })
@@ -17,5 +19,4 @@ class Hasher(@Value("\${FAMILIE_DOKUMENT_FNR_SECRET_SALT}")
         val digest = instance.digest(s.toByteArray())
         return Base64.getEncoder().encodeToString(digest)
     }
-
 }

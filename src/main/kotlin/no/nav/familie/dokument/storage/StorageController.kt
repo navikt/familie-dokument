@@ -29,22 +29,28 @@ import java.util.UUID
 @RestController
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
 @RequiredIssuers(
-        ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"]),
-        ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+    ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"]),
+    ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
 )
-class StorageController(val storage: AttachmentStorage,
-                        val virusScanService: VirusScanService,
-                        val contextHolder: TokenValidationContextHolder,
-                        @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
-                        val hasher: Hasher,
-                        val pdfService: PdfService) {
+class StorageController(
+    val storage: AttachmentStorage,
+    val virusScanService: VirusScanService,
+    val contextHolder: TokenValidationContextHolder,
+    @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
+    val hasher: Hasher,
+    val pdfService: PdfService
+) {
 
-    /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
-    @PostMapping(path = ["{bucket}"],
-                 consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
-                 produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun addAttachment(@PathVariable("bucket") bucket: String,
-                      @RequestParam("file") multipartFile: MultipartFile): ResponseEntity<Map<String, String>> {
+    // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
+    @PostMapping(
+        path = ["{bucket}"],
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun addAttachment(
+        @PathVariable("bucket") bucket: String,
+        @RequestParam("file") multipartFile: MultipartFile
+    ): ResponseEntity<Map<String, String>> {
 
         if (multipartFile.isEmpty) {
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
@@ -66,14 +72,18 @@ class StorageController(val storage: AttachmentStorage,
 
         storage.put(directory, uuid, bytes)
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.originalFilename))
+            .body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.originalFilename))
     }
 
-    @PostMapping(path = ["/merge/{bucket}"],
-                 consumes = [MediaType.APPLICATION_JSON_VALUE],
-                 produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun mergeAndStoreDocuments(@PathVariable("bucket") bucket: String,
-                               @RequestBody documentList: List<UUID>): ResponseEntity<Map<String, String>> {
+    @PostMapping(
+        path = ["/merge/{bucket}"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun mergeAndStoreDocuments(
+        @PathVariable("bucket") bucket: String,
+        @RequestBody documentList: List<UUID>
+    ): ResponseEntity<Map<String, String>> {
 
         if (documentList.isEmpty()) {
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
@@ -90,13 +100,15 @@ class StorageController(val storage: AttachmentStorage,
         storage.put(directory, uuid, mergedeDokumenter)
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(mapOf("dokumentId" to uuid))
+            .body(mapOf("dokumentId" to uuid))
     }
 
-    /// TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
+    // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getAttachment(@PathVariable("bucket") bucket: String,
-                      @PathVariable("dokumentId") dokumentId: String): ResponseEntity<Ressurs<ByteArray>> {
+    fun getAttachment(
+        @PathVariable("bucket") bucket: String,
+        @PathVariable("dokumentId") dokumentId: String
+    ): ResponseEntity<Ressurs<ByteArray>> {
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
@@ -113,5 +125,4 @@ class StorageController(val storage: AttachmentStorage,
 
         private val log = LoggerFactory.getLogger(StorageController::class.java)
     }
-
 }

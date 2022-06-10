@@ -32,5 +32,4 @@ internal class FlattenPdfServiceTest {
         Files.createDirectories(Paths.get("target/samvaersavtale"))
         File("target/samvaersavtale", "samvaersavtale_konvertert_chrome_endret.pdf").writeBytes(convertedChrome)
     }
-
 }

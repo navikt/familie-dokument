@@ -31,8 +31,8 @@ class PdfGenerartorTest {
 
     private fun getDocument(fixtureName: String): String {
         return IOUtils.toString(
-                this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
-                StandardCharsets.UTF_8
+            this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
+            StandardCharsets.UTF_8
         )
     }
 
@@ -83,14 +83,16 @@ class PdfGenerartorTest {
 
         // Get a list of results.
         val problems = PdfVisualTester.comparePdfDocuments(
-                expectedPdfBytes, actualPdfBytes, resource, false
+            expectedPdfBytes, actualPdfBytes, resource, false
         )
 
         // Get a list of results.
         if (problems.isNotEmpty()) {
             System.err.println("Found problems with test case ($resource):")
-            System.err.println(problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
-                                       .collect(Collectors.joining("\n    ", "[\n    ", "\n]")))
+            System.err.println(
+                problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
+                    .collect(Collectors.joining("\n    ", "[\n    ", "\n]"))
+            )
             System.err.println("For test case ($resource) writing failure artifacts to '$TEST_OUTPUT_PATH'")
             File(TEST_OUTPUT_PATH, "$resource---actual.pdf").writeBytes(actualPdfBytes)
         }
@@ -105,11 +107,10 @@ class PdfGenerartorTest {
             }
         }
         return problems.isEmpty()
-
     }
 
     private fun isPDF_2_ACompliant(pdf: ByteArray): Boolean {
-        VeraGreenfieldFoundryProvider.initialise();
+        VeraGreenfieldFoundryProvider.initialise()
         val pdfaFlavour = PDFAFlavour.PDFA_2_U
         val validator = Foundries.defaultInstance().createValidator(pdfaFlavour, false)
         val parser = Foundries.defaultInstance().createParser(ByteArrayInputStream(pdf))

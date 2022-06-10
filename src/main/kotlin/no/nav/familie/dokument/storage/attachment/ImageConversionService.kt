@@ -39,10 +39,12 @@ class ImageConversionService {
             val pdImage = JPEGFactory.createFromImage(document, portraitImage, quality)
             val imageSize = scale(pdImage, page)
 
-            logger.info("Input format=${detectedType.name} h=${image.height} w=${image.width} " +
-                        "Portrait h=${portraitImage.height} w=${portraitImage.width} " +
-                        "ImageSize height=${imageSize.height} width=${imageSize.width} " +
-                        " lowHeight=${imageSize.height < page.cropBox.height} lowWidth=${imageSize.width < page.cropBox.width}")
+            logger.info(
+                "Input format=${detectedType.name} h=${image.height} w=${image.width} " +
+                    "Portrait h=${portraitImage.height} w=${portraitImage.width} " +
+                    "ImageSize height=${imageSize.height} width=${imageSize.width} " +
+                    " lowHeight=${imageSize.height < page.cropBox.height} lowWidth=${imageSize.width < page.cropBox.width}"
+            )
 
             PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false).use {
                 it.drawImage(pdImage, Matrix(imageSize.width, 0f, 0f, imageSize.height, 0f, 0f))
