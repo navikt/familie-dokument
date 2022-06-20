@@ -8,10 +8,12 @@ import io.mockk.slot
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
+import no.nav.familie.dokument.testutils.ExtensionMockUtil
 import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
 import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -30,7 +32,6 @@ internal class StorageControllerTest {
 
     @BeforeEach
     internal fun setUp() {
-
         val virusScanMock = mockk<VirusScanService>()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
         setUpMockHentFnr()
@@ -43,6 +44,11 @@ internal class StorageControllerTest {
         every { storageMock.get(any(), dokument1.toString()) } returns leseVedlegg("vedlegg", "gyldig-0.8m.pdf")
         every { storageMock.get(any(), dokument2.toString()) } returns leseVedlegg("pdf", "eksempel1.pdf")
         every { storageMock.get(any(), dokument3.toString()) } returns leseVedlegg("vedlegg", "gyldig-0.8m.pdf")
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        ExtensionMockUtil.unmockHentFnr()
     }
 
     @Test

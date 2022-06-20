@@ -7,9 +7,11 @@ import io.mockk.mockk
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
+import no.nav.familie.dokument.testutils.ExtensionMockUtil.unmockHentFnr
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,13 +24,18 @@ internal class StonadControllerTest {
 
     @BeforeEach
     internal fun setUp() {
-        storageMock = mockk<MellomLagerService>()
+        storageMock = mockk()
         setUpMockHentFnr()
         val contextHolderMock = mockk<TokenValidationContextHolder>()
         stonadController = StonadController(storageMock, contextHolderMock, objectMapper, Hasher("hammeligSalt"))
 
         every { contextHolderMock.hentFnr() } returns "12345678901"
         every { storageMock.put(any(), any(), any()) } just Runs
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        unmockHentFnr()
     }
 
     @Test

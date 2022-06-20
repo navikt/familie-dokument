@@ -51,7 +51,6 @@ class StorageController(
         @PathVariable("bucket") bucket: String,
         @RequestParam("file") multipartFile: MultipartFile
     ): ResponseEntity<Map<String, String>> {
-
         if (multipartFile.isEmpty) {
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
         }
@@ -84,7 +83,6 @@ class StorageController(
         @PathVariable("bucket") bucket: String,
         @RequestBody documentList: List<UUID>
     ): ResponseEntity<Map<String, String>> {
-
         if (documentList.isEmpty()) {
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
         }

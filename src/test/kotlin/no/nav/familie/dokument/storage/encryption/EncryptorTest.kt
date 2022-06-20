@@ -14,7 +14,6 @@ class EncryptorTest {
 
     @Test
     fun at_encrypt_og_decrypt_fungerer() {
-
         val encryptedStream = encryptor.encryptedStream(fnr, ByteArrayInputStream(originalTekst.toByteArray()))
 
         val encrypted = toByteArray(encryptedStream)

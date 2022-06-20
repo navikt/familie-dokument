@@ -4,12 +4,14 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.verify
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
 import no.nav.familie.dokument.storage.hentFnr
+import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
+import no.nav.familie.dokument.testutils.ExtensionMockUtil.unmockHentFnr
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
@@ -31,21 +33,24 @@ class EncryptedStorageTest {
 
     @BeforeEach
     fun setUpMockedEncryptor() {
-
         every { encryptor.encryptedStream(FNR, any()) } returns ENCRYPTED_STREAM
         every { encryptor.decrypt(FNR, eq(ENCRYPTED_DATA)) } returns UNENCRYPTED_DATA
         every { storage.put(eq(DIRECTORY), eq(KEY), any()) } just Runs
 
-        mockkStatic("no.nav.familie.dokument.storage.ExtensionsKt")
+        setUpMockHentFnr()
 
         every {
             tokenValidationContextHolder.hentFnr()
         } returns FNR
     }
 
+    @AfterEach
+    internal fun tearDown() {
+        unmockHentFnr()
+    }
+
     @Test
     fun encrypts_before_put() {
-
         encryptedStorage.put(DIRECTORY, KEY, ByteArrayInputStream(UNENCRYPTED_DATA))
 
         verify {
@@ -55,7 +60,6 @@ class EncryptedStorageTest {
 
     @Test
     fun encrypts_after_get() {
-
         every { storage[DIRECTORY, KEY] } returns ENCRYPTED_DATA
 
         val fetchedData = encryptedStorage[DIRECTORY, KEY]

@@ -26,7 +26,6 @@ class MellomlagerServiceTest {
 
     @Test
     fun `skal putte søknad om overgangsstønad i mellomlager`() {
-
         val slot = slot<ByteArrayInputStream>()
 
         every { delegate.put(any(), any(), capture(slot)) } answers {

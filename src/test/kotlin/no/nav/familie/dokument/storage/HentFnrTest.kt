@@ -59,7 +59,6 @@ internal class HentFnrTest {
     }
 
     private fun mockContext(sub: String? = null, pid: String? = null) {
-
         val builder = JWTClaimsSet.Builder()
         sub?.let { builder.subject(it) }
         pid?.let { builder.claim("pid", it) }
