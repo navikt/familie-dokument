@@ -26,7 +26,7 @@
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
         <gcp.version>0.175.0</gcp.version>
         <kontrakter.version>2.0_20220615165608_348f1f2</kontrakter.version>
-        <tika.core.version>2.2.1</tika.core.version>
+        <tika.core.version>2.4.1</tika.core.version>
         <tika.parser.version>1.28.3</tika.parser.version>
         <jsoup.version>1.15.1</jsoup.version>
         <!-- Setter disse til token-support sine versjoner, versjoner(9.x) i spring er ikke kompatibel med oauth2-oidc-sdk -->
