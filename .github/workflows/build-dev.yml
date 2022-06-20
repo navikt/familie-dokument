@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-to-dev:
-    name: Build, push til docker (dev)
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
