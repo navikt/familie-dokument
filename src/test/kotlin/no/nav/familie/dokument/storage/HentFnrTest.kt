@@ -3,10 +3,10 @@ package no.nav.familie.dokument.storage
 import com.nimbusds.jwt.JWTClaimsSet
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.security.mock.oauth2.token.OAuth2TokenProvider
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.jwt.JwtToken
 import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
-import no.nav.security.token.support.test.JwtTokenGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
@@ -59,11 +59,10 @@ internal class HentFnrTest {
     }
 
     private fun mockContext(sub: String? = null, pid: String? = null) {
-
         val builder = JWTClaimsSet.Builder()
         sub?.let { builder.subject(it) }
         pid?.let { builder.claim("pid", it) }
-        val jwtToken = JwtTokenGenerator.createSignedJWT(builder.build())
+        val jwtToken = OAuth2TokenProvider().jwt(builder.claims)
 
         mockRequestContextHolder(mapOf("selvbetjening" to JwtToken(jwtToken.serialize())))
     }

@@ -11,19 +11,16 @@ import no.nav.familie.dokument.storage.encryption.EncryptedStorage
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.ATTACHMENT_ENCRYPTED_STORAGE
 import no.nav.familie.dokument.storage.encryption.EncryptedStorageConfiguration.Companion.STONAD_ENCRYPTED_STORAGE
 import no.nav.familie.dokument.virusscan.VirusScanService
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 import java.io.InputStream
 
 @Profile("dev")
 @Configuration
-@Import(TokenGeneratorConfiguration::class)
 class TestStorageConfiguration {
 
     val lokalStorage: MutableMap<String, ByteArray> = HashMap()

@@ -83,7 +83,10 @@ class PdfGenerartorTest {
 
         // Get a list of results.
         val problems = PdfVisualTester.comparePdfDocuments(
-            expectedPdfBytes, actualPdfBytes, resource, false
+            expectedPdfBytes,
+            actualPdfBytes,
+            resource,
+            false
         )
 
         // Get a list of results.
