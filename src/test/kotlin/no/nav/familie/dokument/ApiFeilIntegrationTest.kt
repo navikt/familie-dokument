@@ -1,15 +1,24 @@
 package no.nav.familie.dokument
 
-import no.nav.security.token.support.core.JwtTokenConstants
+import no.nav.familie.util.FnrGenerator
+import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.security.token.support.core.api.Unprotected
-import no.nav.security.token.support.test.JwtTokenGenerator
-import org.glassfish.jersey.logging.LoggingFeature
+import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.client.exchange
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -18,9 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.ws.rs.client.ClientBuilder
-import javax.ws.rs.client.Entity
-import javax.ws.rs.core.Response
+import java.util.UUID
 import kotlin.test.assertEquals
 
 @Profile("feil-controller")
@@ -44,68 +51,91 @@ class FeilController {
 @ActiveProfiles("dev", "feil-controller")
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [DevLauncher::class])
+@EnableMockOAuth2Server
 class ApiFeilIntegrationTest {
 
-    @Value("\${local.server.port}")
-    val port: Int = 0
-    val contextPath = "/api"
-    val tokenSubject = "12345678911"
+    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
+    private lateinit var mockOAuth2Server: MockOAuth2Server
+
+    @LocalServerPort
+    private var port: Int? = 0
+    private val contextPath = "/api"
+
+    private val restTemplate = TestRestTemplate()
+    private val headers = HttpHeaders()
+
+    @AfterEach
+    internal fun tearDown() {
+        headers.clear()
+    }
 
     @Test
     fun `skal få 200 når autentisert og vi bruker get`() {
-        val response = webTarget().path("/ok")
-            .request()
-            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-            .get()
-        assertEquals(Response.Status.OK.statusCode, response.status)
+        headers.setBearerAuth(søkerBearerToken())
+        val response = restTemplate.exchange<Any>(path("ok"), HttpMethod.GET, HttpEntity<Any>(headers))
+        assertEquals(HttpStatus.OK, response.statusCode)
     }
 
     @Test
     fun `skal få 400 når man sender inn feil type objekt, liste i stedet for objekt`() {
-        val response = webTarget().path("/ok")
-            .request()
-            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-            .post(Entity.json("{}"))
-        assertEquals(Response.Status.BAD_REQUEST.statusCode, response.status)
+        headers.setBearerAuth(søkerBearerToken())
+        val response = restTemplate.exchange<Any>(path("ok"), HttpMethod.POST, HttpEntity<Any>(mapOf<String, String>(), headers))
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
 
     @Test // Tester handleExceptionInternal
     fun `skal få 415 når man sender inn feil type Content-Type`() {
-        val response = webTarget().path("/ok")
-            .request()
-            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-            .post(Entity.text("Hei"))
-        assertEquals(Response.Status.UNSUPPORTED_MEDIA_TYPE.statusCode, response.status)
+        headers.setBearerAuth(søkerBearerToken())
+        val response = restTemplate.exchange<Any>(path("ok"), HttpMethod.POST, HttpEntity<Any>("Hei", headers))
+        assertEquals(HttpStatus.UNSUPPORTED_MEDIA_TYPE, response.statusCode)
     }
 
     @Test
     fun `skal få 401 når ikke autentisert `() {
-        val response = webTarget().path("/ok")
-            .request()
-            .get()
-        assertEquals(Response.Status.UNAUTHORIZED.statusCode, response.status)
+        val response = restTemplate.exchange<Any>(path("ok"), HttpMethod.GET, HttpEntity<Any>(headers))
+        assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
     @Test
     fun `skal få 404 når endepunkt ikke eksisterer`() {
-        val response = webTarget().path("/eksistererIkke")
-            .request()
-            .header(JwtTokenConstants.AUTHORIZATION_HEADER, "Bearer ${serializedJWTToken()}")
-            .get()
-        assertEquals(Response.Status.NOT_FOUND.statusCode, response.status)
+        headers.setBearerAuth(søkerBearerToken())
+        val response = restTemplate.exchange<Any>(path("eksistererIkke"), HttpMethod.GET, HttpEntity<Any>(headers))
+        assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
     }
 
     @Test
     fun `skal få 500 når endepunkt kaster feil`() {
-        val response = webTarget().path("/feil")
-            .request()
-            .get()
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.statusCode, response.status)
+        val response = restTemplate.exchange<Any>(path("feil"), HttpMethod.GET, HttpEntity<Any>(headers))
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.statusCode)
     }
 
-    private fun webTarget() = client().target("http://localhost:$port$contextPath")
+    private fun path(path: String) = "http://localhost:$port$contextPath/$path"
 
-    private fun client() = ClientBuilder.newClient().register(LoggingFeature::class.java)
+    protected fun søkerBearerToken(personident: String = FnrGenerator.generer()): String {
+        return jwt(personident)
+    }
 
-    private fun serializedJWTToken() = JwtTokenGenerator.createSignedJWT(tokenSubject).serialize()
+    private fun jwt(fnr: String) = mockOAuth2Server.token(subject = fnr)
+
+    private fun MockOAuth2Server.token(
+        subject: String,
+        issuerId: String = "selvbetjening",
+        clientId: String = UUID.randomUUID().toString(),
+        audience: String = "aud-localhost",
+        claims: Map<String, Any> = mapOf("acr" to "Level4"),
+
+    ): String {
+        return this.issueToken(
+            issuerId,
+            clientId,
+            DefaultOAuth2TokenCallback(
+                issuerId = issuerId,
+                subject = subject,
+                audience = listOf(audience),
+                claims = claims,
+                expiry = 3600
+            )
+        ).serialize()
+    }
 }
