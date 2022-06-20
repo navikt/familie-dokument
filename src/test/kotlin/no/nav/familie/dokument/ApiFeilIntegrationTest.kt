@@ -80,7 +80,8 @@ class ApiFeilIntegrationTest {
     @Test
     fun `skal få 400 når man sender inn feil type objekt, liste i stedet for objekt`() {
         headers.setBearerAuth(søkerBearerToken())
-        val response = restTemplate.exchange<Any>(path("ok"), HttpMethod.POST, HttpEntity<Any>(mapOf<String, String>(), headers))
+        val response =
+            restTemplate.exchange<Any>(path("ok"), HttpMethod.POST, HttpEntity<Any>(mapOf<String, String>(), headers))
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
 
