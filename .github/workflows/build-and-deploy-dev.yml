@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/familie-dokument:${{ github.sha }}
+  IMAGE: ghcr.io/navikt/familie-dokument:${{ github.sha }}
 
 jobs:
   build-and-deploy-to-dev:
@@ -30,10 +30,9 @@ jobs:
           docker build -t ${IMAGE} .
       - name: Login to Github Package Registry
         env:
-          DOCKER_USERNAME: x-access-token
-          DOCKER_PASSWORD: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin docker.pkg.github.com
+          echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
       - name: Push Docker image med versjonstag
         run: docker push ${IMAGE}
       - name: Deploy til GCP (dev)
