@@ -1,6 +1,7 @@
 name: Build (dev)
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build-to-dev:
