@@ -1,7 +1,6 @@
 package no.nav.familie.dokument
 
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
@@ -9,12 +8,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
 class DevLauncher
 
-@EnableMockOAuth2Server
-class ApplicationLocalLauncher : DevLauncher()
+/**
+ * Familie-dokument er ikke ansvarlig for håndtering av oauth ved lokal kjøring
+ * Denne porten må også settes i eks ef-soknad-api/ba-soknad-api
+ */
+private val mockOauth2ServerPort: String = "11588"
 
 fun main(args: Array<String>) {
-    val springApp = SpringApplication(ApplicationLocalLauncher::class.java)
+    val springApp = SpringApplication(DevLauncher::class.java)
     springApp.setAdditionalProfiles("dev")
-//    springApp.setDefaultProperties(mapOf("spring.main.allow-bean-definition-overriding" to true))
+    springApp.setDefaultProperties(mapOf("mock-oauth2-server.port" to mockOauth2ServerPort))
     springApp.run(*args)
 }
