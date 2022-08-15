@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication(scanBasePackages = ["no.nav.familie.dokument"], excludeName = ["DevLauncher"])
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
-class DevLauncherSøknad
+class DevLauncherSoknad
 
 /**
  * Bruk denne launcheren hvis du skal bruke ef-søknad-api/ba-søknad-
@@ -18,7 +18,7 @@ class DevLauncherSøknad
 private val mockOauth2ServerPort: String = "11588"
 
 fun main(args: Array<String>) {
-    val springApp = SpringApplication(DevLauncherSøknad::class.java)
+    val springApp = SpringApplication(DevLauncherSoknad::class.java)
     springApp.setAdditionalProfiles("dev")
     springApp.setDefaultProperties(mapOf("mock-oauth2-server.port" to mockOauth2ServerPort))
     springApp.run(*args)
