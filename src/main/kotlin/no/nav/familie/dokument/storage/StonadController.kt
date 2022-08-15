@@ -85,6 +85,7 @@ class StonadController(
         overgangsstonad("overgangsstønad"),
         barnetilsyn("barnetilsyn"),
         skolepenger("skolepenger"),
-        barnetrygd("barnetrygd")
+        barnetrygd("barnetrygd"),
+        kontantstotte("kontantstotte")
     }
 }
