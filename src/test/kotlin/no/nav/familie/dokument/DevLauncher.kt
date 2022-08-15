@@ -9,14 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class DevLauncher
 
 /**
- * Familie-dokument er ikke ansvarlig for håndtering av oauth ved lokal kjøring
- * Denne porten må også settes i eks ef-soknad-api/ba-soknad-api
+ * Bruk denne launcheren hvis du skal bruke familie-brev / saksbehandling.
+ * Skal du bruke familie-dokument ifm søknad så start opp DevlauncherSøknad
  */
-private val mockOauth2ServerPort: String = "11588"
-
 fun main(args: Array<String>) {
     val springApp = SpringApplication(DevLauncher::class.java)
-    springApp.setAdditionalProfiles("dev")
-    springApp.setDefaultProperties(mapOf("mock-oauth2-server.port" to mockOauth2ServerPort))
+    springApp.setAdditionalProfiles("dev", "mock-oauth-selv")
     springApp.run(*args)
 }
