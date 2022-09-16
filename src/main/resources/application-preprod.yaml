@@ -8,6 +8,7 @@ cors:
     - "https://familie-brev.dev.intern.nav.no"
     - "http://familie-brev.dev.intern.nav.no"
     - "https://familie-ef-blankett.dev.intern.nav.no"
+    - "https://familie-ks-soknad.dev.nav.no"
     - "https://ensligmorellerfar.dev.nav.no"
     - "https://familie.dev.nav.no"
 
