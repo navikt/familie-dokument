@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.1</version>
+        <version>2.7.4</version>
     </parent>
 
     <properties>
@@ -24,11 +24,11 @@
         <mockk.version>1.12.4</mockk.version>
         <token-validation-spring.version>2.1.2</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
-        <gcp.version>0.176.0</gcp.version>
+        <gcp.version>0.179.0</gcp.version>
         <kontrakter.version>2.0_20220615165608_348f1f2</kontrakter.version>
         <tika.core.version>2.4.1</tika.core.version>
-        <tika.parser.version>1.28.4</tika.parser.version>
-        <jsoup.version>1.15.2</jsoup.version>
+        <tika.parser.version>1.28.5</tika.parser.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <!-- Setter disse til token-support sine versjoner, versjoner(9.x) i spring er ikke kompatibel med oauth2-oidc-sdk -->
         <nimbus-jose-jwt.version>8.20.2</nimbus-jose-jwt.version>
      </properties>
