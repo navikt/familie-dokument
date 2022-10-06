@@ -60,8 +60,8 @@ spec:
         - application: familie-ef-sak
         - application: familie-ba-mottak
           cluster: dev-fss
-        - application: familie-baks-mottak
           namespace: teamfamilie
+        - application: familie-baks-mottak
     outbound:
       rules:
         - application: clamav
