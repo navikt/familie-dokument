@@ -60,6 +60,7 @@ spec:
         - application: familie-ba-mottak
           cluster: prod-fss
           namespace: teamfamilie
+        - application: familie-baks-mottak
     outbound:
       rules:
         - application: clamav
