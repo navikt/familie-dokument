@@ -20,13 +20,13 @@
         <jvmTarget>17</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>1.20220610091149_ae616c5</felles.version>
-        <kotlin.version>1.7.10</kotlin.version>
-        <mockk.version>1.12.4</mockk.version>
-        <token-validation-spring.version>2.1.2</token-validation-spring.version>
+        <kotlin.version>1.7.20</kotlin.version>
+        <mockk.version>1.13.2</mockk.version>
+        <token-validation-spring.version>2.1.6</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
-        <gcp.version>0.179.0</gcp.version>
+        <gcp.version>0.180.0</gcp.version>
         <kontrakter.version>2.0_20220615165608_348f1f2</kontrakter.version>
-        <tika.core.version>2.4.1</tika.core.version>
+        <tika.core.version>2.5.0</tika.core.version>
         <tika.parser.version>1.28.5</tika.parser.version>
         <jsoup.version>1.15.3</jsoup.version>
         <!-- Setter disse til token-support sine versjoner, versjoner(9.x) i spring er ikke kompatibel med oauth2-oidc-sdk -->
@@ -107,7 +107,7 @@
         </dependency>
         <dependency>
             <groupId>io.mockk</groupId>
-            <artifactId>mockk</artifactId>
+            <artifactId>mockk-jvm</artifactId>
             <version>${mockk.version}</version>
             <scope>test</scope>
         </dependency>
@@ -193,13 +193,13 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>localstack</artifactId>
-            <version>1.17.3</version>
+            <version>1.17.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.17.3</version>
+            <version>1.17.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -233,7 +233,7 @@
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>validation-model</artifactId>
-            <version>1.20.1</version>
+            <version>1.22.2</version>
         </dependency>
         <!-- PDF/A-2U-validering -->
     </dependencies>

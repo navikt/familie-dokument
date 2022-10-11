@@ -5,8 +5,8 @@ import no.nav.familie.dokument.TestUtil.toByteArray
 import org.apache.commons.io.IOUtils
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 import org.verapdf.pdfa.Foundries
-import org.verapdf.pdfa.VeraGreenfieldFoundryProvider
 import org.verapdf.pdfa.flavours.PDFAFlavour
 import java.io.ByteArrayInputStream
 import java.io.File
