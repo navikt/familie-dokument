@@ -57,9 +57,6 @@ spec:
         - application: familie-ef-mottak
         - application: familie-ef-soknad-api
         - application: familie-ef-sak
-        - application: familie-ba-mottak
-          cluster: prod-fss
-          namespace: teamfamilie
         - application: familie-baks-mottak
     outbound:
       rules:
