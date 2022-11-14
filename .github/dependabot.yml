@@ -21,3 +21,8 @@ updates:
     - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-core
       versions:
       - 1.5.0-native-mt
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
