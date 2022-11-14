@@ -25,7 +25,7 @@
         <token-validation-spring.version>2.1.7</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
         <gcp.version>0.180.0</gcp.version>
-        <kontrakter.version>2.0_20220615165608_348f1f2</kontrakter.version>
+        <kontrakter.version>2.0_20221110144342_36a697b</kontrakter.version>
         <tika.core.version>2.5.0</tika.core.version>
         <tika.parser.version>1.28.5</tika.parser.version>
         <jsoup.version>1.15.3</jsoup.version>
