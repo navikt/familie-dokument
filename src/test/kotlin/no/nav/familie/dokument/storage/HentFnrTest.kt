@@ -64,7 +64,7 @@ internal class HentFnrTest {
         pid?.let { builder.claim("pid", it) }
         val jwtToken = OAuth2TokenProvider().jwt(builder.claims)
 
-        mockRequestContextHolder(mapOf("selvbetjening" to JwtToken(jwtToken.serialize())))
+        mockRequestContextHolder(mapOf("idporten" to JwtToken(jwtToken.serialize())))
     }
 
     private fun mockRequestContextHolder(map: Map<String, JwtToken>) {
