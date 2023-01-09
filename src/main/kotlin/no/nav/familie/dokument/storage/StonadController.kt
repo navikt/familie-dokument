@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@ProtectedWithClaims(issuer = "idporten", claimMap = ["acr=Level4"])
 class StonadController(
     @Autowired val storage: MellomLagerService,
     @Autowired val contextHolder: TokenValidationContextHolder,
