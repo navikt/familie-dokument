@@ -30,13 +30,13 @@ class ImageConversionService {
             val page = PDPage(PDRectangle.A4)
             document.addPage(page)
             val image = ImageIO.read(imageStream)
-            logger.info("Konverterer detectedType=$detectedType imageType=${image.type}")
             if (image.height < 400 && image.width < 400) throw InvalidImageDimensions(BadRequestCode.IMAGE_DIMENSIONS_TOO_SMALL)
 
             val portraitImage = toPortrait(image, detectedType)
 
             val quality = 1.0f
 
+            logger.info("Konverterer detectedType=$detectedType imageType=${image.type} portraitImageType=${portraitImage.type}")
             val pdImage = JPEGFactory.createFromImage(document, portraitImage, quality)
             val imageSize = scale(pdImage, page)
 
