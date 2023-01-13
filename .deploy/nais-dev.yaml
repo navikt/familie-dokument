@@ -52,14 +52,13 @@ spec:
     inbound:
       rules:
         - application: familie-brev
+        - application: familie-klage
         - application: familie-ef-blankett
         - application: soknad-kontantstotte-api
         - application: familie-ef-mottak
         - application: familie-ef-soknad-api
         - application: familie-ef-sak
-        - application: familie-ba-mottak
-          cluster: dev-fss
-          namespace: teamfamilie
+        - application: familie-baks-mottak
     outbound:
       rules:
         - application: clamav

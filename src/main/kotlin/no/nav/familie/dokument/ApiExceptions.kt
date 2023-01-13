@@ -19,5 +19,5 @@ enum class BadRequestCode {
     DOCUMENT_MISSING,
     IMAGE_TOO_LARGE,
     IMAGE_DIMENSIONS_TOO_SMALL,
-    VIRUS_FOUND,
+    VIRUS_FOUND
 }
