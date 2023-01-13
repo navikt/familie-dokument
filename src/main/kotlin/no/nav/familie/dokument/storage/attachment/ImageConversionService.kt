@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.util.Matrix
 import org.slf4j.LoggerFactory
@@ -34,24 +35,43 @@ class ImageConversionService {
 
             val portraitImage = toPortrait(image, detectedType)
 
-            val quality = 1.0f
 
-            val pdImage = JPEGFactory.createFromImage(document, portraitImage, quality)
+            logger.info("Konverterer detectedType=$detectedType imageType=${image.type} portraitImageType=${portraitImage.type}")
+            val pdImage = createPdImage(document, portraitImage, detectedType)
             val imageSize = scale(pdImage, page)
-
-            logger.info(
-                "Input format=${detectedType.name} h=${image.height} w=${image.width} " +
-                    "Portrait h=${portraitImage.height} w=${portraitImage.width} " +
-                    "ImageSize height=${imageSize.height} width=${imageSize.width} " +
-                    " lowHeight=${imageSize.height < page.cropBox.height} lowWidth=${imageSize.width < page.cropBox.width}"
-            )
 
             PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false).use {
                 it.drawImage(pdImage, Matrix(imageSize.width, 0f, 0f, imageSize.height, 0f, 0f))
             }
             val byteArrayOutputStream = ByteArrayOutputStream()
             document.save(byteArrayOutputStream)
-            byteArrayOutputStream.toByteArray()
+            val outputBytes = byteArrayOutputStream.toByteArray()
+            logger.info(
+                "Input format=${detectedType.name} h=${image.height} w=${image.width} " +
+                    "Portrait h=${portraitImage.height} w=${portraitImage.width} " +
+                    "ImageSize height=${imageSize.height} width=${imageSize.width} " +
+                    " lowHeight=${imageSize.height < page.cropBox.height} lowWidth=${imageSize.width < page.cropBox.width}" +
+                    " inputSize=${input.size / 1024} diffSize=${outputBytes.size / input.size} "
+            )
+            outputBytes
+        }
+    }
+
+    private fun createPdImage(
+        document: PDDocument,
+        portraitImage: BufferedImage,
+        detectedType: Format
+    ): PDImageXObject {
+        val quality = 1.0f
+        return try {
+            JPEGFactory.createFromImage(document, portraitImage, quality)
+        } catch (e: Exception) {
+            if (detectedType == Format.PNG) {
+                logger.warn("Feilet konvertering av jpegbilde, prøver med lossless", e)
+                LosslessFactory.createFromImage(document, portraitImage)
+            } else {
+                throw e
+            }
         }
     }
 
