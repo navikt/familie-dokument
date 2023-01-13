@@ -35,7 +35,6 @@ class ImageConversionService {
 
             val portraitImage = toPortrait(image, detectedType)
 
-
             logger.info("Konverterer detectedType=$detectedType imageType=${image.type} portraitImageType=${portraitImage.type}")
             val pdImage = createPdImage(document, portraitImage, detectedType)
             val imageSize = scale(pdImage, page)
