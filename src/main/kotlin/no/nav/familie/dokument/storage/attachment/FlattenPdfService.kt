@@ -14,15 +14,16 @@ class FlattenPdfService {
 
     fun convert(input: ByteArray): ByteArray {
         return try {
-            val loadedPdf = PDDocument.load(input)
-            val pdAcroForm: PDAcroForm? = loadedPdf.documentCatalog.acroForm
-            if (loadedPdf.isEncrypted) return input
-            pdAcroForm?.let {
-                it.flatten()
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                loadedPdf.save(byteArrayOutputStream)
-                byteArrayOutputStream.toByteArray()
-            } ?: input
+            PDDocument.load(input).use { loadedPdf ->
+                val pdAcroForm: PDAcroForm? = loadedPdf.documentCatalog.acroForm
+                if (loadedPdf.isEncrypted) return input
+                pdAcroForm?.let {
+                    it.flatten()
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    loadedPdf.save(byteArrayOutputStream)
+                    byteArrayOutputStream.toByteArray()
+                } ?: input
+            }
         } catch (e: InvalidPasswordException) {
             logger.info("PDF-en er passordbeskyttet og det er ikke mulig å flate ut potensielle pdf-form felter")
             input
