@@ -20,7 +20,3 @@ no.nav.security.jwt:
     tokenx:
       discoveryurl: ${TOKEN_X_WELL_KNOWN_URL}
       accepted_audience: ${TOKEN_X_CLIENT_ID}
-    idporten:
-      discoveryurl: ${TOKEN_X_WELL_KNOWN_URL}
-      accepted_audience: ${TOKEN_X_CLIENT_ID}
-      cookie_name: idporten-token
