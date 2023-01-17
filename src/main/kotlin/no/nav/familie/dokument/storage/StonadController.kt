@@ -6,6 +6,7 @@ import no.nav.familie.dokument.InvalidJsonSoknad
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
 import no.nav.security.token.support.core.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.RequiredIssuers
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -23,7 +24,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+@RequiredIssuers(
+    ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"]),
+    ProtectedWithClaims(issuer = "tokenx", claimMap = ["acr=Level4"])
+)
 class StonadController(
     @Autowired val storage: MellomLagerService,
     @Autowired val contextHolder: TokenValidationContextHolder,

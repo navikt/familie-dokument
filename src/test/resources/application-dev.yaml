@@ -7,11 +7,14 @@ cors:
     - "http://localhost:3000"
 
 no.nav.security.jwt:
-  issuers: selvbetjening
-  issuer.selvbetjening:
-    discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
-    accepted_audience: aud-localhost
-    cookie_name: localhost-idtoken
+  issuer:
+    selvbetjening:
+      discoveryurl: http://localhost:${mock-oauth2-server.port}/selvbetjening/.well-known/openid-configuration
+      accepted_audience: aud-localhost
+      cookie_name: localhost-idtoken
+    tokenx:
+      discovery-url: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
+      accepted-audience: familie-app
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt
