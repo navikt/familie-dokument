@@ -58,6 +58,7 @@ spec:
         - application: familie-ef-soknad-api
         - application: familie-ef-sak
         - application: familie-baks-mottak
+        - application: familie-ef-soknad
     outbound:
       rules:
         - application: clamav
