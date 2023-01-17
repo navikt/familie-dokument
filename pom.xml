@@ -19,7 +19,7 @@
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>17</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>1.20221202080911_bcf8f33</felles.version>
+        <felles.version>1.20230117091843_19b020f</felles.version>
         <kotlin.version>1.8.0</kotlin.version>
         <mockk.version>1.13.3</mockk.version>
         <token-validation-spring.version>2.1.9</token-validation-spring.version>
