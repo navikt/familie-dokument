@@ -24,7 +24,7 @@
         <mockk.version>1.13.3</mockk.version>
         <token-validation-spring.version>2.1.9</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
-        <gcp.version>0.184.0</gcp.version>
+        <gcp.version>0.185.0</gcp.version>
         <kontrakter.version>2.0_20230112155838_ab5a243</kontrakter.version>
         <tika.core.version>2.6.0</tika.core.version>
         <tika.parser.version>2.6.0</tika.parser.version>
