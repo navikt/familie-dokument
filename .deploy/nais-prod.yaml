@@ -59,6 +59,7 @@ spec:
         - application: familie-ef-sak
         - application: familie-baks-mottak
         - application: familie-ef-soknad
+        - application: familie-ef-ettersending
     outbound:
       rules:
         - application: clamav
