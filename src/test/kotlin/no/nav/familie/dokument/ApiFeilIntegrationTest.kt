@@ -50,7 +50,7 @@ class FeilController {
 
 @ActiveProfiles("local", "feil-controller")
 @ExtendWith(SpringExtension::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [LocalApplicationLauncher::class])
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [LocalApplication::class])
 @EnableMockOAuth2Server
 class ApiFeilIntegrationTest {
 
