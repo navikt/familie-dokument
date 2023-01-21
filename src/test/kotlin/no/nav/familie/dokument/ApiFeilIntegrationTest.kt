@@ -48,9 +48,9 @@ class FeilController {
     fun ok(@RequestBody body: List<String>): Map<String, String> = mapOf("a" to "b")
 }
 
-@ActiveProfiles("dev", "feil-controller")
+@ActiveProfiles("local", "feil-controller")
 @ExtendWith(SpringExtension::class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [DevLauncher::class])
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [LocalApplicationLauncher::class])
 @EnableMockOAuth2Server
 class ApiFeilIntegrationTest {
 
