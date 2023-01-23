@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile
 
 @Configuration
 @Import(EncryptedStorageConfiguration::class)
-@Profile("!dev")
+@Profile("!local")
 class AttachmentConfiguration {
 
     @Bean

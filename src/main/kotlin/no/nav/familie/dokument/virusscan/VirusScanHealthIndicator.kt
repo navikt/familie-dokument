@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("!dev && !integration-test")
+@Profile("!local && !integration-test")
 class VirusScanHealthIndicator(client: VirusScanClient) : AbstractHealthIndicator(client, "virusscan")
