@@ -67,7 +67,7 @@ spec:
     outbound:
       rules:
         - application: clamav
-          namespace: clamav
+          namespace: nais-system
       external:
         - host: login.microsoftonline.com
   azure:
