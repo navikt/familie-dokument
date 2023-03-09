@@ -20,7 +20,7 @@ management:
     base-path: "/internal"
     path-mapping:
       info: "status/isAlive"
-  metrics.export.prometheus.enabled: true
+  prometheus.metrics.export.enabled: true
 
 attachment.max.size.mb: 20
 storage_service.timeout.ms: 3000

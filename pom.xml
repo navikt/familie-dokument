@@ -21,10 +21,10 @@
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>2.20230210162649_a258d57-SPRING_BOOT_3</felles.version>
         <kotlin.version>1.8.10</kotlin.version>
-        <mockk.version>1.13.3</mockk.version>
-        <token-validation-spring.version>2.1.9</token-validation-spring.version>
+        <mockk.version>1.13.4</mockk.version>
+        <token-validation-spring.version>3.0.4</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
-        <gcp.version>0.184.0</gcp.version>
+        <gcp.version>0.191.0</gcp.version>
         <kontrakter.version>3.0_20230306094848_3425b04-JAKARTA</kontrakter.version>
         <tika.core.version>2.6.0</tika.core.version>
         <tika.parser.version>2.6.0</tika.parser.version>

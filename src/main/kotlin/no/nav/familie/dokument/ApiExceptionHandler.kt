@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.NestedExceptionUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
@@ -32,9 +33,9 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         ex: Exception,
         body: Any?,
         headers: HttpHeaders,
-        status: HttpStatus,
+        status: HttpStatusCode,
         request: WebRequest
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<Any>? {
         if (ex is HttpRequestMethodNotSupportedException || ex is HttpMediaTypeNotSupportedException || ex is HttpMediaTypeNotAcceptableException) {
             secureLogger.warn("En feil har oppstått", ex)
             logger.warn("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
