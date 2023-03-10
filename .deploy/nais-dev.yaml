@@ -45,7 +45,8 @@ spec:
       memory: 2Gi
       cpu: 500m
   ingresses:
-      - https://familie-dokument.dev.intern.nav.no
+      - https://familie-dokument.intern.dev.nav.no
+      - https://familie-dokument.dev.intern.nav.no # Deprecated
       - https://familie-dokument.dev.nav.no/familie/dokument
       - https://familie.dev.nav.no/familie/dokument
   accessPolicy:
