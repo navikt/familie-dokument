@@ -21,7 +21,7 @@
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>1.20230117091843_19b020f</felles.version>
         <kotlin.version>1.8.10</kotlin.version>
-        <mockk.version>1.13.3</mockk.version>
+        <mockk.version>1.13.4</mockk.version>
         <token-validation-spring.version>2.1.9</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
         <gcp.version>0.184.0</gcp.version>
