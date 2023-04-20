@@ -7,15 +7,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class VirusScanService(
-    private val client: VirusScanClient,
-    private val metadataLoggerService: MetadataLoggerService
+    private val client: VirusScanClient
 ) {
 
     private val logger = LoggerFactory.getLogger(VirusScanService::class.java)
 
     fun scan(bytes: ByteArray, name: String) {
         logger.debug("Scanner {}", name)
-        metadataLoggerService.logPdfMetadata(bytes)
         val scanResults = client.scan(bytes)
         if (scanResults.size != 1) {
             throw VirusScanException("Uventet respons med lengde ${scanResults.size}, forventet lengde er 1")
