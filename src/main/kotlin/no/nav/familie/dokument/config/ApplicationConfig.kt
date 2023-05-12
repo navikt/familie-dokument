@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
 import org.springframework.web.client.RestOperations
+import java.time.Duration
+import java.time.temporal.ChronoUnit
 
 @SpringBootConfiguration
 @Import(ConsumerIdClientInterceptor::class)
@@ -45,6 +47,7 @@ class ApplicationConfig {
     @Bean
     fun restOperations(consumerIdClientInterceptor: ConsumerIdClientInterceptor): RestOperations =
         RestTemplateBuilder()
+            .setConnectTimeout(Duration.of(3, ChronoUnit.SECONDS))
             .additionalInterceptors(consumerIdClientInterceptor)
             .build()
 
