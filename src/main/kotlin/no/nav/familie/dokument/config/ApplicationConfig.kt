@@ -48,6 +48,7 @@ class ApplicationConfig {
     fun restOperations(consumerIdClientInterceptor: ConsumerIdClientInterceptor): RestOperations =
         RestTemplateBuilder()
             .setConnectTimeout(Duration.of(3, ChronoUnit.SECONDS))
+            .setReadTimeout(Duration.of(15, ChronoUnit.MINUTES))
             .additionalInterceptors(consumerIdClientInterceptor)
             .build()
 
