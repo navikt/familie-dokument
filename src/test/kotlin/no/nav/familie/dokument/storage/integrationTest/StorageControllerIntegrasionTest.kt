@@ -48,8 +48,8 @@ import kotlin.test.assertEquals
         GcpStorageConfiguration::class,
         ApiExceptionHandler::class,
         IntegrationTestConfig::class,
-        Hasher::class
-    ]
+        Hasher::class,
+    ],
 )
 @WebMvcTest
 @ActiveProfiles("integration-test")
@@ -105,7 +105,7 @@ class StorageControllerIntegrasionTest {
         every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
         every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(
             HttpStatus.UNAUTHORIZED.value(),
-            "Unauthorized"
+            "Unauthorized",
         )
         mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
             .andExpect(status().isInternalServerError)

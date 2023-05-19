@@ -50,7 +50,7 @@ class ImageConversionService {
                     "Portrait h=${portraitImage.height} w=${portraitImage.width} " +
                     "ImageSize height=${imageSize.height} width=${imageSize.width} " +
                     " lowHeight=${imageSize.height < page.cropBox.height} lowWidth=${imageSize.width < page.cropBox.width}" +
-                    " inputSize=${input.size / 1024} diffSize=${outputBytes.size / input.size} "
+                    " inputSize=${input.size / 1024} diffSize=${outputBytes.size / input.size} ",
             )
             outputBytes
         }
@@ -59,7 +59,7 @@ class ImageConversionService {
     private fun createPdImage(
         document: PDDocument,
         portraitImage: BufferedImage,
-        detectedType: Format
+        detectedType: Format,
     ): PDImageXObject {
         val quality = 1.0f
         return try {

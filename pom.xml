@@ -20,15 +20,15 @@
         <jvmTarget>17</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>1.20230117091843_19b020f</felles.version>
-        <kotlin.version>1.8.10</kotlin.version>
-        <mockk.version>1.13.3</mockk.version>
+        <kotlin.version>1.8.20</kotlin.version>
+        <mockk.version>1.13.5</mockk.version>
         <token-validation-spring.version>2.1.9</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
-        <gcp.version>0.184.0</gcp.version>
+        <gcp.version>0.195.0</gcp.version>
         <kontrakter.version>2.0_20230112155838_ab5a243</kontrakter.version>
         <tika.core.version>2.6.0</tika.core.version>
         <tika.parser.version>2.6.0</tika.parser.version>
-        <jsoup.version>1.15.3</jsoup.version>
+        <jsoup.version>1.16.1</jsoup.version>
         <!-- Setter disse til token-support sine versjoner, versjoner(9.x) i spring er ikke kompatibel med oauth2-oidc-sdk -->
         <nimbus-jose-jwt.version>8.20.2</nimbus-jose-jwt.version>
         <testcontainers.version>1.17.6</testcontainers.version>
@@ -243,7 +243,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.1.0</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
@@ -339,7 +339,7 @@
                     <dependency>
                         <groupId>com.pinterest</groupId>
                         <artifactId>ktlint</artifactId>
-                        <version>0.47.1</version>
+                        <version>0.49.1</version>
                     </dependency>
                     <!-- additional 3rd party ruleset(s) can be specified here -->
                 </dependencies>

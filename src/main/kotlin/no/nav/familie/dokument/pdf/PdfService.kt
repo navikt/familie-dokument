@@ -62,21 +62,21 @@ class PdfService {
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.NORMAL,
-                    true
+                    true,
                 )
                 .useFont(
                     FontSupplier("SourceSansPro-Bold.ttf"),
                     "Source Sans Pro",
                     700,
                     BaseRendererBuilder.FontStyle.OBLIQUE,
-                    true
+                    true,
                 )
                 .useFont(
                     FontSupplier("SourceSansPro-It.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.ITALIC,
-                    true
+                    true,
                 )
                 .useSVGDrawer(BatikSVGDrawer())
                 .withW3cDocument(w3cDokument, "")
