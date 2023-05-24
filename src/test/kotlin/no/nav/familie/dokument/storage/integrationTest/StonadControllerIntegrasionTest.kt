@@ -37,8 +37,8 @@ import org.springframework.test.web.servlet.post
         GcpStorageConfiguration::class,
         ApiExceptionHandler::class,
         IntegrationTestConfig::class,
-        Hasher::class
-    ]
+        Hasher::class,
+    ],
 )
 @WebMvcTest
 @ActiveProfiles("integration-test")

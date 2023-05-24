@@ -124,7 +124,7 @@ class ApiFeilIntegrationTest {
         issuerId: String = "selvbetjening",
         clientId: String = UUID.randomUUID().toString(),
         audience: String = "aud-localhost",
-        claims: Map<String, Any> = mapOf("acr" to "Level4")
+        claims: Map<String, Any> = mapOf("acr" to "Level4"),
 
     ): String {
         return this.issueToken(
@@ -135,8 +135,8 @@ class ApiFeilIntegrationTest {
                 subject = subject,
                 audience = listOf(audience),
                 claims = claims,
-                expiry = 3600
-            )
+                expiry = 3600,
+            ),
         ).serialize()
     }
 }
