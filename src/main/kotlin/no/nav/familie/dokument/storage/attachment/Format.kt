@@ -8,7 +8,8 @@ enum class Format(var mimeType: String) {
 
     PDF("application/pdf"),
     PNG("image/png"),
-    JPEG("image/jpeg");
+    JPEG("image/jpeg"),
+    ;
 
     companion object {
 

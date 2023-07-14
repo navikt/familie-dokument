@@ -9,7 +9,7 @@ import java.io.InputStream
 class EncryptedStorage constructor(
     private val contextHolder: TokenValidationContextHolder,
     private val delegate: GcpStorageWrapper,
-    private val encryptor: Encryptor
+    private val encryptor: Encryptor,
 ) : Storage<InputStream, ByteArray> {
 
     override fun put(directory: String, key: String, data: InputStream) {

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 internal class VirusScanServiceTest {
 
     private val virusScanClient: VirusScanClient = mockk()
-    private val virusScanService = VirusScanService(virusScanClient, mockk(relaxed = true))
+    private val virusScanService = VirusScanService(virusScanClient)
 
     @Test
     internal fun ok() {

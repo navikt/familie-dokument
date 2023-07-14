@@ -58,7 +58,7 @@ class TestStorageConfiguration {
     @Primary
     fun attachmentStorage(
         @Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) encryptedStorage: EncryptedStorage,
-        storableFormatConverter: AttachmentToStorableFormatConverter
+        storableFormatConverter: AttachmentToStorableFormatConverter,
     ): AttachmentStorage {
         val storage: AttachmentStorage = mockk()
 
