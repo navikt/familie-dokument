@@ -22,7 +22,7 @@ class AttachmentConfiguration {
     @Bean
     fun attachmentStorage(
         @Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) storage: EncryptedStorage,
-        storableFormatConverter: AttachmentToStorableFormatConverter,
+        storableFormatConverter: AttachmentToStorableFormatConverter
     ): AttachmentStorage {
         return AttachmentStorage(storage, storableFormatConverter)
     }

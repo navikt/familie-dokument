@@ -31,7 +31,7 @@ import java.util.UUID
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
 @RequiredIssuers(
     ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_SELVBETJENING, claimMap = ["acr=Level4"]),
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
+    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"])
 )
 class StorageController(
     val storage: AttachmentStorage,
@@ -39,18 +39,18 @@ class StorageController(
     val contextHolder: TokenValidationContextHolder,
     @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
     val hasher: Hasher,
-    val pdfService: PdfService,
+    val pdfService: PdfService
 ) {
 
     // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(
         path = ["{bucket}"],
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun addAttachment(
         @PathVariable("bucket") bucket: String,
-        @RequestParam("file") multipartFile: MultipartFile,
+        @RequestParam("file") multipartFile: MultipartFile
     ): ResponseEntity<Map<String, String>> {
         if (multipartFile.isEmpty) {
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
@@ -78,11 +78,11 @@ class StorageController(
     @PostMapping(
         path = ["/merge/{bucket}"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun mergeAndStoreDocuments(
         @PathVariable("bucket") bucket: String,
-        @RequestBody documentList: List<UUID>,
+        @RequestBody documentList: List<UUID>
     ): ResponseEntity<Map<String, String>> {
         if (documentList.isEmpty()) {
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
@@ -106,7 +106,7 @@ class StorageController(
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getAttachment(
         @PathVariable("bucket") bucket: String,
-        @PathVariable("dokumentId") dokumentId: String,
+        @PathVariable("dokumentId") dokumentId: String
     ): ResponseEntity<Ressurs<ByteArray>> {
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
         val data = storage[directory, dokumentId]

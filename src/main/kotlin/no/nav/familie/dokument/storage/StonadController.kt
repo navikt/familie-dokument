@@ -27,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
 @RequiredIssuers(
     ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_SELVBETJENING, claimMap = ["acr=Level4"]),
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
+    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"])
 )
 class StonadController(
     @Autowired val storage: MellomLagerService,
     @Autowired val contextHolder: TokenValidationContextHolder,
     @Autowired val objectMapper: ObjectMapper,
-    @Autowired val hasher: Hasher,
+    @Autowired val hasher: Hasher
 ) {
 
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -41,11 +41,11 @@ class StonadController(
     @PostMapping(
         path = ["/{stonad}"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun mellomlagreSøknad(
         @PathVariable("stonad") stønad: StønadParameter,
-        @RequestBody(required = true) søknad: String,
+        @RequestBody(required = true) søknad: String
     ): ResponseEntity<Unit> {
         log.debug("Mellomlagrer søknad om overgangsstønad")
 
@@ -91,6 +91,6 @@ class StonadController(
         barnetilsyn("barnetilsyn"),
         skolepenger("skolepenger"),
         barnetrygd("barnetrygd"),
-        kontantstotte("kontantstotte"),
+        kontantstotte("kontantstotte")
     }
 }

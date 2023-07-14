@@ -6,5 +6,5 @@ data class ScanResult(@JsonProperty("Result") val result: Result)
 
 enum class Result {
     FOUND,
-    OK,
+    OK
 }

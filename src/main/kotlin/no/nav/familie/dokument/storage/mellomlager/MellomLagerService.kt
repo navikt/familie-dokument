@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream
 @Service
 class MellomLagerService internal constructor(
     @Qualifier(STONAD_ENCRYPTED_STORAGE)
-    private val delegate: EncryptedStorage,
+    private val delegate: EncryptedStorage
 ) : Storage<String, String> {
 
     override fun put(directory: String, key: String, data: String) {

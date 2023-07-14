@@ -26,7 +26,7 @@ class GcpStorageConfiguration {
     fun gcpStorage(
         storage: Storage,
         @Value("\${gcp.storage.bucketname}") bucketName: String,
-        @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int,
+        @Value("\${attachment.max.size.mb}") maxFileSizeMB: Int
     ): GcpStorage {
         return GcpStorage(bucketName, maxFileSizeMB * MAX_FILE_SIZE_FACTOR, storage)
     }

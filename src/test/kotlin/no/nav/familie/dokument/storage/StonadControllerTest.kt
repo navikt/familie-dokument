@@ -51,7 +51,7 @@ internal class StonadControllerTest {
         assertThrows<IllegalArgumentException> {
             stonadController.mellomlagreSøknad(
                 StonadController.StønadParameter.valueOf("overgangsstonad"),
-                ugyldigJson,
+                ugyldigJson
             )
         }
     }

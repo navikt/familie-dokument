@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.NestedExceptionUtils
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
@@ -29,11 +28,11 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         return NestedExceptionUtils.getMostSpecificCause(throwable).javaClass.simpleName
     }
 
-    override fun handleExceptionInternal(
+    fun handleExceptionInternal(
         ex: Exception,
         body: Any?,
         headers: HttpHeaders,
-        status: HttpStatusCode,
+        status: HttpStatus,
         request: WebRequest
     ): ResponseEntity<Any>? {
         if (ex is HttpRequestMethodNotSupportedException || ex is HttpMediaTypeNotSupportedException || ex is HttpMediaTypeNotAcceptableException) {

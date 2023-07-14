@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class VirusScanService(
-    private val client: VirusScanClient,
+    private val client: VirusScanClient
 ) {
 
     private val logger = LoggerFactory.getLogger(VirusScanService::class.java)
@@ -23,7 +23,7 @@ class VirusScanService(
         if (Result.OK != scanResult.result) {
             throw BadRequestException(
                 BadRequestCode.VIRUS_FOUND,
-                "Fil ikke godkjent - virus detektert status=${scanResult.result} fil=$name",
+                "Fil ikke godkjent - virus detektert status=${scanResult.result} fil=$name"
             )
         }
     }
