@@ -6,7 +6,7 @@ import java.io.ByteArrayInputStream
 
 class AttachmentStorage constructor(
     private val delegate: EncryptedStorage,
-    private val storableFormatConverter: AttachmentToStorableFormatConverter
+    private val storableFormatConverter: AttachmentToStorableFormatConverter,
 ) :
     Storage<ByteArray, ByteArray> {
 

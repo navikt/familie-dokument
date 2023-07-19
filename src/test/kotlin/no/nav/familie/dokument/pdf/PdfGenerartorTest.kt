@@ -32,7 +32,7 @@ class PdfGenerartorTest {
     private fun getDocument(fixtureName: String): String {
         return IOUtils.toString(
             this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
-            StandardCharsets.UTF_8
+            StandardCharsets.UTF_8,
         )
     }
 
@@ -86,7 +86,7 @@ class PdfGenerartorTest {
             expectedPdfBytes,
             actualPdfBytes,
             resource,
-            false
+            false,
         )
 
         // Get a list of results.
@@ -94,7 +94,7 @@ class PdfGenerartorTest {
             System.err.println("Found problems with test case ($resource):")
             System.err.println(
                 problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
-                    .collect(Collectors.joining("\n    ", "[\n    ", "\n]"))
+                    .collect(Collectors.joining("\n    ", "[\n    ", "\n]")),
             )
             System.err.println("For test case ($resource) writing failure artifacts to '$TEST_OUTPUT_PATH'")
             File(TEST_OUTPUT_PATH, "$resource---actual.pdf").writeBytes(actualPdfBytes)

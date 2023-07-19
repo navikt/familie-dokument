@@ -21,7 +21,7 @@ class EncryptedStorageConfiguration {
 
     @Bean
     internal fun secretKeyProvider(
-        @Value("\${FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD}") passphrase: String
+        @Value("\${FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD}") passphrase: String,
     ): SecretKeyProvider {
         return SecretKeyProvider(passphrase)
     }
@@ -30,7 +30,7 @@ class EncryptedStorageConfiguration {
     internal fun attachmentEncryptedStorage(
         @Autowired contextHolder: TokenValidationContextHolder,
         @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper,
-        encryptor: Encryptor
+        encryptor: Encryptor,
     ): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
@@ -40,7 +40,7 @@ class EncryptedStorageConfiguration {
     internal fun stonadEncryptedStorage(
         @Autowired contextHolder: TokenValidationContextHolder,
         @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper,
-        encryptor: Encryptor
+        encryptor: Encryptor,
     ): EncryptedStorage {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }

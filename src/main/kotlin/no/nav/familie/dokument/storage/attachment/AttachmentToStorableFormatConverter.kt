@@ -4,7 +4,7 @@ import org.apache.tika.Tika
 
 class AttachmentToStorableFormatConverter(
     private val imageConversionService: ImageConversionService,
-    private val flattenPdfService: FlattenPdfService
+    private val flattenPdfService: FlattenPdfService,
 ) {
 
     fun toStorageFormat(input: ByteArray): ByteArray {

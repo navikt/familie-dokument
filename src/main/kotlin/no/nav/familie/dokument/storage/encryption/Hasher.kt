@@ -8,7 +8,7 @@ import java.util.Base64
 @Component
 class Hasher(
     @Value("\${FAMILIE_DOKUMENT_FNR_SECRET_SALT}")
-    val hemmeligSalt: String
+    val hemmeligSalt: String,
 ) {
 
     fun lagFnrHash(fnr: String): String {
