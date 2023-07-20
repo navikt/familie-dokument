@@ -28,13 +28,13 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         return NestedExceptionUtils.getMostSpecificCause(throwable).javaClass.simpleName
     }
 
-    override fun handleExceptionInternal(
+    fun handleExceptionInternal(
         ex: Exception,
         body: Any?,
         headers: HttpHeaders,
         status: HttpStatus,
         request: WebRequest,
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<Any>? {
         if (ex is HttpRequestMethodNotSupportedException || ex is HttpMediaTypeNotSupportedException || ex is HttpMediaTypeNotAcceptableException) {
             secureLogger.warn("En feil har oppstått", ex)
             logger.warn("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
