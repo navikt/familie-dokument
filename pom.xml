@@ -20,15 +20,15 @@
         <jvmTarget>17</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>2.20230508082643_6b28bd8</felles.version>
-        <kotlin.version>1.8.10</kotlin.version>
-        <mockk.version>1.13.4</mockk.version>
+        <kotlin.version>1.9.0</kotlin.version>
+        <mockk.version>1.13.5</mockk.version>
         <token-validation-spring.version>3.0.4</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
         <gcp.version>0.195.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
         <tika.core.version>2.6.0</tika.core.version>
         <tika.parser.version>2.6.0</tika.parser.version>
-        <jsoup.version>1.15.4</jsoup.version>
+        <jsoup.version>1.16.1</jsoup.version>
         <testcontainers.version>1.17.6</testcontainers.version>
      </properties>
 
