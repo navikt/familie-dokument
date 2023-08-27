@@ -20,7 +20,7 @@
         <jvmTarget>17</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>2.20230508082643_6b28bd8</felles.version>
-        <kotlin.version>1.9.0</kotlin.version>
+        <kotlin.version>1.9.10</kotlin.version>
         <mockk.version>1.13.5</mockk.version>
         <token-validation-spring.version>3.1.0</token-validation-spring.version>
         <openhtmltopdf.version>1.0.10</openhtmltopdf.version>
