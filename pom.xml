@@ -27,7 +27,7 @@
         <gcp.version>0.200.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
         <tika-core.version>2.8.0</tika-core.version>
-        <tika.parser.version>2.8.0</tika.parser.version>
+        <tika.parser.version>2.9.0</tika.parser.version>
         <jsoup.version>1.16.1</jsoup.version>
         <testcontainers.version>1.18.3</testcontainers.version>
      </properties>
@@ -313,8 +313,7 @@
                         <phase>verify</phase>
                         <configuration>
                             <target name="ktlint">
-                                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                                      classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                                     <arg value="src/**/*.kt"/>
                                 </java>
                             </target>
@@ -328,8 +327,7 @@
                         <phase>validate</phase>
                         <configuration>
                             <target name="ktlint">
-                                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
-                                      classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
+                                <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true" classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                                     <jvmarg value="--add-opens"/>
                                     <jvmarg value="java.base/java.lang=ALL-UNNAMED"/>
                                     <arg value="-F"/>
