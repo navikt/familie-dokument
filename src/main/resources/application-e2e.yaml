@@ -3,5 +3,5 @@ logging:
 no.nav.security.jwt:
   issuer:
     tokenx:
-      discovery-url: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
-      accepted-audience: familie-app
+      discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
+      accepted_audience: familie-app
