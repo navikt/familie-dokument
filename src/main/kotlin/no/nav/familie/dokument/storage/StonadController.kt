@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
 @RequiredIssuers(
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_SELVBETJENING, claimMap = ["acr=Level4"]),
     ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
 )
 class StonadController(

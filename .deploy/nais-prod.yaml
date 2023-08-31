@@ -15,7 +15,6 @@ spec:
   port: 8082
   envFrom:
     - secret: familie-dokument-secret
-    - configmap: loginservice-idporten
   liveness:
     path: /internal/status/isAlive
     initialDelay: 30
