@@ -13,6 +13,8 @@ jobs:
   build-and-deploy:
     name: Build, push til docker, og deploy til GCP (dev)
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
