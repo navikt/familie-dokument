@@ -1,5 +1,6 @@
 package no.nav.familie.dokument
 
+import no.nav.familie.sikkerhet.EksternBrukerUtils
 import no.nav.familie.util.FnrGenerator
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
@@ -40,11 +41,11 @@ class FeilController {
     fun feil(): Unit = throw RuntimeException("Feil")
 
     @GetMapping("ok")
-    @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+    @ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"])
     fun ok(): Map<String, String> = mapOf("a" to "b")
 
     @PostMapping("ok")
-    @ProtectedWithClaims(issuer = "selvbetjening", claimMap = ["acr=Level4"])
+    @ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"])
     fun ok(@RequestBody body: List<String>): Map<String, String> = mapOf("a" to "b")
 }
 
@@ -121,9 +122,9 @@ class ApiFeilIntegrationTest {
 
     private fun MockOAuth2Server.token(
         subject: String,
-        issuerId: String = "selvbetjening",
+        issuerId: String = EksternBrukerUtils.ISSUER_TOKENX,
         clientId: String = UUID.randomUUID().toString(),
-        audience: String = "aud-localhost",
+        audience: String = "familie-app",
         claims: Map<String, Any> = mapOf("acr" to "Level4"),
 
     ): String {

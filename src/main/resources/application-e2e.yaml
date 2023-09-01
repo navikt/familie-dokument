@@ -1,7 +1,7 @@
 logging:
   config: "classpath:logback-e2e.xml"
 no.nav.security.jwt:
-  issuer.selvbetjening:
-    discoveryurl: https://login.microsoftonline.com/NAVtestB2C.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_idporten_ver1
-    accepted_audience: ${ACCEPTEDAUDIENCE}
-    cookie_name: selvbetjening-idtoken
+  issuer:
+    tokenx:
+      discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
+      accepted_audience: familie-app

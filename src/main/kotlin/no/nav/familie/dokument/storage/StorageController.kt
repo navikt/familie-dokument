@@ -30,7 +30,6 @@ import java.util.UUID
 @RestController
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
 @RequiredIssuers(
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_SELVBETJENING, claimMap = ["acr=Level4"]),
     ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
 )
 class StorageController(
