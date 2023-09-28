@@ -61,6 +61,8 @@ spec:
         - application: familie-ks-soknad
         - application: familie-baks-mottak
         - application: familie-ef-ettersending
+        - application: tilleggsstonader-soknad
+        - application: tilleggsstonader-soknad-api
     outbound:
       rules:
         - application: clamav
