@@ -29,7 +29,7 @@
         <tika-core.version>2.8.0</tika-core.version>
         <tika.parser.version>2.8.0</tika.parser.version>
         <jsoup.version>1.16.1</jsoup.version>
-        <testcontainers.version>1.18.3</testcontainers.version>
+        <testcontainers.version>1.19.1</testcontainers.version>
      </properties>
 
     <repositories>
