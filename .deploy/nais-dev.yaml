@@ -63,6 +63,8 @@ spec:
           namespace: tilleggsstonader
         - application: tilleggsstonader-soknad-api
           namespace: tilleggsstonader
+        - application: tilleggsstonader-sak
+          namespace: tilleggsstonader
     outbound:
       rules:
         - application: clamav
