@@ -101,16 +101,24 @@ class StorageController(
             .body(mapOf("dokumentId" to uuid))
     }
 
-    // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getAttachment(
+    fun getAttachmentRessurs(
         @PathVariable("bucket") bucket: String,
         @PathVariable("dokumentId") dokumentId: String,
     ): ResponseEntity<Ressurs<ByteArray>> {
+        return ResponseEntity.ok(Ressurs.success(getAttachment(bucket, dokumentId)))
+    }
+
+    // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
+    @GetMapping(path = ["{bucket}/{dokumentId}"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    fun getAttachment(
+        @PathVariable("bucket") bucket: String,
+        @PathVariable("dokumentId") dokumentId: String,
+    ): ByteArray {
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
-        return ResponseEntity.ok(Ressurs.success(data))
+        return data
     }
 
     @Unprotected
