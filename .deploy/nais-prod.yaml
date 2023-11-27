@@ -60,6 +60,12 @@ spec:
         - application: familie-baks-mottak
         - application: familie-ef-soknad
         - application: familie-ef-ettersending
+        - application: tilleggsstonader-soknad
+          namespace: tilleggsstonader
+        - application: tilleggsstonader-soknad-api
+          namespace: tilleggsstonader
+        - application: tilleggsstonader-sak
+          namespace: tilleggsstonader
     outbound:
       rules:
         - application: clamav
