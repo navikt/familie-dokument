@@ -160,7 +160,7 @@ class StorageControllerIntegrasionTest {
             .andExpect(status().isCreated).andReturn()
         val dokumentId = objectMapper.readValue(result.response.contentAsString, Map::class.java)["dokumentId"]
 
-        val response = mockMvc.get("/api/mapper/familie-dokument-test/$dokumentId") {
+        val response = mockMvc.get("/api/mapper/familie-dokument-test/$dokumentId/pdf") {
             accept = MediaType.APPLICATION_OCTET_STREAM
         }.andExpect {
             status { isOk() }
