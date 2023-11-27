@@ -66,7 +66,7 @@ class ImageConversionService {
             JPEGFactory.createFromImage(document, portraitImage, quality)
         } catch (e: Exception) {
             if (detectedType == Format.PNG) {
-                logger.warn("Feilet konvertering av jpegbilde, prøver med lossless", e)
+                logger.info("Feilet konvertering av jpegbilde, prøver med lossless", e)
                 LosslessFactory.createFromImage(document, portraitImage)
             } else {
                 throw e
