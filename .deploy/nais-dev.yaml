@@ -43,8 +43,6 @@ spec:
       cpu: 500m
   ingresses:
       - https://familie-dokument.intern.dev.nav.no
-      - https://familie-dokument.dev.nav.no/familie/dokument
-      - https://familie.dev.nav.no/familie/dokument
   accessPolicy:
     inbound:
       rules:
@@ -61,6 +59,12 @@ spec:
         - application: familie-ks-soknad
         - application: familie-baks-mottak
         - application: familie-ef-ettersending
+        - application: tilleggsstonader-soknad
+          namespace: tilleggsstonader
+        - application: tilleggsstonader-soknad-api
+          namespace: tilleggsstonader
+        - application: tilleggsstonader-sak
+          namespace: tilleggsstonader
     outbound:
       rules:
         - application: clamav
