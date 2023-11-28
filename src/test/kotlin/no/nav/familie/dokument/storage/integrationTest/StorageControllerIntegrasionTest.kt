@@ -153,6 +153,24 @@ class StorageControllerIntegrasionTest {
     }
 
     @Test
+    fun `Skal kunne hente lagret vedlegg som bytearray uten å pakke inn det i ressurs`() {
+        initMockWithoutArtificialErrors()
+        val vedlegg = leseVedlegg("gyldig-0.8m.pdf", "application/pdf")
+        val result = mockMvc.perform(multipart("/api/mapper/{bucket}", "familie-dokument-test").file(vedlegg))
+            .andExpect(status().isCreated).andReturn()
+        val dokumentId = objectMapper.readValue(result.response.contentAsString, Map::class.java)["dokumentId"]
+
+        val response = mockMvc.get("/api/mapper/familie-dokument-test/$dokumentId/pdf") {
+            accept = MediaType.APPLICATION_OCTET_STREAM
+        }.andExpect {
+            status { isOk() }
+        }.andReturn().response
+
+        assertEquals(200, response.status)
+        assertEquals(vedlegg.bytes.size, response.contentAsString.length)
+    }
+
+    @Test
     fun `Skal returnere 404 for å hent ukjent dokument`() {
         every { tokenValidationContextHolderMock.hentFnr() } returns TEST_FNR
         every { storageMock.get(any<BlobId>()) } returns null
