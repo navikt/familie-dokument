@@ -17,7 +17,7 @@
     <properties>
         <revision>1.0</revision>
         <changelist>-SNAPSHOT</changelist>
-        <jvmTarget>17</jvmTarget>
+        <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>2.20230508082643_6b28bd8</felles.version>
         <kotlin.version>1.9.22</kotlin.version>
