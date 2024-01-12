@@ -9,13 +9,15 @@ env:
   IMAGE: ghcr.io/navikt/familie-dokument:${{ github.sha }}
   IMAGE_LATEST: ghcr.io/navikt/familie-dokument:latest
 
+permissions:
+  packages: write
+  id-token: write
+  contents: read
+
 jobs:
   build-and-deploy:
     name: Build, push til docker, og deploy til GCP (dev)
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,12 +49,10 @@ jobs:
       - name: Deploy til GCP (dev)
         uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: .deploy/nais-dev.yaml
       - name: Deploy til GCP (prod)
         uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-gcp
           RESOURCE: .deploy/nais-prod.yaml
