@@ -92,4 +92,6 @@ spec:
     buckets:
       - name: familie-dokument-dev
         cascadingDelete: false
-        age: 2
+        lifecycleCondition:
+          age: 2
+          withState: ANY
