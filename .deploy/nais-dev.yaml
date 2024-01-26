@@ -64,6 +64,9 @@ spec:
           namespace: tilleggsstonader
         - application: tilleggsstonader-sak
           namespace: tilleggsstonader
+        - application: tokenx-token-generator
+          namespace: aura
+          cluster: dev-gcp
     outbound:
       rules:
         - application: clamav
