@@ -33,13 +33,13 @@ spec:
     enabled: true
   replicas:
     min: 2
-    max: 4
+    max: 2
   resources:
     limits:
-      memory: 4Gi
+      memory: 1Gi
     requests:
-      memory: 2Gi
-      cpu: 500m
+      memory: 512Mi
+      cpu: 200m
   ingresses:
       - https://familie-dokument.intern.dev.nav.no
   accessPolicy:
