@@ -1,6 +1,6 @@
 package no.nav.familie.dokument.storage.attachment
 
-import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm
 import org.slf4j.LoggerFactory
@@ -14,7 +14,7 @@ class FlattenPdfService {
 
     fun convert(input: ByteArray): ByteArray {
         return try {
-            PDDocument.load(input).use { loadedPdf ->
+            Loader.loadPDF(input).use { loadedPdf ->
                 val pdAcroForm: PDAcroForm? = loadedPdf.documentCatalog.acroForm
                 if (loadedPdf.isEncrypted) return input
                 pdAcroForm?.let {

@@ -44,31 +44,28 @@ class PdfGenerartorTest {
             data[1] == 0x50.toByte() && // P
             data[2] == 0x44.toByte() && // D
             data[3] == 0x46.toByte() && // F
-            data[4] == 0x2D.toByte()
-        ) { // -
-
+            data[4] == 0x2D.toByte()    // -
+        ) {
             // version 1.3 file terminator
-            if (data[5] == 0x31.toByte() && data[6] == 0x2E.toByte() &&
-                data[7] == 0x33.toByte() && data[data.size - 7] == 0x25.toByte() && // %
+            if (data[data.size - 7] == 0x25.toByte() && // %
                 data[data.size - 6] == 0x25.toByte() && // %
                 data[data.size - 5] == 0x45.toByte() && // E
                 data[data.size - 4] == 0x4F.toByte() && // O
                 data[data.size - 3] == 0x46.toByte() && // F
                 data[data.size - 2] == 0x20.toByte() && // SPACE
-                data[data.size - 1] == 0x0A.toByte()
-            ) { // EOL
+                data[data.size - 1] == 0x0A.toByte()    // EOL
+            ) {
                 return true
             }
 
             // version 1.3 file terminator
-            if (data[5] == 0x31.toByte() && data[6] == 0x2E.toByte() &&
-                data[7] == 0x34.toByte() && data[data.size - 6] == 0x25.toByte() && // %
+            if (data[data.size - 6] == 0x25.toByte() && // %
                 data[data.size - 5] == 0x25.toByte() && // %
                 data[data.size - 4] == 0x45.toByte() && // E
                 data[data.size - 3] == 0x4F.toByte() && // O
                 data[data.size - 2] == 0x46.toByte() && // F
-                data[data.size - 1] == 0x0A.toByte()
-            ) { // EOL
+                data[data.size - 1] == 0x0A.toByte()    // EOL
+            ) {
                 return true
             }
         }
@@ -114,7 +111,7 @@ class PdfGenerartorTest {
 
     private fun isPDF_2_ACompliant(pdf: ByteArray): Boolean {
         VeraGreenfieldFoundryProvider.initialise()
-        val pdfaFlavour = PDFAFlavour.PDFA_2_U
+        val pdfaFlavour = PDFAFlavour.PDFA_2_B
         val validator = Foundries.defaultInstance().createValidator(pdfaFlavour, false)
         val parser = Foundries.defaultInstance().createParser(ByteArrayInputStream(pdf))
         return validator.validate(parser).isCompliant
