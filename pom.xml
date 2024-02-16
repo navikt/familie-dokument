@@ -153,12 +153,11 @@
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers-standard-package</artifactId>
             <version>${tika.parser.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.pdfbox</groupId>
-                    <artifactId>fontbox</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
