@@ -23,7 +23,7 @@ class IntegrationTestConfig {
     fun tokenValidationContextHolderMock(): TokenValidationContextHolder {
         val tokenValidationContextHolder = mockk<TokenValidationContextHolder>()
         ExtensionMockUtil.setUpMockHentFnr()
-        every { tokenValidationContextHolder.tokenValidationContext } returns mockk()
+        every { tokenValidationContextHolder.getTokenValidationContext() } returns mockk()
         return tokenValidationContextHolder
     }
 

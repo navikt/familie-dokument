@@ -1,0 +1,20 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /
+cors:
+  allowed_origins:
+    - "http://localhost:3000"
+
+no.nav.security.jwt:
+  issuer:
+    tokenx:
+      discovery-url: https://fakedings.intern.dev.nav.no/fake/.well-known/openid-configuration
+      accepted-audience: dev-gcp:teamfamilie:familie-dokument
+
+FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
+FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt
+
+gcp.storage.bucketname: not-a-real-name
+
+spring.main.allow-bean-definition-overriding": true
