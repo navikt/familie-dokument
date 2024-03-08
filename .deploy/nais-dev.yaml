@@ -39,7 +39,7 @@ spec:
       memory: 1Gi
     requests:
       memory: 512Mi
-      cpu: 200m
+      cpu: 10m
   ingresses:
       - https://familie-dokument.intern.dev.nav.no
   accessPolicy:
