@@ -11,7 +11,6 @@ no.nav.security.jwt:
     tokenx:
       discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
       accepted_audience: familie-app
-      cookie_name: localhost-idtoken
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt

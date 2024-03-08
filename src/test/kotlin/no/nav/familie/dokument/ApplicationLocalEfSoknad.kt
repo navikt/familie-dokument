@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.no.nav.familie.dokument
 
-import no.nav.familie.dokument.ApplicationLocalSoknad
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
