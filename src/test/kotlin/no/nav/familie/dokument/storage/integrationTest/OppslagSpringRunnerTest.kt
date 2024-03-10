@@ -67,7 +67,7 @@ abstract class OppslagSpringRunnerTest {
         return LOCALHOST + getPort() + uri
     }
 
-    fun søkerBearerToken(
+    protected fun søkerBearerToken(
         personident: String = "12345678911",
     ): String {
         val clientId = "lokal:teamfamilie:familie-dokument"
