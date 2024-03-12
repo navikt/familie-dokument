@@ -55,6 +55,7 @@ spec:
         - application: familie-ef-soknad
         - application: familie-baks-soknad-api
         - application: familie-ba-soknad
+        - application: familie-ba-soknad-gammel-url
         - application: familie-ks-soknad
         - application: familie-baks-mottak
         - application: familie-ef-ettersending
