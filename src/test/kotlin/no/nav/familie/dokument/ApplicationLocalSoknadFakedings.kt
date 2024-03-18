@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication(scanBasePackages = ["no.nav.familie.dokument"], excludeName = ["DevLauncher"])
 @EnableJwtTokenValidation(ignore = ["org.springframework", "org.springdoc"])
-class ApplicationLocalEfSoknad
+class ApplicationLocalSoknadFakedings
 
 /**
  * Bruk denne launcheren hvis du skal bruke ef-søknad-api
@@ -16,7 +16,7 @@ class ApplicationLocalEfSoknad
  */
 
 fun main(args: Array<String>) {
-    val springApp = SpringApplication(ApplicationLocalEfSoknad::class.java)
-    springApp.setAdditionalProfiles("local-ef")
+    val springApp = SpringApplication(ApplicationLocalSoknadFakedings::class.java)
+    springApp.setAdditionalProfiles("local-fd")
     springApp.run(*args)
 }

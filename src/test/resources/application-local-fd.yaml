@@ -1,3 +1,4 @@
+# Profil for lokal kjøring med fakedings til henting og validering av tokens
 server:
   port: 8082
   servlet:

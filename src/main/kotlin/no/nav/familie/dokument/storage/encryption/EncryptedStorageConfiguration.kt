@@ -35,7 +35,7 @@ class EncryptedStorageConfiguration {
         return EncryptedStorage(contextHolder, storage, encryptor)
     }
 
-    @Profile("!local && !local-ef")
+    @Profile("!local && !local-fd")
     @Bean(STONAD_ENCRYPTED_STORAGE)
     internal fun stonadEncryptedStorage(
         @Autowired contextHolder: TokenValidationContextHolder,
