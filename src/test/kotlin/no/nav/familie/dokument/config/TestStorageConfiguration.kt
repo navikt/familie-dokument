@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 import java.io.InputStream
 
-@Profile("local")
+@Profile("local", "local-fd")
 @Configuration
 class TestStorageConfiguration {
 
