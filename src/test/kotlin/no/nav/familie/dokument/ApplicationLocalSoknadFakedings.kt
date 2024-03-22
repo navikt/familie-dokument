@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class ApplicationLocalSoknadFakedings
 
 /**
- * Bruk denne launcheren hvis du skal bruke ef-søknad-api
- * Familie-ef-søknad bruker fakedings til å hente token, derfor er det en egen ef-profil for lokal kjøring som validerer token mot fakedings
+ * Bruk denne launcheren hvis du skal bruke ef-søknad-api/baks-soknad-api
+ * Disse appene bruker fakedings til å hente token, derfor er det en egen profil for lokal kjøring som validerer token mot fakedings
  *
  * Skal du bruke familie-dokument ifm sak/brev så start opp ApplicationLocal
  */
