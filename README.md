@@ -9,7 +9,7 @@ mock-oauth-server kjørende på port 11588
 Kjør opp `ApplicationLocalSoknad`
 
 ## Kjøre lokalt for søknad med fakedings
-Søknad apper som bruker fakedings for å hente og validere token lokalt
+Søknadsapper som bruker fakedings for å hente og validere token lokalt. Dette gjelder både `familie-baks-soknad-api` og `familie-ef-soknad-api`.
 
 Kjør opp `ApplicationLocalSoknadFakedings`
 
