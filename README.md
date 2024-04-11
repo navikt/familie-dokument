@@ -5,7 +5,7 @@ Brukes ifm vedlegg i søknadsdialoger og generering av pdf fra html for brev
 ## Kjøre lokalt for søknad
 Søknadsapper som bruker fakedings for å hente og validere token lokalt. Dette gjelder både `familie-baks-soknad-api` og `familie-ef-soknad-api`.
 
-Kjør opp `ApplicationLocalSoknadFakedings`
+Kjør opp `ApplicationLocalSoknad`
 
 ## Kjøre lokalt for sak/brev
 Kjør opp `ApplicationLocal` som starter opp mock-oauth-server selv
