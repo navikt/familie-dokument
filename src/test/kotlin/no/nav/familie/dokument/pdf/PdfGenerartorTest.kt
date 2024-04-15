@@ -111,7 +111,7 @@ class PdfGenerartorTest {
 
     private fun isPDF_2_ACompliant(pdf: ByteArray): Boolean {
         VeraGreenfieldFoundryProvider.initialise()
-        val pdfaFlavour = PDFAFlavour.PDFA_2_B
+        val pdfaFlavour = PDFAFlavour.PDFA_2_U
         val validator = Foundries.defaultInstance().createValidator(pdfaFlavour, false)
         val parser = Foundries.defaultInstance().createParser(ByteArrayInputStream(pdf))
         return validator.validate(parser).isCompliant

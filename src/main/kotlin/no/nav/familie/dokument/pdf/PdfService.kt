@@ -5,7 +5,6 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import org.apache.pdfbox.io.MemoryUsageSetting
-import org.apache.pdfbox.io.RandomAccessReadBuffer
 import org.apache.pdfbox.multipdf.PDFMergerUtility
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
@@ -26,6 +25,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import org.w3c.dom.Document
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -101,7 +101,7 @@ class PdfService {
             dc.addCreator("navikt/familie-dokument")
             dc.addDate(cal)
 
-            val id = xmp.createAndAddPDFAIdentificationSchema()
+            val id = xmp.createAndAddPFAIdentificationSchema()
             id.part = 2
             id.conformance = "U"
 
@@ -135,10 +135,10 @@ class PdfService {
 
     fun mergeDokumenter(dokumenter: List<ByteArray>): ByteArray {
         val pdfMerger = PDFMergerUtility()
-        dokumenter.forEach { pdfMerger.addSource(RandomAccessReadBuffer(it)) }
+        dokumenter.forEach { pdfMerger.addSource(ByteArrayInputStream(it)) }
         val output = ByteArrayOutputStream()
         pdfMerger.destinationStream = output
-        pdfMerger.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly().streamCache)
+        pdfMerger.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly())
         return output.toByteArray()
     }
 
