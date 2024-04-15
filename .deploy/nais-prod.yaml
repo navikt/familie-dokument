@@ -39,7 +39,7 @@ spec:
       memory: 4Gi
     requests:
       memory: 2Gi
-      cpu: 500m
+      cpu: 50m
   ingresses:
     - https://familie-dokument.intern.nav.no
     - https://www.nav.no/familie/dokument

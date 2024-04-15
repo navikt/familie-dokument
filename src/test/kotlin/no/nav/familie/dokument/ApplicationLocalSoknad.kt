@@ -1,4 +1,4 @@
-package no.nav.familie.dokument
+package no.nav.familie.dokument.no.nav.familie.dokument
 
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.boot.SpringApplication
@@ -9,17 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class ApplicationLocalSoknad
 
 /**
- * Bruk denne launcheren hvis du skal bruke ef-søknad-api/ba-søknad-
- * Familie-dokument er ikke ansvarlig for håndtering av oauth ved lokal kjøring
- * Denne porten må også settes i eks ef-soknad-api/ba-soknad-api
+ * Bruk denne launcheren hvis du skal bruke ef-søknad-api/baks-soknad-api
+ * Disse appene bruker fakedings til å hente token, derfor er det en egen profil for lokal kjøring som validerer token mot fakedings
  *
  * Skal du bruke familie-dokument ifm sak/brev så start opp ApplicationLocal
  */
-private val mockOauth2ServerPort: String = "11588"
 
 fun main(args: Array<String>) {
     val springApp = SpringApplication(ApplicationLocalSoknad::class.java)
-    springApp.setAdditionalProfiles("local")
-    springApp.setDefaultProperties(mapOf("mock-oauth2-server.port" to mockOauth2ServerPort))
+    springApp.setAdditionalProfiles("local-fd")
     springApp.run(*args)
 }

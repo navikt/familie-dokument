@@ -1,3 +1,4 @@
+# Profil for lokal kjøring med fakedings til henting og validering av tokens
 server:
   port: 8082
   servlet:
@@ -9,8 +10,8 @@ cors:
 no.nav.security.jwt:
   issuer:
     tokenx:
-      discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
-      accepted_audience: familie-app
+      discovery-url: https://fakedings.intern.dev.nav.no/fake/.well-known/openid-configuration
+      accepted-audience: dev-gcp:teamfamilie:familie-dokument
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt
