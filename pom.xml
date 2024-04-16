@@ -23,7 +23,7 @@
         <kotlin.version>1.9.23</kotlin.version>
         <mockk.version>1.13.10</mockk.version>
         <token-validation-spring.version>4.1.4</token-validation-spring.version>
-        <openhtmltopdf.version>1.1.4</openhtmltopdf.version>
+        <openhtmltopdf.version>pdfbox2-65c2c5010f84b2daa5821971c9c68cd330463830</openhtmltopdf.version>
         <gcp.version>0.218.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
         <tika-core.version>2.9.2</tika-core.version>
@@ -36,6 +36,10 @@
         <repository>
             <id>github</id>
             <url>https://maven.pkg.github.com/navikt/familie-kontrakter</url>
+        </repository>
+        <repository>
+            <id>at.datenwort.openhtmltopdf</id>
+            <url>https://maven.pkg.github.com/openhtmltopdf/openhtmltopdf</url>
         </repository>
     </repositories>
 
@@ -153,11 +157,6 @@
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers-standard-package</artifactId>
             <version>${tika.parser.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
