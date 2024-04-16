@@ -23,7 +23,7 @@
         <kotlin.version>1.9.23</kotlin.version>
         <mockk.version>1.13.10</mockk.version>
         <token-validation-spring.version>4.1.4</token-validation-spring.version>
-        <openhtmltopdf.version>pdfbox2-65c2c5010f84b2daa5821971c9c68cd330463830</openhtmltopdf.version>
+        <openhtmltopdf.version>1.1.4</openhtmltopdf.version>
         <gcp.version>0.218.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
         <tika-core.version>2.9.2</tika-core.version>
@@ -243,12 +243,12 @@
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>core-jakarta</artifactId>
-            <version>1.24.1</version>
+            <version>1.24.2</version>
         </dependency>
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>validation-model</artifactId>
-            <version>1.24.1</version>
+            <version>1.24.2</version>
         </dependency>
         <!-- PDF/A-2U-validering -->
     </dependencies>
