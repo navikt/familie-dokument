@@ -103,7 +103,7 @@ class PdfService {
 
             val id = xmp.createAndAddPFAIdentificationSchema()
             id.part = 2
-            id.conformance = "U"
+            id.conformance = "A"
 
             val serializer = XmpSerializer()
             val baos = ByteArrayOutputStream()
