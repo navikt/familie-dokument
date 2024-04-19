@@ -48,8 +48,6 @@ spec:
       rules:
         - application: familie-brev
         - application: familie-klage
-        - application: familie-ef-blankett
-        - application: soknad-kontantstotte-api
         - application: familie-ef-mottak
         - application: familie-ef-soknad-api
         - application: familie-ef-sak
