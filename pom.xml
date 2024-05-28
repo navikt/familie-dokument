@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
+        <version>3.3.0</version>
     </parent>
 
     <properties>
@@ -20,9 +20,9 @@
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>3.20240227112118_e55c4be</felles.version>
-        <kotlin.version>1.9.24</kotlin.version>
-        <mockk.version>1.13.10</mockk.version>
-        <token-validation-spring.version>4.1.4</token-validation-spring.version>
+        <kotlin.version>2.0.0</kotlin.version>
+        <mockk.version>1.13.11</mockk.version>
+        <token-validation-spring.version>4.1.7</token-validation-spring.version>
         <openhtmltopdf.version>pdfbox2-65c2c5010f84b2daa5821971c9c68cd330463830</openhtmltopdf.version>
         <gcp.version>0.220.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
@@ -243,12 +243,12 @@
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>core-jakarta</artifactId>
-            <version>1.24.2</version>
+            <version>1.26.1</version>
         </dependency>
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>validation-model</artifactId>
-            <version>1.24.2</version>
+            <version>1.26.1</version>
         </dependency>
         <!-- PDF/A-2U-validering -->
     </dependencies>
