@@ -22,9 +22,9 @@
         <felles.version>3.20240227112118_e55c4be</felles.version>
         <kotlin.version>2.0.0</kotlin.version>
         <mockk.version>1.13.11</mockk.version>
-        <token-validation-spring.version>4.1.7</token-validation-spring.version>
-        <openhtmltopdf.version>pdfbox2-65c2c5010f84b2daa5821971c9c68cd330463830</openhtmltopdf.version>
-        <gcp.version>0.220.0</gcp.version>
+        <token-validation-spring.version>4.1.8</token-validation-spring.version>
+        <openhtmltopdf.version>1.1.4</openhtmltopdf.version>
+        <gcp.version>0.221.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
         <tika-core.version>2.9.2</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
