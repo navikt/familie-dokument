@@ -62,6 +62,8 @@ spec:
           namespace: tilleggsstonader
         - application: tilleggsstonader-sak
           namespace: tilleggsstonader
+        - application: tilleggsstonader-klage
+          namespace: tilleggsstonader
         - application: tokenx-token-generator
           namespace: aura
           cluster: dev-gcp
