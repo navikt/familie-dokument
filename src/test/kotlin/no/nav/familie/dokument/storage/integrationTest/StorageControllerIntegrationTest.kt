@@ -55,7 +55,7 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     @Test
     fun `Skal returnere 400 for vedlegg som overstiger størrelsesgrensen`() {
         val vedlegg = leseVedlegg("ugyldig-2.6m.pdf")
-        val response = restTemplate.exchange<Map<String, String>>(
+        val response = restTemplate.exchange<Map<String, Any>>(
             localhost("/api/mapper/familie-dokument-test"),
             HttpMethod.POST,
             HttpEntity(vedlegg, headers),
@@ -67,7 +67,7 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     fun `Skal returnere 500 for vedlegg med ustøttet type`() {
         initMock()
         val vedlegg = leseVedlegg("ugyldig.txt")
-        val response = restTemplate.exchange<Map<String, String>>(
+        val response = restTemplate.exchange<Map<String, Any>>(
             localhost("/api/mapper/familie-dokument-test"),
             HttpMethod.POST,
             HttpEntity(vedlegg, headers),
@@ -83,7 +83,7 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
             HttpStatus.UNAUTHORIZED.value(),
             "Unauthorized",
         )
-        val response = restTemplate.exchange<Map<String, String>>(
+        val response = restTemplate.exchange<Map<String, Any>>(
             localhost("/api/mapper/familie-dokument-test"),
             HttpMethod.POST,
             HttpEntity(vedlegg, headers),
@@ -184,7 +184,7 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     @Test
     internal fun `skal returnere 400 dersom tom liste sendes inn`() {
         val emptyMap = HttpHeaders()
-        val response = restTemplate.exchange<Map<String, String>>(
+        val response = restTemplate.exchange<Map<String, Any>>(
             localhost("/api/mapper/familie-dokument-test"),
             HttpMethod.POST,
             HttpEntity(emptyMap, headers),
