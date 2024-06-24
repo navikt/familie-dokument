@@ -41,5 +41,6 @@
     <logger name="org.apache.pdfbox.pdmodel.font.PDType0Font" level="ERROR"/>
     <logger name="org.apache.pdfbox.pdmodel.font.PDType1Font" level="ERROR"/>
     <logger name="org.apache.pdfbox.pdmodel.font.PDTrueTypeFont" level="ERROR"/>
+    <logger name="org.apache.pdfbox.pdmodel.font.FileSystemFontProvider" level="ERROR"/>
 
 </configuration>

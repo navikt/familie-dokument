@@ -72,7 +72,7 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
             HttpMethod.POST,
             HttpEntity(vedlegg, headers),
         )
-        assertThat(response.statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
     @Test
