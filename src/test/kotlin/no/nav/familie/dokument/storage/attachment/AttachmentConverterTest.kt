@@ -3,6 +3,7 @@ package no.nav.familie.dokument.storage.attachment
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import no.nav.familie.dokument.InvalidDocumentFormat
 import no.nav.familie.dokument.TestUtil.toByteArray
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -25,7 +26,7 @@ class AttachmentConverterTest {
     @Test
     fun at_ulovlig_format_kaster_exception() {
         val txtVedlegg = toByteArray("dummy/txt_dummy.txt")
-        assertThatThrownBy { converter.toStorageFormat(txtVedlegg) }.isInstanceOf(RuntimeException::class.java)
+        assertThatThrownBy { converter.toStorageFormat(txtVedlegg) }.isInstanceOf(InvalidDocumentFormat::class.java)
     }
 
     @Test

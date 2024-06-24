@@ -1,5 +1,6 @@
 package no.nav.familie.dokument.storage.attachment
 
+import no.nav.familie.dokument.InvalidDocumentFormat
 import org.apache.tika.Tika
 
 class AttachmentToStorableFormatConverter(
@@ -10,7 +11,7 @@ class AttachmentToStorableFormatConverter(
     fun toStorageFormat(input: ByteArray): ByteArray {
         val mimeType = Tika().detect(input)
         val detectedType = Format.fromMimeType(mimeType)
-            .orElseThrow { RuntimeException("Kunne ikke konvertere vedleggstypen $mimeType") }
+            .orElseThrow { InvalidDocumentFormat("Kunne ikke konvertere vedleggstypen $mimeType") }
 
         return if (Format.PDF == detectedType) {
             flattenPdfService.convert(input)
