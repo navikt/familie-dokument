@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
+        <version>3.3.2</version>
     </parent>
 
     <properties>
@@ -21,15 +21,15 @@
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
         <felles.version>3.20240227112118_e55c4be</felles.version>
         <kotlin.version>2.0.0</kotlin.version>
-        <mockk.version>1.13.11</mockk.version>
+        <mockk.version>1.13.12</mockk.version>
         <token-validation-spring.version>5.0.1</token-validation-spring.version>
-        <openhtmltopdf.version>pdfbox2-65c2c5010f84b2daa5821971c9c68cd330463830</openhtmltopdf.version>
-        <gcp.version>0.223.0</gcp.version>
+        <openhtmltopdf.version>1.1.4</openhtmltopdf.version>
+        <gcp.version>0.224.0</gcp.version>
         <kontrakter.version>3.0_20230705132547_9303863</kontrakter.version>
         <tika-core.version>2.9.2</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
-        <jsoup.version>1.17.2</jsoup.version>
-        <testcontainers.version>1.19.8</testcontainers.version>
+        <jsoup.version>1.18.1</jsoup.version>
+        <testcontainers.version>1.20.1</testcontainers.version>
      </properties>
 
     <repositories>
@@ -261,7 +261,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
@@ -365,7 +365,7 @@
                 <!-- For å få dependency graph i SLSA som pushes av docker-build-push parameter byosbom -->
                 <groupId>org.cyclonedx</groupId>
                 <artifactId>cyclonedx-maven-plugin</artifactId>
-                <version>2.8.0</version>
+                <version>2.8.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
