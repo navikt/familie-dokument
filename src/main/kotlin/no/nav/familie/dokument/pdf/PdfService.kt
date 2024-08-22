@@ -1,10 +1,12 @@
 package no.nav.familie.dokument.pdf
 
-import com.openhtmltopdf.extend.FSSupplier
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
+import com.openhtmltopdf.pdfboxout.PDFontSupplier
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
-import org.apache.pdfbox.io.MemoryUsageSetting
+import org.apache.fontbox.ttf.TTFParser
+import org.apache.pdfbox.io.IOUtils
+import org.apache.pdfbox.io.RandomAccessReadBuffer
 import org.apache.pdfbox.multipdf.PDFMergerUtility
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
@@ -12,6 +14,7 @@ import org.apache.pdfbox.pdmodel.common.PDMetadata
 import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDMarkInfo
 import org.apache.pdfbox.pdmodel.documentinterchange.logicalstructure.PDStructureTreeRoot
+import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.graphics.color.PDOutputIntent
 import org.apache.pdfbox.pdmodel.interactive.viewerpreferences.PDViewerPreferences
 import org.apache.xmpbox.XMPMetadata
@@ -25,10 +28,8 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import org.w3c.dom.Document
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.util.Calendar
 
 @Service
@@ -46,11 +47,15 @@ class PdfService {
         return pdfOutputStream.toByteArray()
     }
 
-    private class FontSupplier(val fontName: String) : FSSupplier<InputStream> {
-
-        override fun supply(): InputStream {
-            return ClassPathResource("/fonts/$fontName").inputStream
-        }
+    fun fontSupplier(fontName: String): PDFontSupplier {
+        val font = TTFParser().parse(RandomAccessReadBuffer(ClassPathResource("/fonts/$fontName").inputStream)).also { it.isEnableGsub = false }
+        return PDFontSupplier(
+            PDType0Font.load(
+                PDDocument(),
+                font,
+                true,
+            ),
+        )
     }
 
     fun genererPdf(w3cDokument: Document, outputStream: ByteArrayOutputStream) {
@@ -58,21 +63,21 @@ class PdfService {
             val builder = PdfRendererBuilder()
                 .useFastMode()
                 .useFont(
-                    FontSupplier("SourceSansPro-Regular.ttf"),
+                    fontSupplier("SourceSansPro-Regular.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.NORMAL,
                     true,
                 )
                 .useFont(
-                    FontSupplier("SourceSansPro-Bold.ttf"),
+                    fontSupplier("SourceSansPro-Bold.ttf"),
                     "Source Sans Pro",
                     700,
                     BaseRendererBuilder.FontStyle.OBLIQUE,
                     true,
                 )
                 .useFont(
-                    FontSupplier("SourceSansPro-It.ttf"),
+                    fontSupplier("SourceSansPro-It.ttf"),
                     "Source Sans Pro",
                     400,
                     BaseRendererBuilder.FontStyle.ITALIC,
@@ -101,7 +106,7 @@ class PdfService {
             dc.addCreator("navikt/familie-dokument")
             dc.addDate(cal)
 
-            val id = xmp.createAndAddPFAIdentificationSchema()
+            val id = xmp.createAndAddPDFAIdentificationSchema()
             id.part = 2
             id.conformance = "A"
 
@@ -135,10 +140,10 @@ class PdfService {
 
     fun mergeDokumenter(dokumenter: List<ByteArray>): ByteArray {
         val pdfMerger = PDFMergerUtility()
-        dokumenter.forEach { pdfMerger.addSource(ByteArrayInputStream(it)) }
+        dokumenter.forEach { pdfMerger.addSource(RandomAccessReadBuffer(it)) }
         val output = ByteArrayOutputStream()
         pdfMerger.destinationStream = output
-        pdfMerger.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly())
+        pdfMerger.mergeDocuments(IOUtils.createMemoryOnlyStreamCache())
         return output.toByteArray()
     }
 
