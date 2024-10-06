@@ -24,12 +24,12 @@
         <mockk.version>1.13.12</mockk.version>
         <token-validation-spring.version>5.0.5</token-validation-spring.version>
         <openhtmltopdf.version>1.1.22</openhtmltopdf.version>
-        <gcp.version>0.228.0</gcp.version>
-        <kontrakter.version>3.0_20240919121839_57daa74</kontrakter.version>
+        <gcp.version>0.229.0</gcp.version>
+        <kontrakter.version>3.0_20241004134208_2962899</kontrakter.version>
         <tika-core.version>2.9.2</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.18.1</jsoup.version>
-        <testcontainers.version>1.20.1</testcontainers.version>
+        <testcontainers.version>1.20.2</testcontainers.version>
      </properties>
 
     <repositories>
