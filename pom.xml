@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
+        <version>3.3.5</version>
     </parent>
 
     <properties>
@@ -22,14 +22,14 @@
         <felles.version>3.20240913110742_adb42f8</felles.version>
         <kotlin.version>2.0.21</kotlin.version>
         <mockk.version>1.13.13</mockk.version>
-        <token-validation-spring.version>5.0.5</token-validation-spring.version>
+        <token-validation-spring.version>5.0.8</token-validation-spring.version>
         <openhtmltopdf.version>1.1.22</openhtmltopdf.version>
-        <gcp.version>0.230.0</gcp.version>
-        <kontrakter.version>3.0_20241018104853_fa92410</kontrakter.version>
+        <gcp.version>0.231.0</gcp.version>
+        <kontrakter.version>3.0_20241102131210_d65efd1</kontrakter.version>
         <tika-core.version>3.0.0</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.18.1</jsoup.version>
-        <testcontainers.version>1.20.2</testcontainers.version>
+        <testcontainers.version>1.20.3</testcontainers.version>
      </properties>
 
     <repositories>
@@ -246,7 +246,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.5.2</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
