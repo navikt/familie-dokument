@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.0</version>
     </parent>
 
     <properties>
@@ -19,7 +19,7 @@
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>3.20241111113426_be51eee</felles.version>
+        <felles.version>3.20241121151626_836e7ca</felles.version>
         <kotlin.version>2.0.21</kotlin.version>
         <mockk.version>1.13.13</mockk.version>
         <token-validation-spring.version>5.0.11</token-validation-spring.version>
@@ -29,7 +29,7 @@
         <tika-core.version>3.0.0</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.18.1</jsoup.version>
-        <testcontainers.version>1.20.3</testcontainers.version>
+        <testcontainers.version>1.20.4</testcontainers.version>
      </properties>
 
     <repositories>
