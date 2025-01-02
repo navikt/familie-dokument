@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.0</version>
+        <version>3.4.1</version>
     </parent>
 
     <properties>
@@ -19,13 +19,13 @@
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>3.20241127123724_adfc561</felles.version>
+        <felles.version>3.20241216102134_145872f</felles.version>
         <kotlin.version>2.1.0</kotlin.version>
-        <mockk.version>1.13.13</mockk.version>
+        <mockk.version>1.13.14</mockk.version>
         <token-validation-spring.version>5.0.13</token-validation-spring.version>
         <openhtmltopdf.version>1.1.23</openhtmltopdf.version>
-        <gcp.version>0.232.0</gcp.version>
-        <kontrakter.version>3.0_20241206132953_18ef9da</kontrakter.version>
+        <gcp.version>0.233.0</gcp.version>
+        <kontrakter.version>3.0_20241220141021_9e86ad8</kontrakter.version>
         <tika-core.version>3.0.0</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.18.3</jsoup.version>
@@ -228,7 +228,7 @@
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>core-jakarta</artifactId>
-            <version>1.26.1</version>
+            <version>1.26.2</version>
         </dependency>
         <dependency>
             <groupId>org.verapdf</groupId>
