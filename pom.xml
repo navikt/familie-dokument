@@ -23,7 +23,7 @@
         <kotlin.version>2.1.0</kotlin.version>
         <mockk.version>1.13.14</mockk.version>
         <token-validation-spring.version>5.0.13</token-validation-spring.version>
-        <openhtmltopdf.version>1.1.23</openhtmltopdf.version>
+        <openhtmltopdf.version>1.1.24</openhtmltopdf.version>
         <gcp.version>0.233.0</gcp.version>
         <kontrakter.version>3.0_20241220141021_9e86ad8</kontrakter.version>
         <tika-core.version>3.0.0</tika-core.version>
