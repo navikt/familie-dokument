@@ -3,6 +3,7 @@ package no.nav.familie.dokument.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
 import no.nav.familie.kontrakter.felles.objectMapper
+import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.log.filter.RequestTimeFilter
 import org.springframework.boot.SpringBootConfiguration
@@ -31,7 +32,7 @@ class ApplicationConfig {
     @Bean
     fun logFilter(): FilterRegistrationBean<LogFilter> {
         val filterRegistration = FilterRegistrationBean<LogFilter>()
-        filterRegistration.filter = LogFilter()
+        filterRegistration.filter = LogFilter(NavSystemtype.NAV_INTEGRASJON)
         filterRegistration.order = 1
         return filterRegistration
     }
