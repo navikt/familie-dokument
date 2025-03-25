@@ -5,11 +5,6 @@ import java.io.InputStream
 
 class GcpStorageWrapper(val storage: GcpStorage, val mediaTypeValue: String) : Storage<InputStream, ByteArray> {
 
-//    @Retryable(
-//        retryFor = [GcpRateLimitException::class],
-//        maxAttempts = 3,
-//        backoff = Backoff(delay = 1000),
-//    )
     override fun put(directory: String, key: String, data: InputStream) {
         storage.put(directory, key, data, mediaTypeValue)
     }
