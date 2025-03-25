@@ -1,5 +1,6 @@
 package no.nav.familie.dokument
 
+import no.nav.familie.dokument.storage.google.GcpRateLimitException
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.LoggerFactory
@@ -35,7 +36,11 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         status: HttpStatus,
         request: WebRequest,
     ): ResponseEntity<Any>? {
-        if (ex is HttpRequestMethodNotSupportedException || ex is HttpMediaTypeNotSupportedException || ex is HttpMediaTypeNotAcceptableException) {
+        if (ex is HttpRequestMethodNotSupportedException ||
+            ex is HttpMediaTypeNotSupportedException ||
+            ex is HttpMediaTypeNotAcceptableException ||
+            ex is GcpRateLimitException
+        ) {
             secureLogger.warn("En feil har oppstått", ex)
             logger.warn("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
         } else {
