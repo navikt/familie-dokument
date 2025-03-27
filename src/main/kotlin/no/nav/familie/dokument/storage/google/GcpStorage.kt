@@ -3,6 +3,7 @@ package no.nav.familie.dokument.storage.google
 import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageException
 import no.nav.familie.dokument.GcpDocumentNotFound
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -26,6 +27,13 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
                 .setContentType(mediaTypeValue).build()
             storage.create(blobInfo, bytes)
         } catch (e: Exception) {
+            if (e is StorageException) {
+                val storageException = e as StorageException
+                if (storageException.code == 429) {
+                    LOG.warn("Mottatt rate limit fra GCP storage", e)
+                    throw GcpRateLimitException(e)
+                }
+            }
             throw RuntimeException("Feil oppsto ved lagring av fil mot gcp.", e)
         }
     }
@@ -46,3 +54,5 @@ class GcpStorage(private val bucketName: String, maxFileSizeMB: Int, private val
         private const val ENCRYPTION_SIZE_FACTOR = 1.5
     }
 }
+
+class GcpRateLimitException(e: Throwable) : RuntimeException("Rate limit exceeded for GCP storage", e)
