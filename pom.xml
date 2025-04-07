@@ -19,13 +19,13 @@
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>3.20250320122046_7ca9dae</felles.version>
+        <felles.version>3.20250330150138_0502cea</felles.version>
         <kotlin.version>2.1.20</kotlin.version>
         <mockk.version>1.13.17</mockk.version>
         <token-validation-spring.version>5.0.24</token-validation-spring.version>
         <openhtmltopdf.version>1.1.26</openhtmltopdf.version>
-        <gcp.version>0.239.0</gcp.version>
-        <kontrakter.version>3.0_20250324172417_684edfe</kontrakter.version>
+        <gcp.version>0.240.0</gcp.version>
+        <kontrakter.version>3.0_20250401151544_aae9e33</kontrakter.version>
         <tika-core.version>3.1.0</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.19.1</jsoup.version>
@@ -254,7 +254,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.3</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
