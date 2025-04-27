@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
+        <version>3.4.5</version>
     </parent>
 
     <properties>
@@ -19,17 +19,17 @@
         <changelist>-SNAPSHOT</changelist>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>3.20250330150138_0502cea</felles.version>
+        <felles.version>3.20250422130733_4d831f9</felles.version>
         <kotlin.version>2.1.20</kotlin.version>
         <mockk.version>1.14.0</mockk.version>
-        <token-validation-spring.version>5.0.24</token-validation-spring.version>
-        <openhtmltopdf.version>1.1.26</openhtmltopdf.version>
+        <token-validation-spring.version>5.0.25</token-validation-spring.version>
+        <openhtmltopdf.version>1.1.28</openhtmltopdf.version>
         <gcp.version>0.240.0</gcp.version>
-        <kontrakter.version>3.0_20250401151544_aae9e33</kontrakter.version>
+        <kontrakter.version>3.0_20250424145650_af8cea0</kontrakter.version>
         <tika-core.version>3.1.0</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.19.1</jsoup.version>
-        <testcontainers.version>1.20.6</testcontainers.version>
+        <testcontainers.version>1.21.0</testcontainers.version>
      </properties>
 
     <repositories>
