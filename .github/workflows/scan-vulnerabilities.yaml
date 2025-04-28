@@ -1,0 +1,24 @@
+name: Scan vulnerabilities
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 6 * * 1 # monday 06:00
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.github/**.yaml'
+      - '.gitignore'
+      - 'CODEOWNERS'
+      - 'LICENSE'
+jobs:
+  scan-vulnerabilities:
+    name: Scan vulnerabilities
+    permissions:
+      contents: write # to write sarif
+      security-events: write # push sarif to github security
+    uses: navikt/familie-baks-gha-workflows/.github/workflows/scan-vulnerabilities-maven.yaml@54c5d9228a37ca88ea58074a00eaa9cf9e90e7ec # ratchet:navikt/familie-baks-gha-workflows/.github/workflows/scan-vulnerabilities-maven.yaml@main
+    secrets: inherit
+
