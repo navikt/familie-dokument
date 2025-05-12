@@ -69,7 +69,7 @@ spec:
         - application: tilleggsstonader-klage
           namespace: tilleggsstonader
         - application: tokenx-token-generator
-          namespace: aura
+          namespace: nais
           cluster: dev-gcp
     outbound:
       rules:
