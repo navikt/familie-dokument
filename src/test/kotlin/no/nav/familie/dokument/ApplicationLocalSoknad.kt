@@ -1,4 +1,4 @@
-package no.nav.familie.dokument.no.nav.familie.dokument
+package no.nav.familie.dokument
 
 import no.nav.security.token.support.spring.api.EnableJwtTokenValidation
 import org.springframework.boot.SpringApplication
