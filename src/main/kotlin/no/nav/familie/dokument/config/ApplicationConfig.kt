@@ -50,8 +50,8 @@ class ApplicationConfig {
     @Bean
     fun restOperations(consumerIdClientInterceptor: ConsumerIdClientInterceptor): RestOperations =
         RestTemplateBuilder()
-            .setConnectTimeout(Duration.of(3, ChronoUnit.SECONDS))
-            .setReadTimeout(Duration.of(2, ChronoUnit.MINUTES))
+            .connectTimeout(Duration.of(3, ChronoUnit.SECONDS))
+            .readTimeout(Duration.of(2, ChronoUnit.MINUTES))
             .additionalInterceptors(consumerIdClientInterceptor)
             .build()
 
