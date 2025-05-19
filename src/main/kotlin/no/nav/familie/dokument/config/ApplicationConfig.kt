@@ -1,6 +1,8 @@
 package no.nav.familie.dokument.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.openhtmltopdf.slf4j.Slf4jLogger
+import com.openhtmltopdf.util.XRLog
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.log.NavSystemtype
@@ -23,6 +25,9 @@ import java.time.temporal.ChronoUnit
 @Import(ConsumerIdClientInterceptor::class)
 @EnableRetry
 class ApplicationConfig {
+    init {
+        XRLog.setLoggerImpl(Slf4jLogger())
+    }
 
     @Bean
     fun servletWebServerFactory(): ServletWebServerFactory {
