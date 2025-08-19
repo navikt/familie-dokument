@@ -44,10 +44,10 @@ spec:
     max: 4
   resources:
     limits:
-      memory: 4Gi
+      memory: 2.78Gi
     requests:
       memory: 2Gi
-      cpu: 50m
+      cpu: 532m
   ingresses:
     - https://familie-dokument.intern.nav.no
     - https://www.nav.no/familie/dokument
