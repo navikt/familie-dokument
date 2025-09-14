@@ -11,23 +11,23 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>3.5.5</version>
     </parent>
 
     <properties>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>3.20250422130733_4d831f9</felles.version>
-        <kotlin.version>2.1.20</kotlin.version>
-        <mockk.version>1.14.0</mockk.version>
-        <token-validation-spring.version>5.0.25</token-validation-spring.version>
-        <openhtmltopdf.version>1.1.28</openhtmltopdf.version>
-        <gcp.version>0.240.0</gcp.version>
-        <kontrakter.version>3.0_20250424145650_af8cea0</kontrakter.version>
-        <tika-core.version>3.1.0</tika-core.version>
+        <felles.version>3.20250909155158_81fc464</felles.version>
+        <kotlin.version>2.2.20</kotlin.version>
+        <mockk.version>1.14.5</mockk.version>
+        <token-validation-spring.version>5.0.36</token-validation-spring.version>
+        <openhtmltopdf.version>1.1.31</openhtmltopdf.version>
+        <gcp.version>0.248.0</gcp.version>
+        <kontrakter.version>3.0_20250908122449_a228daf</kontrakter.version>
+        <tika-core.version>3.2.2</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
-        <jsoup.version>1.19.1</jsoup.version>
-        <testcontainers.version>1.21.0</testcontainers.version>
+        <jsoup.version>1.21.2</jsoup.version>
+        <testcontainers.version>1.21.3</testcontainers.version>
      </properties>
 
     <repositories>
@@ -240,12 +240,12 @@
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>core-jakarta</artifactId>
-            <version>1.26.5</version>
+            <version>1.28.2</version>
         </dependency>
         <dependency>
             <groupId>org.verapdf</groupId>
             <artifactId>validation-model</artifactId>
-            <version>1.26.5</version>
+            <version>1.28.2</version>
         </dependency>
         <!-- PDF/A-2U-validering -->
     </dependencies>
@@ -258,7 +258,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.4</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
                 </configuration>
