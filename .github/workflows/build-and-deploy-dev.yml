@@ -16,7 +16,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up JDK 21
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # ratchet:actions/setup-java@v4
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # ratchet:actions/setup-java@v4
         with:
           java-version: 21
           distribution: 'temurin'
@@ -33,7 +33,7 @@ jobs:
           team: teamfamilie
           byosbom: target/classes/META-INF/sbom/application.cdx.json
       - name: Deploy til GCP (dev)
-        uses: nais/deploy/actions/deploy@0388e142dd1f5af09171b9074020ae893f70be59 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@56e14061f2a8437bd9119e7b8f92749a3b288db1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
