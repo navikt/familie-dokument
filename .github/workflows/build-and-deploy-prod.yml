@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v4
         with:
           persist-credentials: false
       - name: Set up JDK 21
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # ratchet:actions/setup-java@v4
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # ratchet:actions/setup-java@v4
         with:
           java-version: 21
           distribution: 'temurin'
@@ -37,13 +37,13 @@ jobs:
           tag: latest
           byosbom: target/classes/META-INF/sbom/application.cdx.json
       - name: Deploy til GCP (dev)
-        uses: nais/deploy/actions/deploy@0388e142dd1f5af09171b9074020ae893f70be59 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
           RESOURCE: .nais/app-dev.yaml
           VAR: image=${{ steps.docker-push.outputs.image }}
       - name: Deploy til GCP (prod)
-        uses: nais/deploy/actions/deploy@0388e142dd1f5af09171b9074020ae893f70be59 # ratchet:nais/deploy/actions/deploy@v2
+        uses: nais/deploy/actions/deploy@fa754451577294aae42872a69b888b3470478ec1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/app-prod.yaml
