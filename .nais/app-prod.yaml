@@ -73,6 +73,8 @@ spec:
           namespace: tilleggsstonader
         - application: tilleggsstonader-klage
           namespace: tilleggsstonader
+        - application: gjenlevende-bs-sak
+          namespace: etterlatte
     outbound:
       rules:
         - application: clamav
