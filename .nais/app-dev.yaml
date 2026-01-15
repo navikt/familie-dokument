@@ -75,6 +75,8 @@ spec:
         - application: tokenx-token-generator
           namespace: nais
           cluster: dev-gcp
+        - application: gjenlevende-bs-sak
+          namespace: etterlatte
     outbound:
       rules:
         - application: clamav
