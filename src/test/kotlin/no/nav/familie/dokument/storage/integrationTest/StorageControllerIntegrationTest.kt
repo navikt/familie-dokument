@@ -14,14 +14,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.web.client.exchange
+import org.springframework.boot.resttestclient.exchange
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 
 @ActiveProfiles("integration-test")
@@ -183,11 +183,11 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
 
     @Test
     internal fun `skal returnere 400 dersom tom liste sendes inn`() {
-        val emptyMap = HttpHeaders()
+        val emptyMultipart = LinkedMultiValueMap<String, Any>()
         val response = restTemplate.exchange<Map<String, Any>>(
             localhost("/api/mapper/familie-dokument-test"),
             HttpMethod.POST,
-            HttpEntity(emptyMap, headers),
+            HttpEntity(emptyMultipart, headers),
         )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
