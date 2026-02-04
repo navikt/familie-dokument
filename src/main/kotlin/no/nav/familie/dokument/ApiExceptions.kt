@@ -20,6 +20,7 @@ class GcpDocumentNotFound : RuntimeException("Finner ikke dokumentet i Google St
 
 enum class BadRequestCode {
     DOCUMENT_MISSING,
+    FILENAME_MISSING,
     IMAGE_TOO_LARGE,
     IMAGE_DIMENSIONS_TOO_SMALL,
     INVALID_DOCUMENT_FORMAT,

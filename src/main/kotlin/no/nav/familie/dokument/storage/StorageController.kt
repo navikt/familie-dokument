@@ -1,6 +1,7 @@
 package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.BadRequestCode
+import no.nav.familie.dokument.BadRequestException
 import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
@@ -63,7 +64,9 @@ class StorageController(
             throw InvalidDocumentSize(BadRequestCode.IMAGE_TOO_LARGE)
         }
 
-        virusScanService.scan(bytes, multipartFile.originalFilename)
+        val filnavn = multipartFile.originalFilename
+            ?: throw BadRequestException(BadRequestCode.FILENAME_MISSING)
+        virusScanService.scan(bytes, filnavn)
 
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
@@ -71,7 +74,7 @@ class StorageController(
 
         storage.put(directory, uuid, bytes)
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.originalFilename))
+            .body(mapOf("dokumentId" to uuid, "filnavn" to filnavn))
     }
 
     @PostMapping(

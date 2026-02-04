@@ -60,7 +60,7 @@ internal class StorageControllerTest {
         val response = storageController.mergeAndStoreDocuments("familievedlegg", dokumentListe)
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
-        assertThat(response.body.get("dokumentId")).isEqualTo(dokumentIdSlot.captured)
+        assertThat(response.body?.get("dokumentId")).isEqualTo(dokumentIdSlot.captured)
         Files.createDirectories(Paths.get("target/mergetpdf"))
         File("target/mergetpdf", "mergetfil.pdf").writeBytes(mergetDokumentSlot.captured)
     }
