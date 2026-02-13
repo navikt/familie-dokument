@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.familie.dokument.GcpDocumentNotFound
 import no.nav.familie.dokument.InvalidJsonSoknad
 import no.nav.familie.dokument.storage.encryption.Hasher
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import tools.jackson.databind.json.JsonMapper
 
 @RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController
 class StonadController(
     @Autowired val storage: MellomLagerService,
     @Autowired val contextHolder: TokenValidationContextHolder,
-    @Autowired val objectMapper: ObjectMapper,
+    @Autowired val jsonMapper: JsonMapper,
     @Autowired val hasher: Hasher,
 ) {
 
@@ -78,7 +78,7 @@ class StonadController(
 
     private fun validerGyldigJson(verdi: String) {
         try {
-            objectMapper.readTree(verdi)
+            jsonMapper.readTree(verdi)
         } catch (e: Exception) {
             throw InvalidJsonSoknad("Forsøker å mellomlagre søknad som ikke er gyldig json-verdi")
         }

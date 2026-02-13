@@ -7,9 +7,9 @@ import com.google.cloud.storage.StorageException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import no.nav.familie.http.client.MultipartBuilder
 import no.nav.familie.kontrakter.felles.Ressurs
-import no.nav.familie.kontrakter.felles.objectMapper
+import no.nav.familie.kontrakter.felles.jsonMapper
+import no.nav.familie.restklient.client.MultipartBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -138,7 +138,7 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         )
 
         assertThat(responseGet.statusCode).isEqualTo(HttpStatus.OK)
-        val ressursData = objectMapper.readValue(responseGet.body?.toString(), RessursData::class.java)
+        val ressursData = jsonMapper.readValue(responseGet.body?.toString(), RessursData::class.java)
         assertThat(ressursData.status).isEqualTo(Ressurs.Status.SUKSESS)
         assertThat(ressursData.data.size).isEqualTo((vedlegg.get("file")?.first() as ByteArrayResource).byteArray.size)
     }

@@ -17,13 +17,13 @@
     <properties>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class>
-        <felles.version>4.20251203153147_ca40cc5</felles.version>
+        <felles.version>4.20260205114838_3a4c3dc</felles.version>
         <kotlin.version>2.1.20</kotlin.version>
         <mockk.version>1.14.0</mockk.version>
         <token-validation-spring.version>6.0.1</token-validation-spring.version>
         <openhtmltopdf.version>1.1.28</openhtmltopdf.version>
         <gcp.version>0.240.0</gcp.version>
-        <kontrakter.version>3.0_20250424145650_af8cea0</kontrakter.version>
+        <kontrakter.version>4.0_20260204122732_558ee1d</kontrakter.version>
         <tika-core.version>3.1.0</tika-core.version>
         <tika.parser.version>2.9.2</tika.parser.version>
         <jsoup.version>1.19.1</jsoup.version>
@@ -126,17 +126,13 @@
         </dependency>
         <dependency>
             <groupId>no.nav.familie.felles</groupId>
-            <artifactId>http-client</artifactId>
+            <artifactId>rest-klient</artifactId>
             <version>${felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.familie.kontrakter</groupId>
             <artifactId>felles</artifactId>
             <version>${kontrakter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>

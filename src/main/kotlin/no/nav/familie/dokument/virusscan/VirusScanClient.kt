@@ -1,6 +1,6 @@
 package no.nav.familie.dokument.virusscan
 
-import no.nav.familie.http.client.AbstractPingableRestClient
+import no.nav.familie.restklient.client.AbstractPingableRestClient
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestOperations
 import org.springframework.web.util.UriComponentsBuilder
