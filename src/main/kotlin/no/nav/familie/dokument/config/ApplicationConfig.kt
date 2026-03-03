@@ -9,21 +9,23 @@ import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.log.filter.RequestTimeFilter
 import org.springframework.boot.SpringBootConfiguration
-import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
+import org.springframework.boot.jetty.servlet.JettyServletWebServerFactory
+import org.springframework.boot.restclient.RestTemplateBuilder
+import org.springframework.boot.web.server.servlet.ServletWebServerFactory
 import org.springframework.boot.web.servlet.FilterRegistrationBean
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
-import org.springframework.retry.annotation.EnableRetry
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.resilience.annotation.EnableResilientMethods
 import org.springframework.web.client.RestOperations
+import org.springframework.web.client.RestTemplate
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
 @SpringBootConfiguration
 @Import(ConsumerIdClientInterceptor::class)
-@EnableRetry
+@EnableResilientMethods
 class ApplicationConfig {
     init {
         XRLog.setLoggerImpl(Slf4jLogger())
@@ -38,16 +40,14 @@ class ApplicationConfig {
 
     @Bean
     fun logFilter(): FilterRegistrationBean<LogFilter> {
-        val filterRegistration = FilterRegistrationBean<LogFilter>()
-        filterRegistration.filter = LogFilter(NavSystemtype.NAV_INTEGRASJON)
+        val filterRegistration = FilterRegistrationBean(LogFilter(NavSystemtype.NAV_INTEGRASJON))
         filterRegistration.order = 1
         return filterRegistration
     }
 
     @Bean
     fun requestTimeFilter(): FilterRegistrationBean<RequestTimeFilter> {
-        val filterRegistration = FilterRegistrationBean<RequestTimeFilter>()
-        filterRegistration.filter = RequestTimeFilter()
+        val filterRegistration = FilterRegistrationBean(RequestTimeFilter())
         filterRegistration.order = 2
         return filterRegistration
     }
@@ -55,6 +55,9 @@ class ApplicationConfig {
     @Bean
     fun restOperations(consumerIdClientInterceptor: ConsumerIdClientInterceptor): RestOperations =
         RestTemplateBuilder()
+            .additionalMessageConverters(
+                listOf(MappingJackson2HttpMessageConverter(objectMapper)) + RestTemplate().messageConverters,
+            )
             .connectTimeout(Duration.of(3, ChronoUnit.SECONDS))
             .readTimeout(Duration.of(2, ChronoUnit.MINUTES))
             .additionalInterceptors(consumerIdClientInterceptor)

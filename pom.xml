@@ -11,16 +11,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>4.0.1</version>
     </parent>
 
     <properties>
         <jvmTarget>21</jvmTarget>
-        <main-class>no.nav.familie.dokument.LauncherKt</main-class> 
-        <felles.version>3.20250422130733_4d831f9</felles.version>
+        <main-class>no.nav.familie.dokument.LauncherKt</main-class>
+        <felles.version>4.20251203153147_ca40cc5</felles.version>
         <kotlin.version>2.1.20</kotlin.version>
         <mockk.version>1.14.0</mockk.version>
-        <token-validation-spring.version>5.0.25</token-validation-spring.version>
+        <token-validation-spring.version>6.0.1</token-validation-spring.version>
         <openhtmltopdf.version>1.1.28</openhtmltopdf.version>
         <gcp.version>0.240.0</gcp.version>
         <kontrakter.version>3.0_20250424145650_af8cea0</kontrakter.version>
@@ -65,23 +65,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- https://github.com/spring-projects/spring-boot/issues/33044#issuecomment-1379812611 -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.retry</groupId>
-            <artifactId>spring-retry</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -95,6 +81,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-resttestclient</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -142,6 +133,10 @@
             <groupId>no.nav.familie.kontrakter</groupId>
             <artifactId>felles</artifactId>
             <version>${kontrakter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>

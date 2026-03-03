@@ -6,7 +6,6 @@ server:
     context-path: /
 
 spring:
-  autoconfigure.exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   main.banner-mode: "off"
   servlet:
     multipart:
