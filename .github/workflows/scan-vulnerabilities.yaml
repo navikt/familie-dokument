@@ -20,6 +20,11 @@ jobs:
       contents: write # to write sarif
       security-events: write # push sarif to github security
       id-token: write # pull docker images
-    uses: navikt/familie-baks-gha-workflows/.github/workflows/scan-vulnerabilities-maven.yaml@main # ratchet:exclude
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: nais/login@v0
+        with:
+          team: teamfamilie
+      - uses: navikt/familie-baks-gha-workflows/.github/workflows/scan-vulnerabilities-maven.yaml@main # ratchet:exclude
+        secrets: inherit
 
