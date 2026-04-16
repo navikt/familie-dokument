@@ -106,7 +106,7 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     }
 
     @Test
-    fun `Returner 201 Created ved lagring av søknad med overgangsstonad-v2`() {
+    fun `Returner 201 Created ved lagring av søknad med overgangsstonad-regelendring-2026`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
         val slot = slot<ByteArray>()
         val blob = mockk<Blob>()
@@ -116,7 +116,7 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
         }
 
         val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/overgangsstonad-v2"),
+            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
             HttpMethod.POST,
             HttpEntity(gyldigJson, headers),
         )
@@ -125,7 +125,7 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     }
 
     @Test
-    fun `Returner lagret søknad i getter for overgangsstonad-v2`() {
+    fun `Returner lagret søknad i getter for overgangsstonad-regelendring-2026`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
 
         val slot = slot<ByteArray>()
@@ -139,7 +139,7 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
         every { storageMock.get(any<BlobId>()) } returns blob
 
         val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/overgangsstonad-v2"),
+            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
             HttpMethod.POST,
             HttpEntity(gyldigJson, headers),
         )
@@ -147,7 +147,7 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
 
         val responseGet = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/overgangsstonad-v2"),
+            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
             HttpMethod.GET,
             HttpEntity<String>(headers),
         )
