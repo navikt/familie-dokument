@@ -5,7 +5,7 @@ import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 
 @Component
-class StønadNavnTilParameterConverter : Converter<String, StonadController.StønadParameter> {
+class StønadNavnTilStønadParameterConverter : Converter<String, StonadController.StønadParameter> {
     override fun convert(stønadNavn: String): StonadController.StønadParameter =
         StonadController.StønadParameter.entries.find { it.name == stønadNavn || it.stønadKey == stønadNavn }
             ?: throw UkjentStønadParameter(stønadNavn)
