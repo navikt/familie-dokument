@@ -50,7 +50,6 @@ spec:
       cpu: 532m
   ingresses:
     - https://familie-dokument.intern.nav.no
-    - https://www.nav.no/familie/dokument
   accessPolicy:
     inbound:
       rules:
