@@ -87,6 +87,7 @@ class StonadController(
     @Suppress("unused", "ktlint:standard:enum-entry-name-case")
     enum class StønadParameter(val stønadKey: String) {
         overgangsstonad("overgangsstønad"),
+        overgangsstonadRegelendring2026("overgangsstonad-regelendring-2026"),
         barnetilsyn("barnetilsyn"),
         skolepenger("skolepenger"),
         barnetrygd("barnetrygd"),

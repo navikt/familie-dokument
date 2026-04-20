@@ -9,6 +9,9 @@ open class BadRequestException(val code: BadRequestCode, val secureLogMessage: S
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class InvalidJsonSoknad(msg: String) : IllegalArgumentException(msg)
 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class UkjentStønadParameter(stønad: String) : RuntimeException("Ukjent stønadtype: $stønad")
+
 class InvalidDocumentSize(code: BadRequestCode) : BadRequestException(code)
 
 class InvalidImageDimensions(code: BadRequestCode) : BadRequestException(code)

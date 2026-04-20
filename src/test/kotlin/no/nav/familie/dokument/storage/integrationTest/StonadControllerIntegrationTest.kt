@@ -106,7 +106,70 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     }
 
     @Test
-    fun `Returner 201 No Content ved forsøk på å hente dokument som ikke finnes`() {
+    fun `Returner 201 Created ved lagring av søknad med overgangsstonad-regelendring-2026`() {
+        val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
+        val slot = slot<ByteArray>()
+        val blob = mockk<Blob>()
+        every { storageMock.create(any(), capture(slot)) } answers {
+            every { blob.getContent() } returns slot.captured
+            blob
+        }
+
+        val response = restTemplate.exchange<String>(
+            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
+            HttpMethod.POST,
+            HttpEntity(gyldigJson, headers),
+        )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+    }
+
+    @Test
+    fun `Returner lagret søknad i getter for overgangsstonad-regelendring-2026`() {
+        val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
+
+        val slot = slot<ByteArray>()
+        val blob = mockk<Blob>()
+
+        every { storageMock.create(any(), capture(slot)) } answers {
+            every { blob.getContent() } returns slot.captured
+            blob
+        }
+
+        every { storageMock.get(any<BlobId>()) } returns blob
+
+        val response = restTemplate.exchange<String>(
+            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
+            HttpMethod.POST,
+            HttpEntity(gyldigJson, headers),
+        )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
+
+        val responseGet = restTemplate.exchange<String>(
+            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
+            HttpMethod.GET,
+            HttpEntity<String>(headers),
+        )
+
+        assertThat(responseGet.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(responseGet.body).isEqualTo(gyldigJson)
+    }
+
+    @Test
+    fun `Returner 400 Bad Request for ukjent stønadtype`() {
+        val gyldigJson = """ { "søknad": { "feltA": "æØå"} } """
+        val response = restTemplate.exchange<String>(
+            localhost("/familie/dokument/api/soknad/ukjent-stonad"),
+            HttpMethod.POST,
+            HttpEntity(gyldigJson, headers),
+        )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `Returner 204 No Content ved forsøk på å hente dokument som ikke finnes`() {
         every { storageMock.get(any<BlobId>()) } returns null
 
         val reponse = restTemplate.exchange<String>(
