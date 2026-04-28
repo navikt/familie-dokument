@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.openhtmltopdf.slf4j.Slf4jLogger
 import com.openhtmltopdf.util.XRLog
 import no.nav.familie.http.interceptor.ConsumerIdClientInterceptor
+import no.nav.familie.sikkerhet.context.FamilieFellesNavTokenSupportKonfigurasjon
 import no.nav.familie.kontrakter.felles.objectMapper
 import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
@@ -24,7 +25,7 @@ import java.time.Duration
 import java.time.temporal.ChronoUnit
 
 @SpringBootConfiguration
-@Import(ConsumerIdClientInterceptor::class)
+@Import(ConsumerIdClientInterceptor::class, FamilieFellesNavTokenSupportKonfigurasjon::class)
 @EnableResilientMethods
 class ApplicationConfig {
     init {
