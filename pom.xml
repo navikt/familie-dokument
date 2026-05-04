@@ -17,7 +17,7 @@
     <properties>
         <jvmTarget>21</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class>
-        <felles.version>4.20251203153147_ca40cc5</felles.version>
+        <felles.version>4.20260428145828_c16a1d8</felles.version>
         <kotlin.version>2.3.10</kotlin.version>
         <mockk.version>1.14.9</mockk.version>
         <token-validation-spring.version>6.0.3</token-validation-spring.version>
@@ -129,6 +129,18 @@
             <groupId>no.nav.familie.felles</groupId>
             <artifactId>http-client</artifactId>
             <version>${felles.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.familie.felles</groupId>
+            <artifactId>sikkerhet-token-support</artifactId>
+            <version>${felles.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.familie.felles</groupId>
+            <artifactId>sikkerhet</artifactId>
+            <version>${felles.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.familie.kontrakter</groupId>
