@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 
 class EncryptedStorageTest {
-
     private val UNENCRYPTED_DATA = "originalStream".toByteArray()
     private val ENCRYPTED_DATA = "encryptedStream".toByteArray()
     private val ENCRYPTED_STREAM = ByteArrayInputStream(ENCRYPTED_DATA)

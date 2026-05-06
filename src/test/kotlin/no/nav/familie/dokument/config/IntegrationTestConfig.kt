@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Profile
 @EnableJwtTokenValidation
 @Configuration
 class IntegrationTestConfig {
-
     @Bean
     @Primary
     fun storageMock(): Storage = mockk()

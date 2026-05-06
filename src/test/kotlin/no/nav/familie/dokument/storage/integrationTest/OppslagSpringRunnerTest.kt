@@ -32,7 +32,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 )
 @EnableMockOAuth2Server
 abstract class OppslagSpringRunnerTest {
-
     protected val listAppender = initLoggingEventListAppender()
     protected var loggingEvents: MutableList<ILoggingEvent> = listAppender.list
     protected val restTemplate = TestRestTemplate()
@@ -59,34 +58,29 @@ abstract class OppslagSpringRunnerTest {
         applicationContext.getBeansOfType(WireMockServer::class.java).values.forEach(WireMockServer::resetRequests)
     }
 
-    protected fun getPort(): String {
-        return port.toString()
-    }
+    protected fun getPort(): String = port.toString()
 
-    protected fun localhost(uri: String): String {
-        return LOCALHOST + getPort() + uri
-    }
+    protected fun localhost(uri: String): String = LOCALHOST + getPort() + uri
 
-    protected fun søkerBearerToken(
-        personident: String = "12345678911",
-    ): String {
+    protected fun søkerBearerToken(personident: String = "12345678911"): String {
         val clientId = "lokal:teamfamilie:familie-dokument"
-        return mockOAuth2Server.issueToken(
-            issuerId = "tokenx",
-            clientId,
-            DefaultOAuth2TokenCallback(
+        return mockOAuth2Server
+            .issueToken(
                 issuerId = "tokenx",
-                subject = personident,
-                audience = listOf("familie-app"),
-                claims = mapOf("acr" to "Level4", "client_id" to clientId),
-                expiry = 3600,
-            ),
-        ).serialize()
+                clientId,
+                DefaultOAuth2TokenCallback(
+                    issuerId = "tokenx",
+                    subject = personident,
+                    audience = listOf("familie-app"),
+                    claims = mapOf("acr" to "Level4", "client_id" to clientId),
+                    expiry = 3600,
+                ),
+            ).serialize()
     }
 
     companion object {
-
         private const val LOCALHOST = "http://localhost:"
+
         protected fun initLoggingEventListAppender(): ListAppender<ILoggingEvent> {
             val listAppender = ListAppender<ILoggingEvent>()
             listAppender.start()

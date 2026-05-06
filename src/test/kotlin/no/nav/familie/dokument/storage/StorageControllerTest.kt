@@ -23,7 +23,6 @@ import java.nio.file.Paths
 import java.util.UUID
 
 internal class StorageControllerTest {
-
     lateinit var storageController: StorageController
     val storageMock = mockk<AttachmentStorage>()
     val dokument1 = UUID.randomUUID()
@@ -65,7 +64,8 @@ internal class StorageControllerTest {
         File("target/mergetpdf", "mergetfil.pdf").writeBytes(mergetDokumentSlot.captured)
     }
 
-    private fun leseVedlegg(mappeNavn: String, navn: String): ByteArray {
-        return StorageControllerTest::class.java.getResource("/$mappeNavn/$navn").readBytes()
-    }
+    private fun leseVedlegg(
+        mappeNavn: String,
+        navn: String,
+    ): ByteArray = StorageControllerTest::class.java.getResource("/$mappeNavn/$navn").readBytes()
 }

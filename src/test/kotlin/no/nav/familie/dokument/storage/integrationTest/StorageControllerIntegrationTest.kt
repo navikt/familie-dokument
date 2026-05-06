@@ -26,7 +26,6 @@ import org.springframework.util.MultiValueMap
 
 @ActiveProfiles("integration-test")
 class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
-
     @Autowired
     lateinit var storageMock: Storage
 
@@ -42,11 +41,12 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         val navn = "gyldig-0.8m.pdf"
         val vedlegg = leseVedlegg(navn)
 
-        val response = restTemplate.exchange<Map<String, String>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(vedlegg, headers),
-        )
+        val response =
+            restTemplate.exchange<Map<String, String>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg, headers),
+            )
 
         val filnavn = response.body?.get("filnavn")
         assertThat(filnavn).isEqualTo(navn)
@@ -55,11 +55,12 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     @Test
     fun `Skal returnere 400 for vedlegg som overstiger størrelsesgrensen`() {
         val vedlegg = leseVedlegg("ugyldig-2.6m.pdf")
-        val response = restTemplate.exchange<Map<String, Any>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(vedlegg, headers),
-        )
+        val response =
+            restTemplate.exchange<Map<String, Any>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
@@ -67,11 +68,12 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     fun `Skal returnere 500 for vedlegg med ustøttet type`() {
         initMock()
         val vedlegg = leseVedlegg("ugyldig.txt")
-        val response = restTemplate.exchange<Map<String, Any>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(vedlegg, headers),
-        )
+        val response =
+            restTemplate.exchange<Map<String, Any>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 
@@ -79,15 +81,17 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     fun `Skal returnere 500 hvis Google Storage feil`() {
         val vedlegg = leseVedlegg("gyldig-0.8m.pdf")
 
-        every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(
-            HttpStatus.UNAUTHORIZED.value(),
-            "Unauthorized",
-        )
-        val response = restTemplate.exchange<Map<String, Any>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(vedlegg, headers),
-        )
+        every { storageMock.create(any(), any<ByteArray>()) } throws
+            StorageException(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+            )
+        val response =
+            restTemplate.exchange<Map<String, Any>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
@@ -111,7 +115,6 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     }
 
     class RessursData {
-
         lateinit var data: ByteArray
         lateinit var status: Ressurs.Status
     }
@@ -121,21 +124,23 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         initMock()
         val vedlegg = leseVedlegg("gyldig-0.8m.pdf")
 
-        val response = restTemplate.exchange<Map<String, String>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(vedlegg, headers),
-        )
+        val response =
+            restTemplate.exchange<Map<String, String>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
 
         val dokumentId = response.body?.get("dokumentId")
 
         headers.contentType = MediaType.APPLICATION_JSON
-        val responseGet = restTemplate.exchange<String>(
-            localhost("/api/mapper/familie-dokument-test/$dokumentId"),
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-        )
+        val responseGet =
+            restTemplate.exchange<String>(
+                localhost("/api/mapper/familie-dokument-test/$dokumentId"),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
 
         assertThat(responseGet.statusCode).isEqualTo(HttpStatus.OK)
         val ressursData = objectMapper.readValue(responseGet.body?.toString(), RessursData::class.java)
@@ -148,21 +153,23 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         initMock()
         val vedlegg = leseVedlegg("gyldig-0.8m.pdf")
 
-        val response = restTemplate.exchange<Map<String, String>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(vedlegg, headers),
-        )
+        val response =
+            restTemplate.exchange<Map<String, String>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
 
         val dokumentId = response.body?.get("dokumentId")
 
         headers.contentType = MediaType.APPLICATION_OCTET_STREAM
-        val responseGet = restTemplate.exchange<String>(
-            localhost("/api/mapper/familie-dokument-test/$dokumentId/pdf"),
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-        )
+        val responseGet =
+            restTemplate.exchange<String>(
+                localhost("/api/mapper/familie-dokument-test/$dokumentId/pdf"),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
         assertThat(responseGet.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(responseGet.body?.toString()?.length).isEqualTo((vedlegg.get("file")?.first() as ByteArrayResource).byteArray.size)
     }
@@ -172,11 +179,12 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         every { storageMock.get(any<BlobId>()) } returns null
 
         headers.contentType = MediaType.APPLICATION_JSON
-        val responseGet = restTemplate.exchange<String>(
-            localhost("/api/mapper/familie-dokument-test/ukjent-id"),
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-        )
+        val responseGet =
+            restTemplate.exchange<String>(
+                localhost("/api/mapper/familie-dokument-test/ukjent-id"),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
 
         assertThat(responseGet.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
     }
@@ -184,11 +192,12 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     @Test
     internal fun `skal returnere 400 dersom tom liste sendes inn`() {
         val emptyMultipart = LinkedMultiValueMap<String, Any>()
-        val response = restTemplate.exchange<Map<String, Any>>(
-            localhost("/api/mapper/familie-dokument-test"),
-            HttpMethod.POST,
-            HttpEntity(emptyMultipart, headers),
-        )
+        val response =
+            restTemplate.exchange<Map<String, Any>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(emptyMultipart, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }

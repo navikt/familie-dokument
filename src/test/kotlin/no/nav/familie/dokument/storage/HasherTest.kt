@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 internal class HasherTest {
-
     private val hasher = Hasher("sectretSalt")
     private val testFnr = "test_fnr"
 
@@ -31,7 +30,10 @@ internal class HasherTest {
         )
     }
 
-    private fun assertThatDigestHarLengde44(fnr: String, hemmeligSalt: String) {
+    private fun assertThatDigestHarLengde44(
+        fnr: String,
+        hemmeligSalt: String,
+    ) {
         val testHasher = Hasher(hemmeligSalt)
         val directory = testHasher.lagFnrHash(fnr)
         assertThat(directory).hasSize(44)

@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles
 
 @ActiveProfiles("integration-test")
 class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
-
     @Autowired
     lateinit var storageMock: Storage
 
@@ -40,11 +39,12 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
             blob
         }
 
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/barnetilsyn"),
-            HttpMethod.POST,
-            HttpEntity(gyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/barnetilsyn"),
+                HttpMethod.POST,
+                HttpEntity(gyldigJson, headers),
+            )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
     }
@@ -63,19 +63,21 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
 
         every { storageMock.get(any<BlobId>()) } returns blob
 
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/barnetilsyn"),
-            HttpMethod.POST,
-            HttpEntity(gyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/barnetilsyn"),
+                HttpMethod.POST,
+                HttpEntity(gyldigJson, headers),
+            )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
 
-        val responseGet = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/barnetilsyn"),
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-        )
+        val responseGet =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/barnetilsyn"),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
 
         assertThat(responseGet.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(responseGet.body).isEqualTo(gyldigJson)
@@ -84,11 +86,12 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     @Test
     fun `Returner 400 Bad Request ved ugyldig json`() {
         val ugyldigJson = """ { "søknad""""
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/barnetilsyn"),
-            HttpMethod.POST,
-            HttpEntity(ugyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/barnetilsyn"),
+                HttpMethod.POST,
+                HttpEntity(ugyldigJson, headers),
+            )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
@@ -97,11 +100,12 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     fun `Returner 500 Internal Server Error hvis Google Storage feil`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå", "feltB": 1234} } """
         every { storageMock.create(any(), any<ByteArray>()) } throws StorageException(HttpStatus.UNAUTHORIZED.value(), "Unauthorized")
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/barnetilsyn"),
-            HttpMethod.POST,
-            HttpEntity(gyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/barnetilsyn"),
+                HttpMethod.POST,
+                HttpEntity(gyldigJson, headers),
+            )
         assertThat(response.statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
@@ -115,11 +119,12 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
             blob
         }
 
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
-            HttpMethod.POST,
-            HttpEntity(gyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
+                HttpMethod.POST,
+                HttpEntity(gyldigJson, headers),
+            )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
     }
@@ -138,19 +143,21 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
 
         every { storageMock.get(any<BlobId>()) } returns blob
 
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
-            HttpMethod.POST,
-            HttpEntity(gyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
+                HttpMethod.POST,
+                HttpEntity(gyldigJson, headers),
+            )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
 
-        val responseGet = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-        )
+        val responseGet =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/overgangsstonad-regelendring-2026"),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
 
         assertThat(responseGet.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(responseGet.body).isEqualTo(gyldigJson)
@@ -159,11 +166,12 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     @Test
     fun `Returner 400 Bad Request for ukjent stønadtype`() {
         val gyldigJson = """ { "søknad": { "feltA": "æØå"} } """
-        val response = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/ukjent-stonad"),
-            HttpMethod.POST,
-            HttpEntity(gyldigJson, headers),
-        )
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/ukjent-stonad"),
+                HttpMethod.POST,
+                HttpEntity(gyldigJson, headers),
+            )
 
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
@@ -172,11 +180,12 @@ class StonadControllerIntegrationTest : OppslagSpringRunnerTest() {
     fun `Returner 204 No Content ved forsøk på å hente dokument som ikke finnes`() {
         every { storageMock.get(any<BlobId>()) } returns null
 
-        val reponse = restTemplate.exchange<String>(
-            localhost("/familie/dokument/api/soknad/barnetilsyn"),
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-        )
+        val reponse =
+            restTemplate.exchange<String>(
+                localhost("/familie/dokument/api/soknad/barnetilsyn"),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
 
         assertThat(reponse.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
     }

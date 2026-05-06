@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("api", "familie/dokument/api")
 @Unprotected
-class PdfController(val pdfService: PdfService) {
-
+class PdfController(
+    val pdfService: PdfService,
+) {
     @PostMapping("/html-til-pdf")
-    fun lagPdf(@RequestBody html: String): ByteArray {
-        return pdfService.lagPdf(html)
-    }
+    fun lagPdf(
+        @RequestBody html: String,
+    ): ByteArray = pdfService.lagPdf(html)
 }

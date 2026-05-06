@@ -7,19 +7,23 @@ import java.io.ByteArrayInputStream
 class AttachmentStorage constructor(
     private val delegate: EncryptedStorage,
     private val storableFormatConverter: AttachmentToStorableFormatConverter,
-) :
-    Storage<ByteArray, ByteArray> {
-
-    override fun put(directory: String, key: String, data: ByteArray) {
+) : Storage<ByteArray, ByteArray> {
+    override fun put(
+        directory: String,
+        key: String,
+        data: ByteArray,
+    ) {
         val storeable = storableFormatConverter.toStorageFormat(data)
         delegate.put(directory, key, ByteArrayInputStream(storeable))
     }
 
-    override operator fun get(directory: String, key: String): ByteArray {
-        return delegate[directory, key]
-    }
+    override operator fun get(
+        directory: String,
+        key: String,
+    ): ByteArray = delegate[directory, key]
 
-    override fun delete(directory: String, key: String) {
-        throw NotImplementedError("AttachmentStorage::delete(): Ikke implementert")
-    }
+    override fun delete(
+        directory: String,
+        key: String,
+    ): Unit = throw NotImplementedError("AttachmentStorage::delete(): Ikke implementert")
 }

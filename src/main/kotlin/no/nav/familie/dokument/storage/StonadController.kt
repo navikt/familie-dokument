@@ -34,7 +34,6 @@ class StonadController(
     @Autowired val objectMapper: ObjectMapper,
     @Autowired val hasher: Hasher,
 ) {
-
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping(
@@ -57,7 +56,9 @@ class StonadController(
     }
 
     @GetMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun hentMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
+    fun hentMellomlagretSøknad(
+        @PathVariable("stonad") stønad: StønadParameter,
+    ): ResponseEntity<String> {
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         return try {
@@ -68,7 +69,9 @@ class StonadController(
     }
 
     @DeleteMapping(path = ["/{stonad}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun slettMellomlagretSøknad(@PathVariable("stonad") stønad: StønadParameter): ResponseEntity<String> {
+    fun slettMellomlagretSøknad(
+        @PathVariable("stonad") stønad: StønadParameter,
+    ): ResponseEntity<String> {
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
 
         log.debug("Sletter mellomlagret overgangsstønad")
@@ -85,7 +88,9 @@ class StonadController(
     }
 
     @Suppress("unused", "ktlint:standard:enum-entry-name-case")
-    enum class StønadParameter(val stønadKey: String) {
+    enum class StønadParameter(
+        val stønadKey: String,
+    ) {
         overgangsstonad("overgangsstønad"),
         overgangsstonadRegelendring2026("overgangsstonad-regelendring-2026"),
         barnetilsyn("barnetilsyn"),
