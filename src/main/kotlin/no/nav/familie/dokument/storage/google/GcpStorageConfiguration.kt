@@ -12,8 +12,6 @@ import org.threeten.bp.Duration
 
 @Configuration
 class GcpStorageConfiguration {
-    val MAX_FILE_SIZE_FACTOR = 10 // Dersom vi slår sammen flere filer og lagrer ned må vi kunne lagre ned vesentlig større filer enn én og én
-
     @Bean
     fun retrySettings(
         @Value("\${storage_service.timeout.ms:3000}") timeoutMs: Long,
@@ -52,5 +50,8 @@ class GcpStorageConfiguration {
         val LOG = LoggerFactory.getLogger(GcpStorageConfiguration::class.java)
         const val ATTACHMENT_GCP_STORAGE = "attachmentGcpStorage"
         const val STONAD_GCP_STORAGE = "stonadGcpStorage"
+
+        // Dersom vi slår sammen flere filer og lagrer ned må vi kunne lagre ned vesentlig større filer enn én og én
+        const val MAX_FILE_SIZE_FACTOR = 10
     }
 }
