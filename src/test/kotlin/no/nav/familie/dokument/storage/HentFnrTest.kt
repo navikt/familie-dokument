@@ -3,6 +3,8 @@ package no.nav.familie.dokument.storage
 import com.nimbusds.jwt.JWTClaimsSet
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.familie.sikkerhet.context.NavTokenSupportTokenContext
+import no.nav.familie.sikkerhet.context.TokenContextTestHelper
 import no.nav.security.mock.oauth2.token.OAuth2TokenProvider
 import no.nav.security.token.support.core.context.TokenValidationContext
 import no.nav.security.token.support.core.jwt.JwtToken
@@ -10,6 +12,7 @@ import no.nav.security.token.support.spring.SpringTokenValidationContextHolder
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
@@ -21,9 +24,15 @@ internal class HentFnrTest {
 
     private val contextHolder = SpringTokenValidationContextHolder()
 
+    @BeforeEach
+    internal fun setUp() {
+        TokenContextTestHelper.setContext(NavTokenSupportTokenContext())
+    }
+
     @AfterEach
     internal fun tearDown() {
         RequestContextHolder.resetRequestAttributes()
+        TokenContextTestHelper.clearContext()
     }
 
     @Test
