@@ -18,7 +18,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
 
 internal class StonadControllerTest {
-
     lateinit var stonadController: StonadController
     lateinit var storageMock: MellomLagerService
 

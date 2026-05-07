@@ -18,7 +18,6 @@ import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
 
 internal class HentFnrTest {
-
     private val sub: String = "11111111111"
     private val pid: String = "22222222222"
 
@@ -67,7 +66,10 @@ internal class HentFnrTest {
         assertThat(contextHolder.hentFnr()).isEqualTo(pid)
     }
 
-    private fun mockContext(sub: String? = null, pid: String? = null) {
+    private fun mockContext(
+        sub: String? = null,
+        pid: String? = null,
+    ) {
         val builder = JWTClaimsSet.Builder()
         sub?.let { builder.subject(it) }
         pid?.let { builder.claim("pid", it) }

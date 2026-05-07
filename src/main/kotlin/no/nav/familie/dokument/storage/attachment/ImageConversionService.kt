@@ -20,13 +20,18 @@ import javax.imageio.ImageIO
 // Delvis kopi av https://github.com/navikt/pdfgen/blob/master/src/main/kotlin/no/nav/pdfgen/Utils.kt
 @Service
 class ImageConversionService {
-
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    private data class ImageSize(val width: Float, val height: Float)
+    private data class ImageSize(
+        val width: Float,
+        val height: Float,
+    )
 
-    fun convert(input: ByteArray, detectedType: Format): ByteArray {
-        return PDDocument().use { document ->
+    fun convert(
+        input: ByteArray,
+        detectedType: Format,
+    ): ByteArray =
+        PDDocument().use { document ->
             val imageStream = ByteArrayInputStream(input)
             val page = PDPage(PDRectangle.A4)
             document.addPage(page)
@@ -54,7 +59,6 @@ class ImageConversionService {
             )
             outputBytes
         }
-    }
 
     private fun createPdImage(
         document: PDDocument,
@@ -74,7 +78,10 @@ class ImageConversionService {
         }
     }
 
-    private fun toPortrait(image: BufferedImage, detectedType: Format): BufferedImage {
+    private fun toPortrait(
+        image: BufferedImage,
+        detectedType: Format,
+    ): BufferedImage {
         if (image.height >= image.width) {
             return image
         }
@@ -93,15 +100,20 @@ class ImageConversionService {
     /**
      * En feil i ubuntu slik att hvis det er PNG og type 0 så skal den bli 5
      */
-    private fun getType(image: BufferedImage, detectedType: Format): Int {
-        return if (image.type == BufferedImage.TYPE_CUSTOM && detectedType == Format.PNG) {
+    private fun getType(
+        image: BufferedImage,
+        detectedType: Format,
+    ): Int =
+        if (image.type == BufferedImage.TYPE_CUSTOM && detectedType == Format.PNG) {
             BufferedImage.TYPE_3BYTE_BGR
         } else {
             image.type
         }
-    }
 
-    private fun scale(image: PDImageXObject, page: PDPage): ImageSize {
+    private fun scale(
+        image: PDImageXObject,
+        page: PDPage,
+    ): ImageSize {
         var width = image.width.toFloat()
         var height = image.height.toFloat()
 

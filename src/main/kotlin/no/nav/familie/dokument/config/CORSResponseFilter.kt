@@ -15,10 +15,15 @@ import java.io.IOException
 @Component
 @Order(0)
 @EnableConfigurationProperties(CorsProperties::class)
-class CORSResponseFilter(val corsProperties: CorsProperties) : Filter {
-
+class CORSResponseFilter(
+    val corsProperties: CorsProperties,
+) : Filter {
     @Throws(IOException::class, ServletException::class)
-    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
+    override fun doFilter(
+        servletRequest: ServletRequest,
+        servletResponse: ServletResponse,
+        filterChain: FilterChain,
+    ) {
         val request = servletRequest as HttpServletRequest
         val response = servletResponse as HttpServletResponse
         if (erCorsOk(request)) {
@@ -32,7 +37,10 @@ class CORSResponseFilter(val corsProperties: CorsProperties) : Filter {
         }
     }
 
-    private fun setCorsHeaders(response: HttpServletResponse, request: HttpServletRequest) {
+    private fun setCorsHeaders(
+        response: HttpServletResponse,
+        request: HttpServletRequest,
+    ) {
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"))
         response.addHeader("Access-Control-Allow-Headers", "origin, content-type, content-length, accept, authorization, nav-consumer-id")
         response.addHeader("Access-Control-Allow-Credentials", "true")

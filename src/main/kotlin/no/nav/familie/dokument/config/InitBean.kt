@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage
 
 @Component
 class InitBean : InitializingBean {
-
     override fun afterPropertiesSet() {
         logger.info("Initierer Tika and BufferedImage::graphics")
         Tika()

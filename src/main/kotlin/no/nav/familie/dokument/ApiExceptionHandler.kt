@@ -21,13 +21,10 @@ import java.util.concurrent.TimeoutException
 @Suppress("unused")
 @ControllerAdvice
 class ApiExceptionHandler : ResponseEntityExceptionHandler() {
-
     private val logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
     private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
-    private fun rootCause(throwable: Throwable): String {
-        return NestedExceptionUtils.getMostSpecificCause(throwable).javaClass.simpleName
-    }
+    private fun rootCause(throwable: Throwable): String = NestedExceptionUtils.getMostSpecificCause(throwable).javaClass.simpleName
 
     fun handleExceptionInternal(
         ex: Exception,
@@ -90,16 +87,20 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         responseStatus: ResponseStatus,
     ): ResponseEntity<Ressurs<String>> {
         val status = if (responseStatus.value != HttpStatus.INTERNAL_SERVER_ERROR) responseStatus.value else responseStatus.code
-        val loggMelding = "En håndtert feil har oppstått" +
-            " throwable=${rootCause(throwable)}" +
-            " reason=${responseStatus.reason}" +
-            " status=$status"
+        val loggMelding =
+            "En håndtert feil har oppstått" +
+                " throwable=${rootCause(throwable)}" +
+                " reason=${responseStatus.reason}" +
+                " status=$status"
 
         loggFeil(throwable, loggMelding)
         return ResponseEntity.status(status).body(Ressurs.failure("Håndtert feil"))
     }
 
-    private fun loggFeil(throwable: Throwable, loggMelding: String) {
+    private fun loggFeil(
+        throwable: Throwable,
+        loggMelding: String,
+    ) {
         when (throwable) {
             is JwtTokenUnauthorizedException -> logger.debug(loggMelding)
             is GcpDocumentNotFound -> logger.warn(loggMelding)
