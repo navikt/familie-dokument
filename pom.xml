@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <jvmTarget>21</jvmTarget>
+        <jvmTarget>25</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class>
         <felles.version>4.20260428145828_c16a1d8</felles.version>
         <kotlin.version>2.3.21</kotlin.version>
