@@ -41,7 +41,6 @@ class StorageController(
     val hasher: Hasher,
     val pdfService: PdfService,
 ) {
-
     // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(
         path = ["{bucket}"],
@@ -64,8 +63,9 @@ class StorageController(
             throw InvalidDocumentSize(BadRequestCode.IMAGE_TOO_LARGE)
         }
 
-        val filnavn = multipartFile.originalFilename
-            ?: throw BadRequestException(BadRequestCode.FILENAME_MISSING)
+        val filnavn =
+            multipartFile.originalFilename
+                ?: throw BadRequestException(BadRequestCode.FILENAME_MISSING)
         virusScanService.scan(bytes, filnavn)
 
         val directory = hasher.lagFnrHash(contextHolder.hentFnr())
@@ -73,7 +73,8 @@ class StorageController(
         val uuid = UUID.randomUUID().toString()
 
         storage.put(directory, uuid, bytes)
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
             .body(mapOf("dokumentId" to uuid, "filnavn" to filnavn))
     }
 
@@ -100,7 +101,8 @@ class StorageController(
 
         storage.put(directory, uuid, mergedeDokumenter)
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
             .body(mapOf("dokumentId" to uuid))
     }
 
@@ -109,9 +111,7 @@ class StorageController(
     fun getAttachmentRessurs(
         @PathVariable("bucket") bucket: String,
         @PathVariable("dokumentId") dokumentId: String,
-    ): ResponseEntity<Ressurs<ByteArray>> {
-        return ResponseEntity.ok(Ressurs.success(getAttachment(bucket, dokumentId)))
-    }
+    ): ResponseEntity<Ressurs<ByteArray>> = ResponseEntity.ok(Ressurs.success(getAttachment(bucket, dokumentId)))
 
     // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}/pdf"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
@@ -127,12 +127,9 @@ class StorageController(
 
     @Unprotected
     @GetMapping(path = ["ping"], produces = [MediaType.TEXT_PLAIN_VALUE])
-    fun ping(): String {
-        return "Kontakt med familie-dokument"
-    }
+    fun ping(): String = "Kontakt med familie-dokument"
 
     companion object {
-
         private val log = LoggerFactory.getLogger(StorageController::class.java)
     }
 }

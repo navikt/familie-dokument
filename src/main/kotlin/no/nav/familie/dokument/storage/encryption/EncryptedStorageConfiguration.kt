@@ -13,27 +13,20 @@ import org.springframework.context.annotation.Profile
 
 @Configuration
 class EncryptedStorageConfiguration {
-
     @Bean
-    internal fun encryptor(secretKeyProvider: SecretKeyProvider): Encryptor {
-        return Encryptor(secretKeyProvider)
-    }
+    internal fun encryptor(secretKeyProvider: SecretKeyProvider): Encryptor = Encryptor(secretKeyProvider)
 
     @Bean
     internal fun secretKeyProvider(
         @Value("\${FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD}") passphrase: String,
-    ): SecretKeyProvider {
-        return SecretKeyProvider(passphrase)
-    }
+    ): SecretKeyProvider = SecretKeyProvider(passphrase)
 
     @Bean(ATTACHMENT_ENCRYPTED_STORAGE)
     internal fun attachmentEncryptedStorage(
         @Autowired contextHolder: TokenValidationContextHolder,
         @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper,
         encryptor: Encryptor,
-    ): EncryptedStorage {
-        return EncryptedStorage(contextHolder, storage, encryptor)
-    }
+    ): EncryptedStorage = EncryptedStorage(contextHolder, storage, encryptor)
 
     @Profile("!local && !local-fd")
     @Bean(STONAD_ENCRYPTED_STORAGE)
@@ -41,12 +34,9 @@ class EncryptedStorageConfiguration {
         @Autowired contextHolder: TokenValidationContextHolder,
         @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper,
         encryptor: Encryptor,
-    ): EncryptedStorage {
-        return EncryptedStorage(contextHolder, storage, encryptor)
-    }
+    ): EncryptedStorage = EncryptedStorage(contextHolder, storage, encryptor)
 
     companion object {
-
         const val ATTACHMENT_ENCRYPTED_STORAGE = "attachmentEncryptedStorage"
         const val STONAD_ENCRYPTED_STORAGE = "stonadEncryptedStorage"
     }

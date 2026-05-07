@@ -58,15 +58,12 @@ class ApplicationConfig {
         RestTemplateBuilder()
             .additionalMessageConverters(
                 listOf(MappingJackson2HttpMessageConverter(objectMapper)) + RestTemplate().messageConverters,
-            )
-            .connectTimeout(Duration.of(3, ChronoUnit.SECONDS))
+            ).connectTimeout(Duration.of(3, ChronoUnit.SECONDS))
             .readTimeout(Duration.of(2, ChronoUnit.MINUTES))
             .additionalInterceptors(consumerIdClientInterceptor)
             .build()
 
     @Bean
     @Primary
-    fun objectMapper(): ObjectMapper {
-        return objectMapper
-    }
+    fun objectMapper(): ObjectMapper = objectMapper
 }

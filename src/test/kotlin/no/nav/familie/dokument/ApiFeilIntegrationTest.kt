@@ -35,7 +35,6 @@ import kotlin.test.assertEquals
 @RestController
 @RequestMapping(path = ["/api"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class FeilController {
-
     @GetMapping("feil")
     @Unprotected
     fun feil(): Unit = throw RuntimeException("Feil")
@@ -46,7 +45,9 @@ class FeilController {
 
     @PostMapping("ok")
     @ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"])
-    fun ok(@RequestBody body: List<String>): Map<String, String> = mapOf("a" to "b")
+    fun ok(
+        @RequestBody body: List<String>,
+    ): Map<String, String> = mapOf("a" to "b")
 }
 
 @ActiveProfiles("local", "feil-controller")
@@ -54,7 +55,6 @@ class FeilController {
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [ApplicationLocal::class])
 @EnableMockOAuth2Server
 class ApiFeilIntegrationTest {
-
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private lateinit var mockOAuth2Server: MockOAuth2Server
@@ -114,9 +114,7 @@ class ApiFeilIntegrationTest {
 
     private fun path(path: String) = "http://localhost:$port$contextPath/$path"
 
-    protected fun søkerBearerToken(personident: String = FnrGenerator.generer()): String {
-        return jwt(personident)
-    }
+    protected fun søkerBearerToken(personident: String = FnrGenerator.generer()): String = jwt(personident)
 
     private fun jwt(fnr: String) = mockOAuth2Server.token(subject = fnr)
 
@@ -126,18 +124,17 @@ class ApiFeilIntegrationTest {
         clientId: String = UUID.randomUUID().toString(),
         audience: String = "familie-app",
         claims: Map<String, Any> = mapOf("acr" to "Level4"),
-
-    ): String {
-        return this.issueToken(
-            issuerId,
-            clientId,
-            DefaultOAuth2TokenCallback(
-                issuerId = issuerId,
-                subject = subject,
-                audience = listOf(audience),
-                claims = claims,
-                expiry = 3600,
-            ),
-        ).serialize()
-    }
+    ): String =
+        this
+            .issueToken(
+                issuerId,
+                clientId,
+                DefaultOAuth2TokenCallback(
+                    issuerId = issuerId,
+                    subject = subject,
+                    audience = listOf(audience),
+                    claims = claims,
+                    expiry = 3600,
+                ),
+            ).serialize()
 }

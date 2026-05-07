@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 class AttachmentStorageTest {
-
     private val delegate: EncryptedStorage = mockk()
     private val converter: AttachmentToStorableFormatConverter = mockk()
     private val attachmentStorage = AttachmentStorage(delegate, converter)

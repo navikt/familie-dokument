@@ -14,21 +14,28 @@ class MellomLagerService internal constructor(
     @Qualifier(STONAD_ENCRYPTED_STORAGE)
     private val delegate: EncryptedStorage,
 ) : Storage<String, String> {
-
     @Retryable(
         includes = [GcpRateLimitException::class],
         maxRetries = 3,
         delay = 1000,
     )
-    override fun put(directory: String, key: String, data: String) {
+    override fun put(
+        directory: String,
+        key: String,
+        data: String,
+    ) {
         delegate.put(directory, key, ByteArrayInputStream(data.toByteArray()))
     }
 
-    override fun get(directory: String, key: String): String {
-        return String(delegate[directory, key])
-    }
+    override fun get(
+        directory: String,
+        key: String,
+    ): String = String(delegate[directory, key])
 
-    override fun delete(directory: String, key: String) {
+    override fun delete(
+        directory: String,
+        key: String,
+    ) {
         delegate.delete(directory, key)
     }
 }

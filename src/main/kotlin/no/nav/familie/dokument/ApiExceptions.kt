@@ -4,19 +4,32 @@ import no.nav.familie.dokument.BadRequestCode.INVALID_DOCUMENT_FORMAT
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
-open class BadRequestException(val code: BadRequestCode, val secureLogMessage: String? = null) : RuntimeException("CODE=${code.name}")
+open class BadRequestException(
+    val code: BadRequestCode,
+    val secureLogMessage: String? = null,
+) : RuntimeException("CODE=${code.name}")
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-class InvalidJsonSoknad(msg: String) : IllegalArgumentException(msg)
+class InvalidJsonSoknad(
+    msg: String,
+) : IllegalArgumentException(msg)
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-class UkjentStønadParameter(stønad: String) : RuntimeException("Ukjent stønadtype: $stønad")
+class UkjentStønadParameter(
+    stønad: String,
+) : RuntimeException("Ukjent stønadtype: $stønad")
 
-class InvalidDocumentSize(code: BadRequestCode) : BadRequestException(code)
+class InvalidDocumentSize(
+    code: BadRequestCode,
+) : BadRequestException(code)
 
-class InvalidImageDimensions(code: BadRequestCode) : BadRequestException(code)
+class InvalidImageDimensions(
+    code: BadRequestCode,
+) : BadRequestException(code)
 
-class InvalidDocumentFormat(message: String) : BadRequestException(INVALID_DOCUMENT_FORMAT, message)
+class InvalidDocumentFormat(
+    message: String,
+) : BadRequestException(INVALID_DOCUMENT_FORMAT, message)
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class GcpDocumentNotFound : RuntimeException("Finner ikke dokumentet i Google Storage")

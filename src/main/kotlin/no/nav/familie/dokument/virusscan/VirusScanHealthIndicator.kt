@@ -6,4 +6,6 @@ import org.springframework.stereotype.Component
 
 @Component
 @Profile("!local && !local-fd && !integration-test")
-class VirusScanHealthIndicator(client: VirusScanClient) : AbstractHealthIndicator(client, "virusscan")
+class VirusScanHealthIndicator(
+    client: VirusScanClient,
+) : AbstractHealthIndicator(client, "virusscan")

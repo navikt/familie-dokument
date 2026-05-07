@@ -4,7 +4,6 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 
 object ExtensionMockUtil {
-
     fun setUpMockHentFnr() {
         mockkStatic("no.nav.familie.dokument.storage.HentFnrKt")
     }
