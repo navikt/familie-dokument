@@ -24,7 +24,7 @@
         <token-validation-spring.version>6.0.6</token-validation-spring.version>
         <openhtmltopdf.version>1.1.37</openhtmltopdf.version>
         <gcp.version>0.261.0</gcp.version>
-        <kontrakter.version>3.0_20260217114347_6e34f36</kontrakter.version>
+        <kontrakter.version>4.0_20260505124916_025d466</kontrakter.version>
         <tika-core.version>3.2.2</tika-core.version>
         <jsoup.version>1.19.1</jsoup.version>
         <testcontainers.version>1.21.4</testcontainers.version>
@@ -127,7 +127,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.familie.felles</groupId>
-            <artifactId>http-client</artifactId>
+            <artifactId>rest-klient</artifactId>
             <version>${felles.version}</version>
         </dependency>
         <dependency>
@@ -147,10 +147,7 @@
             <artifactId>felles</artifactId>
             <version>${kontrakter.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>token-validation-spring</artifactId>
