@@ -17,18 +17,18 @@
     <properties>
         <jvmTarget>25</jvmTarget>
         <main-class>no.nav.familie.dokument.LauncherKt</main-class>
-        <felles.version>4.20260428145828_c16a1d8</felles.version>
+        <felles.version>4.20260513094924_5cc59b4</felles.version>
         <kotlin.version>2.3.21</kotlin.version>
 
         <mockk.version>1.14.9</mockk.version>
-        <token-validation-spring.version>6.0.6</token-validation-spring.version>
+        <token-validation-spring.version>6.0.7</token-validation-spring.version>
         <openhtmltopdf.version>1.1.37</openhtmltopdf.version>
-        <gcp.version>0.261.0</gcp.version>
+        <gcp.version>0.263.0</gcp.version>
         <kontrakter.version>4.0_20260505124916_025d466</kontrakter.version>
-        <tika-core.version>3.2.2</tika-core.version>
-        <jsoup.version>1.19.1</jsoup.version>
+        <tika-core.version>3.3.0</tika-core.version>
+        <jsoup.version>1.22.2</jsoup.version>
         <testcontainers.version>1.21.4</testcontainers.version>
-        <verapdf.version>1.26.5</verapdf.version>
+        <verapdf.version>1.30.1</verapdf.version>
      </properties>
 
     <repositories>
@@ -211,7 +211,7 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock-jre8-standalone</artifactId>
-            <version>2.35.2</version>
+            <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
 
