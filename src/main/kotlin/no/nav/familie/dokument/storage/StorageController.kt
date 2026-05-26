@@ -9,7 +9,6 @@ import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
-import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -118,7 +117,6 @@ class StorageController(
         return data
     }
 
-    @Unprotected
     @GetMapping(path = ["ping"], produces = [MediaType.TEXT_PLAIN_VALUE])
     fun ping(): String = "Kontakt med familie-dokument"
 

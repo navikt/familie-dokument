@@ -18,6 +18,11 @@ class SecurityConfig {
         http {
             csrf { disable() }
             authorizeHttpRequests {
+                authorize("/internal/**", permitAll)
+                authorize("/api/html-til-pdf", permitAll)
+                authorize("/familie/dokument/api/html-til-pdf", permitAll)
+                authorize("/api/mapper/ping", permitAll)
+                authorize("/familie/dokument/api/mapper/ping", permitAll)
                 authorize(anyRequest, authenticated)
             }
             oauth2ResourceServer {
