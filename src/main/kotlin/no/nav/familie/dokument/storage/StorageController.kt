@@ -8,10 +8,7 @@ import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.familie.kontrakter.felles.Ressurs
-import no.nav.familie.sikkerhet.EksternBrukerUtils
 import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
-import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.RequiredIssuers
 import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -30,9 +27,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
-@RequiredIssuers(
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
-)
 class StorageController(
     val storage: AttachmentStorage,
     val virusScanService: VirusScanService,

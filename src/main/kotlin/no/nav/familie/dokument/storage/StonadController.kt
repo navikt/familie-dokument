@@ -4,10 +4,7 @@ import no.nav.familie.dokument.GcpDocumentNotFound
 import no.nav.familie.dokument.InvalidJsonSoknad
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
-import no.nav.familie.sikkerhet.EksternBrukerUtils
 import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
-import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.RequiredIssuers
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,9 +22,6 @@ import tools.jackson.databind.ObjectMapper
 
 @RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
-@RequiredIssuers(
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
-)
 class StonadController(
     @Autowired val storage: MellomLagerService,
     @Autowired val objectMapper: ObjectMapper,
