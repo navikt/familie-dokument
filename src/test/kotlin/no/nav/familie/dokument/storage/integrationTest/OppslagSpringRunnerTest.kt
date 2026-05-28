@@ -30,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
     "mock-saf",
     "mock-saksbehandling",
 )
-@EnableMockOAuth2Server
+@ContextConfiguration(initializers = [MockOAuth2ServerInitializer::class])
 abstract class OppslagSpringRunnerTest {
     protected val listAppender = initLoggingEventListAppender()
     protected var loggingEvents: MutableList<ILoggingEvent> = listAppender.list
