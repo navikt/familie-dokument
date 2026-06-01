@@ -10,9 +10,3 @@ cors:
     - "https://familie-ks-soknad.dev.nav.no"
     - "https://ensligmorellerfar.dev.nav.no"
     - "https://familie.dev.nav.no"
-
-no.nav.security.jwt:
-  issuer:
-    tokenx:
-      discoveryurl: ${TOKEN_X_WELL_KNOWN_URL}
-      accepted_audience: ${TOKEN_X_CLIENT_ID}

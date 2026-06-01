@@ -3,9 +3,11 @@ package no.nav.familie.dokument.storage.integrationTest
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.google.cloud.storage.Storage
+import io.mockk.clearMocks
+import no.nav.familie.dokument.config.MockOAuth2ServerInitializer
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.token.DefaultOAuth2TokenCallback
-import no.nav.security.token.support.spring.test.EnableMockOAuth2Server
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,12 +17,13 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.ApplicationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [ApplicationLocalTestLauncher::class])
 @ActiveProfiles(
-    "integrationtest",
+    "integration-test",
     "mock-kodeverk",
     "mock-dokument",
     "mock-pdl",
@@ -30,12 +33,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
     "mock-saf",
     "mock-saksbehandling",
 )
-@EnableMockOAuth2Server
+@ContextConfiguration(initializers = [MockOAuth2ServerInitializer::class])
 abstract class OppslagSpringRunnerTest {
     protected val listAppender = initLoggingEventListAppender()
     protected var loggingEvents: MutableList<ILoggingEvent> = listAppender.list
     protected val restTemplate = TestRestTemplate()
     protected val headers = HttpHeaders()
+
+    @Autowired
+    protected lateinit var storageMock: Storage
 
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -52,6 +58,7 @@ abstract class OppslagSpringRunnerTest {
         headers.clear()
         loggingEvents.clear()
         resetWiremockServers()
+        clearMocks(storageMock)
     }
 
     private fun resetWiremockServers() {
@@ -62,17 +69,22 @@ abstract class OppslagSpringRunnerTest {
 
     protected fun localhost(uri: String): String = LOCALHOST + getPort() + uri
 
-    protected fun søkerBearerToken(personident: String = "12345678911"): String {
+    protected fun token(
+        personident: String = "12345678911",
+        issuerId: String = "tokenx",
+        audience: String = "familie-app",
+        acr: String? = "Level4",
+    ): String {
         val clientId = "lokal:teamfamilie:familie-dokument"
         return mockOAuth2Server
             .issueToken(
-                issuerId = "tokenx",
+                issuerId = issuerId,
                 clientId,
                 DefaultOAuth2TokenCallback(
-                    issuerId = "tokenx",
+                    issuerId = issuerId,
                     subject = personident,
-                    audience = listOf("familie-app"),
-                    claims = mapOf("acr" to "Level4", "client_id" to clientId),
+                    audience = listOf(audience),
+                    claims = acr?.let { mapOf("acr" to it) } ?: emptyMap(),
                     expiry = 3600,
                 ),
             ).serialize()

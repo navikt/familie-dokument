@@ -4,12 +4,12 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import io.mockk.verify
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
-import no.nav.familie.dokument.storage.hentFnr
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.unmockHentFnr
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.familie.sikkerhet.EksternBrukerUtils
+import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -28,10 +28,9 @@ class EncryptedStorageTest {
     }
 
     private val storage: GcpStorageWrapper = mockk()
-    private val tokenValidationContextHolder: TokenValidationContextHolder = mockk()
     private val encryptor: Encryptor = mockk()
 
-    private val encryptedStorage = EncryptedStorage(tokenValidationContextHolder, storage, encryptor)
+    private val encryptedStorage = EncryptedStorage(storage, encryptor)
 
     @BeforeEach
     fun setUpMockedEncryptor() {
@@ -39,16 +38,13 @@ class EncryptedStorageTest {
         every { encryptor.decrypt(FNR, eq(encryptedData)) } returns unencryptedData
         every { storage.put(eq(DIRECTORY), eq(KEY), any()) } just Runs
 
-        setUpMockHentFnr()
-
-        every {
-            tokenValidationContextHolder.hentFnr()
-        } returns FNR
+        mockkObject(EksternBrukerUtils)
+        every { hentFnrFraToken() } returns FNR
     }
 
     @AfterEach
     internal fun tearDown() {
-        unmockHentFnr()
+        unmockkObject(EksternBrukerUtils)
     }
 
     @Test

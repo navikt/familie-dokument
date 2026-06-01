@@ -4,12 +4,13 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.unmockHentFnr
 import no.nav.familie.kontrakter.felles.jsonMapper
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.familie.sikkerhet.EksternBrukerUtils
+import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -18,23 +19,19 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
 
 internal class StonadControllerTest {
-    lateinit var stonadController: StonadController
-    lateinit var storageMock: MellomLagerService
+    private val storageMock = mockk<MellomLagerService>()
+    private val stonadController = StonadController(storageMock, jsonMapper, Hasher("hammeligSalt"))
 
     @BeforeEach
     internal fun setUp() {
-        storageMock = mockk()
-        setUpMockHentFnr()
-        val contextHolderMock = mockk<TokenValidationContextHolder>()
-        stonadController = StonadController(storageMock, contextHolderMock, jsonMapper, Hasher("hammeligSalt"))
-
-        every { contextHolderMock.hentFnr() } returns "12345678901"
+        mockkObject(EksternBrukerUtils)
+        every { hentFnrFraToken() } returns "12345678901"
         every { storageMock.put(any(), any(), any()) } just Runs
     }
 
     @AfterEach
     internal fun tearDown() {
-        unmockHentFnr()
+        unmockkObject(EksternBrukerUtils)
     }
 
     @Test

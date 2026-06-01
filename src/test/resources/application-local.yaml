@@ -6,15 +6,13 @@ cors:
   allowed_origins:
     - "http://localhost:3000"
 
-no.nav.security.jwt:
-  issuer:
-    tokenx:
-      discoveryurl: http://localhost:${mock-oauth2-server.port}/tokenx/.well-known/openid-configuration
-      accepted_audience: familie-app
+TOKEN_X_ISSUER: http://localhost:${mock-oauth2-server.port}/tokenx
+TOKEN_X_JWKS_URI: http://localhost:${mock-oauth2-server.port}/tokenx/jwks
+TOKEN_X_CLIENT_ID: familie-app
 
 FAMILIE_DOKUMENT_STORAGE_ENCRYPTION_PASSWORD: not-a-real-pw
 FAMILIE_DOKUMENT_FNR_SECRET_SALT: detteErIkkeSaltMenHemmeligSalt
 
 gcp.storage.bucketname: not-a-real-name
 
-spring.main.allow-bean-definition-overriding": true
+spring.main.allow-bean-definition-overriding: true

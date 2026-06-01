@@ -2,7 +2,6 @@ package no.nav.familie.dokument
 
 import no.nav.familie.dokument.storage.google.GcpRateLimitException
 import no.nav.familie.kontrakter.felles.Ressurs
-import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.LoggerFactory
 import org.springframework.core.NestedExceptionUtils
 import org.springframework.http.HttpHeaders
@@ -81,7 +80,7 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
             .body(Ressurs.failure("Uventet feil"))
     }
 
-    // Denne håndterer eks JwtTokenUnauthorizedException
+    // Denne håndterer feil med @ResponseStatus-annotasjon
     private fun håndtertResponseStatusFeil(
         throwable: Throwable,
         responseStatus: ResponseStatus,
@@ -102,7 +101,6 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
         loggMelding: String,
     ) {
         when (throwable) {
-            is JwtTokenUnauthorizedException -> logger.debug(loggMelding)
             is GcpDocumentNotFound -> logger.warn(loggMelding)
             else -> logger.error(loggMelding)
         }

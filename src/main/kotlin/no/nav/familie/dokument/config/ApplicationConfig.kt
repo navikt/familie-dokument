@@ -7,7 +7,7 @@ import no.nav.familie.log.NavSystemtype
 import no.nav.familie.log.filter.LogFilter
 import no.nav.familie.log.filter.RequestTimeFilter
 import no.nav.familie.restklient.interceptor.ConsumerIdClientInterceptor
-import no.nav.familie.sikkerhet.context.FamilieFellesNavTokenSupportKonfigurasjon
+import no.nav.familie.sikkerhet.context.FamilieFellesSpringSecurityKonfigurasjon
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.jetty.servlet.JettyServletWebServerFactory
 import org.springframework.boot.restclient.RestTemplateBuilder
@@ -25,7 +25,7 @@ import java.time.Duration
 import java.time.temporal.ChronoUnit
 
 @SpringBootConfiguration
-@Import(ConsumerIdClientInterceptor::class, FamilieFellesNavTokenSupportKonfigurasjon::class)
+@Import(ConsumerIdClientInterceptor::class, FamilieFellesSpringSecurityKonfigurasjon::class)
 @EnableResilientMethods
 class ApplicationConfig {
     init {

@@ -4,14 +4,15 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.slot
+import io.mockk.unmockkObject
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
-import no.nav.familie.dokument.testutils.ExtensionMockUtil
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
 import no.nav.familie.dokument.virusscan.VirusScanService
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.familie.sikkerhet.EksternBrukerUtils
+import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -23,23 +24,19 @@ import java.nio.file.Paths
 import java.util.UUID
 
 internal class StorageControllerTest {
-    lateinit var storageController: StorageController
-    val storageMock = mockk<AttachmentStorage>()
-    val dokument1 = UUID.randomUUID()
-    val dokument2 = UUID.randomUUID()
-    val dokument3 = UUID.randomUUID()
+    private val storageMock = mockk<AttachmentStorage>()
+    private val virusScanMock = mockk<VirusScanService>()
+    private val pdfServiceMock = PdfService()
+    private val storageController = StorageController(storageMock, virusScanMock, 10, Hasher("Hemmelig salt"), pdfServiceMock)
+
+    private val dokument1 = UUID.randomUUID()
+    private val dokument2 = UUID.randomUUID()
+    private val dokument3 = UUID.randomUUID()
 
     @BeforeEach
     internal fun setUp() {
-        val virusScanMock = mockk<VirusScanService>()
-        val contextHolderMock = mockk<TokenValidationContextHolder>()
-        setUpMockHentFnr()
-        val pdfServiceMock = PdfService()
-
-        storageController =
-            StorageController(storageMock, virusScanMock, contextHolderMock, 10, Hasher("Hemmelig salt"), pdfServiceMock)
-
-        every { contextHolderMock.hentFnr() } returns "12345678910"
+        mockkObject(EksternBrukerUtils)
+        every { hentFnrFraToken() } returns "12345678910"
         every { storageMock.get(any(), dokument1.toString()) } returns leseVedlegg("vedlegg", "gyldig-0.8m.pdf")
         every { storageMock.get(any(), dokument2.toString()) } returns leseVedlegg("pdf", "eksempel1.pdf")
         every { storageMock.get(any(), dokument3.toString()) } returns leseVedlegg("vedlegg", "gyldig-0.8m.pdf")
@@ -47,7 +44,7 @@ internal class StorageControllerTest {
 
     @AfterEach
     internal fun tearDown() {
-        ExtensionMockUtil.unmockHentFnr()
+        unmockkObject(EksternBrukerUtils)
     }
 
     @Test

@@ -3,8 +3,6 @@ package no.nav.familie.dokument.storage.encryption
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.ATTACHMENT_GCP_STORAGE
 import no.nav.familie.dokument.storage.google.GcpStorageConfiguration.Companion.STONAD_GCP_STORAGE
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -23,18 +21,16 @@ class EncryptedStorageConfiguration {
 
     @Bean(ATTACHMENT_ENCRYPTED_STORAGE)
     internal fun attachmentEncryptedStorage(
-        @Autowired contextHolder: TokenValidationContextHolder,
         @Qualifier(ATTACHMENT_GCP_STORAGE) storage: GcpStorageWrapper,
         encryptor: Encryptor,
-    ): EncryptedStorage = EncryptedStorage(contextHolder, storage, encryptor)
+    ): EncryptedStorage = EncryptedStorage(storage, encryptor)
 
     @Profile("!local && !local-fd")
     @Bean(STONAD_ENCRYPTED_STORAGE)
     internal fun stonadEncryptedStorage(
-        @Autowired contextHolder: TokenValidationContextHolder,
         @Qualifier(STONAD_GCP_STORAGE) storage: GcpStorageWrapper,
         encryptor: Encryptor,
-    ): EncryptedStorage = EncryptedStorage(contextHolder, storage, encryptor)
+    ): EncryptedStorage = EncryptedStorage(storage, encryptor)
 
     companion object {
         const val ATTACHMENT_ENCRYPTED_STORAGE = "attachmentEncryptedStorage"

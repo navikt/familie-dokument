@@ -4,10 +4,7 @@ import no.nav.familie.dokument.GcpDocumentNotFound
 import no.nav.familie.dokument.InvalidJsonSoknad
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.storage.mellomlager.MellomLagerService
-import no.nav.familie.sikkerhet.EksternBrukerUtils
-import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.RequiredIssuers
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,12 +22,8 @@ import tools.jackson.databind.ObjectMapper
 
 @RestController
 @RequestMapping("familie/dokument/api/soknad", "api/soknad")
-@RequiredIssuers(
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
-)
 class StonadController(
     @Autowired val storage: MellomLagerService,
-    @Autowired val contextHolder: TokenValidationContextHolder,
     @Autowired val objectMapper: ObjectMapper,
     @Autowired val hasher: Hasher,
 ) {
@@ -49,7 +42,7 @@ class StonadController(
 
         validerGyldigJson(søknad)
 
-        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(hentFnrFraToken())
 
         storage.put(directory, stønad.stønadKey, søknad)
         return ResponseEntity.status(HttpStatus.CREATED).build()
@@ -59,7 +52,7 @@ class StonadController(
     fun hentMellomlagretSøknad(
         @PathVariable("stonad") stønad: StønadParameter,
     ): ResponseEntity<String> {
-        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(hentFnrFraToken())
 
         return try {
             ResponseEntity.ok(storage[directory, stønad.stønadKey])
@@ -72,7 +65,7 @@ class StonadController(
     fun slettMellomlagretSøknad(
         @PathVariable("stonad") stønad: StønadParameter,
     ): ResponseEntity<String> {
-        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(hentFnrFraToken())
 
         log.debug("Sletter mellomlagret overgangsstønad")
         storage.delete(directory, stønad.stønadKey)
