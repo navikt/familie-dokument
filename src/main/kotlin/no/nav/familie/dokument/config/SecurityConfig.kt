@@ -8,6 +8,7 @@ import no.nav.familie.kontrakter.felles.jsonMapper
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.http.MediaType
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -28,7 +29,28 @@ class SecurityConfig(
     private val corsProperties: CorsProperties,
 ) {
     @Bean
-    fun securityFilterChain(
+    @Order(1)
+    fun publicFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http {
+            securityMatcher(
+                "/internal/**",
+                "/api/html-til-pdf",
+                "/familie/dokument/api/html-til-pdf",
+                "/api/mapper/ping",
+                "/familie/dokument/api/mapper/ping",
+            )
+            cors { configurationSource = corsConfigurationSource() }
+            csrf { disable() }
+            authorizeHttpRequests {
+                authorize(anyRequest, permitAll)
+            }
+        }
+        return http.build()
+    }
+
+    @Bean
+    @Order(2)
+    fun securedFilterChain(
         http: HttpSecurity,
         tokenXJwtDecoder: TokenXJwtDecoder,
     ): SecurityFilterChain {
@@ -36,11 +58,6 @@ class SecurityConfig(
             cors { configurationSource = corsConfigurationSource() }
             csrf { disable() }
             authorizeHttpRequests {
-                authorize("/internal/**", permitAll)
-                authorize("/api/html-til-pdf", permitAll)
-                authorize("/familie/dokument/api/html-til-pdf", permitAll)
-                authorize("/api/mapper/ping", permitAll)
-                authorize("/familie/dokument/api/mapper/ping", permitAll)
                 authorize(anyRequest, authenticated)
             }
             oauth2ResourceServer {

@@ -70,6 +70,20 @@ class SecurityConfigIntegrationTest : OppslagSpringRunnerTest() {
     }
 
     @Test
+    fun `html-til-pdf er tilgjengelig med Azure AD token`() {
+        headers.setBearerAuth(token(issuerId = "azuread"))
+
+        val response =
+            restTemplate.exchange<String>(
+                localhost("/api/html-til-pdf"),
+                HttpMethod.POST,
+                HttpEntity("<html></html>", headers),
+            )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+    }
+
+    @Test
     fun `beskyttet endepunkt returnerer 401 uten token`() {
         val response =
             restTemplate.exchange<String>(
