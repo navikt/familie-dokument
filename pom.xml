@@ -23,7 +23,7 @@
         <mockk.version>1.14.11</mockk.version>
         <openhtmltopdf.version>1.1.37</openhtmltopdf.version>
         <gcp.version>0.264.0</gcp.version>
-        <kontrakter.version>4.0_20260505124916_025d466</kontrakter.version>
+        <kontrakter.version>4.0_20260609150326_d2259dc</kontrakter.version>
         <tika-core.version>3.3.1</tika-core.version>
         <jsoup.version>1.19.1</jsoup.version>
         <testcontainers.version>1.21.4</testcontainers.version>
