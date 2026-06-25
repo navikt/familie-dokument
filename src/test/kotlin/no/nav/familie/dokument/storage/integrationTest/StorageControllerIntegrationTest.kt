@@ -8,7 +8,6 @@ import io.mockk.mockk
 import io.mockk.slot
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.familie.kontrakter.felles.jsonMapper
-import no.nav.familie.restklient.client.MultipartBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -103,9 +102,14 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
     private fun leseVedlegg(navn: String): MultiValueMap<String, Any> {
         val content = StorageControllerIntegrationTest::class.java.getResource("/vedlegg/$navn")!!.readBytes()
 
-        return MultipartBuilder()
-            .withByteArray("file", navn, content)
-            .build()
+        val map = LinkedMultiValueMap<String, Any>()
+        map.add(
+            "file",
+            object : ByteArrayResource(content) {
+                override fun getFilename() = navn
+            },
+        )
+        return map
     }
 
     private fun initMock() {
