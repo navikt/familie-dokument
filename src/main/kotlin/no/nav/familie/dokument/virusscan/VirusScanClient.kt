@@ -2,21 +2,30 @@ package no.nav.familie.dokument.virusscan
 
 import no.nav.familie.log.interceptor.ConsumerIdClientInterceptor
 import org.springframework.http.MediaType
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
 import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
+import java.time.Duration
 
 @Service
 class VirusScanClient(
-    private val config: VirusScanConfig,
+    config: VirusScanConfig,
     consumerIdClientInterceptor: ConsumerIdClientInterceptor,
 ) {
+
+    val requestFactory =
+        SimpleClientHttpRequestFactory().apply {
+            setConnectTimeout(Duration.ofSeconds(3))
+            setReadTimeout(Duration.ofMinutes(2))
+        }
     private val restClient =
         RestClient
             .builder()
             .requestInterceptor(consumerIdClientInterceptor)
+            .requestFactory(requestFactory)
             .build()
 
     private val scanUri: URI =
