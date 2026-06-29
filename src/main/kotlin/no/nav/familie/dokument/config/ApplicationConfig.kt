@@ -10,19 +10,13 @@ import no.nav.familie.log.interceptor.ConsumerIdClientInterceptor
 import no.nav.familie.sikkerhet.context.FamilieFellesSpringSecurityKonfigurasjon
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.jetty.servlet.JettyServletWebServerFactory
-import org.springframework.boot.restclient.RestTemplateBuilder
 import org.springframework.boot.web.server.servlet.ServletWebServerFactory
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.context.annotation.Primary
-import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter
 import org.springframework.resilience.annotation.EnableResilientMethods
-import org.springframework.web.client.RestOperations
-import org.springframework.web.client.RestTemplate
 import tools.jackson.databind.json.JsonMapper
-import java.time.Duration
-import java.time.temporal.ChronoUnit
 
 @SpringBootConfiguration
 @Import(ConsumerIdClientInterceptor::class, FamilieFellesSpringSecurityKonfigurasjon::class)
@@ -52,16 +46,6 @@ class ApplicationConfig {
         filterRegistration.order = 2
         return filterRegistration
     }
-
-    @Bean
-    fun restOperations(consumerIdClientInterceptor: ConsumerIdClientInterceptor): RestOperations =
-        RestTemplateBuilder()
-            .additionalMessageConverters(
-                listOf(JacksonJsonHttpMessageConverter(jsonMapper)) + RestTemplate().messageConverters,
-            ).connectTimeout(Duration.of(3, ChronoUnit.SECONDS))
-            .readTimeout(Duration.of(2, ChronoUnit.MINUTES))
-            .additionalInterceptors(consumerIdClientInterceptor)
-            .build()
 
     @Bean("jacksonJsonMapper")
     @Primary
