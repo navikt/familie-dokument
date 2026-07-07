@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.multipart.MultipartException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.util.concurrent.TimeoutException
 
@@ -44,6 +45,21 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
             logger.error("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
         }
         return super.handleExceptionInternal(ex, body, headers, status, request)
+    }
+
+    @ExceptionHandler(MultipartException::class)
+    fun handleMultipartException(ex: MultipartException): ResponseEntity<Ressurs<String>> {
+        val cause = NestedExceptionUtils.getMostSpecificCause(ex)
+        if (cause is java.io.EOFException || cause.message?.contains("EOF", ignoreCase = true) == true) {
+            secureLogger.warn("Multipart-feil: klienten avbrøt opplasting (EOF)", ex)
+            logger.warn("Multipart-feil: klienten avbrøt opplasting - throwable=${rootCause(ex)}")
+        } else {
+            secureLogger.error("En feil har oppstått", ex)
+            logger.error("En feil har oppstått - throwable=${rootCause(ex)}")
+        }
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Ressurs.failure("Feil ved parsing av multipart-request"))
     }
 
     @ExceptionHandler(Throwable::class)
