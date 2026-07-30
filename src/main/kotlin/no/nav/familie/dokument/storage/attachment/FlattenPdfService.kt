@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream
 
 @Service
 class FlattenPdfService {
-
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun convert(input: ByteArray): ByteArray {

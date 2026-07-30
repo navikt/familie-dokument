@@ -22,7 +22,6 @@ import java.io.InputStream
 @Profile("local", "local-fd")
 @Configuration
 class TestStorageConfiguration {
-
     val lokalStorage: MutableMap<String, ByteArray> = HashMap()
     val lokalStorageAttachment: MutableMap<String, ByteArray> = HashMap()
 
@@ -50,9 +49,9 @@ class TestStorageConfiguration {
 
     @Bean
     @Primary
-    fun converter(@Autowired imageConversionService: ImageConversionService): AttachmentToStorableFormatConverter {
-        return AttachmentToStorableFormatConverter(ImageConversionService(), FlattenPdfService())
-    }
+    fun converter(
+        @Autowired imageConversionService: ImageConversionService,
+    ): AttachmentToStorableFormatConverter = AttachmentToStorableFormatConverter(ImageConversionService(), FlattenPdfService())
 
     @Bean
     @Primary

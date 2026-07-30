@@ -14,7 +14,6 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 class MellomlagerServiceTest {
-
     private val delegate: EncryptedStorage = mockk()
     private val mellomLagerService = MellomLagerService(delegate)
     private val jsonVerdi = """ { "a": "æøå" } """

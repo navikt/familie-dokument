@@ -34,7 +34,6 @@ import java.util.Calendar
 
 @Service
 class PdfService {
-
     private val log: Logger = LoggerFactory.getLogger(this::class.java)
 
     fun lagPdf(html: String): ByteArray {
@@ -48,7 +47,11 @@ class PdfService {
     }
 
     fun fontSupplier(fontName: String): PDFontSupplier {
-        val font = TTFParser().parse(RandomAccessReadBuffer(ClassPathResource("/fonts/$fontName").inputStream)).also { it.isEnableGsub = false }
+        val font =
+            TTFParser().parse(RandomAccessReadBuffer(ClassPathResource("/fonts/$fontName").inputStream)).also {
+                it.isEnableGsub =
+                    false
+            }
         return PDFontSupplier(
             PDType0Font.load(
                 PDDocument(),
@@ -58,34 +61,35 @@ class PdfService {
         )
     }
 
-    fun genererPdf(w3cDokument: Document, outputStream: ByteArrayOutputStream) {
+    fun genererPdf(
+        w3cDokument: Document,
+        outputStream: ByteArrayOutputStream,
+    ) {
         try {
-            val builder = PdfRendererBuilder()
-                .useFastMode()
-                .useFont(
-                    fontSupplier("SourceSansPro-Regular.ttf"),
-                    "Source Sans Pro",
-                    400,
-                    BaseRendererBuilder.FontStyle.NORMAL,
-                    true,
-                )
-                .useFont(
-                    fontSupplier("SourceSansPro-Bold.ttf"),
-                    "Source Sans Pro",
-                    700,
-                    BaseRendererBuilder.FontStyle.OBLIQUE,
-                    true,
-                )
-                .useFont(
-                    fontSupplier("SourceSansPro-It.ttf"),
-                    "Source Sans Pro",
-                    400,
-                    BaseRendererBuilder.FontStyle.ITALIC,
-                    true,
-                )
-                .useSVGDrawer(BatikSVGDrawer())
-                .withW3cDocument(w3cDokument, "")
-                .buildPdfRenderer()
+            val builder =
+                PdfRendererBuilder()
+                    .useFastMode()
+                    .useFont(
+                        fontSupplier("SourceSansPro-Regular.ttf"),
+                        "Source Sans Pro",
+                        400,
+                        BaseRendererBuilder.FontStyle.NORMAL,
+                        true,
+                    ).useFont(
+                        fontSupplier("SourceSansPro-Bold.ttf"),
+                        "Source Sans Pro",
+                        700,
+                        BaseRendererBuilder.FontStyle.OBLIQUE,
+                        true,
+                    ).useFont(
+                        fontSupplier("SourceSansPro-It.ttf"),
+                        "Source Sans Pro",
+                        400,
+                        BaseRendererBuilder.FontStyle.ITALIC,
+                        true,
+                    ).useSVGDrawer(BatikSVGDrawer())
+                    .withW3cDocument(w3cDokument, "")
+                    .buildPdfRenderer()
             builder.createPDFWithoutClosing()
             builder.pdfDocument.conform()
             builder.pdfDocument.save(outputStream)
@@ -148,7 +152,6 @@ class PdfService {
     }
 
     companion object {
-
         val colorProfile: ByteArray
             get() {
                 val cpr = ClassPathResource("sRGB.icc")

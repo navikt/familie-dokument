@@ -9,7 +9,6 @@ import java.io.File
 
 @Disabled
 internal class ImageConversionServiceTest {
-
     val imageConversionService = ImageConversionService()
 
     @Test

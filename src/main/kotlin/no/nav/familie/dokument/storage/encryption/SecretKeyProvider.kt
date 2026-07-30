@@ -7,8 +7,9 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-class SecretKeyProvider(private val passphrase: String) {
-
+class SecretKeyProvider(
+    private val passphrase: String,
+) {
     @Throws(NoSuchAlgorithmException::class, InvalidKeySpecException::class)
     fun key(salt: String): SecretKey {
         val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")

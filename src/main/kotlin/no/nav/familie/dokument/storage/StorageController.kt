@@ -1,17 +1,14 @@
 package no.nav.familie.dokument.storage
 
 import no.nav.familie.dokument.BadRequestCode
+import no.nav.familie.dokument.BadRequestException
 import no.nav.familie.dokument.InvalidDocumentSize
 import no.nav.familie.dokument.pdf.PdfService
 import no.nav.familie.dokument.storage.attachment.AttachmentStorage
 import no.nav.familie.dokument.storage.encryption.Hasher
 import no.nav.familie.dokument.virusscan.VirusScanService
 import no.nav.familie.kontrakter.felles.Ressurs
-import no.nav.familie.sikkerhet.EksternBrukerUtils
-import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.security.token.support.core.api.RequiredIssuers
-import no.nav.security.token.support.core.api.Unprotected
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -29,18 +26,13 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("familie/dokument/api/mapper", "api/mapper")
-@RequiredIssuers(
-    ProtectedWithClaims(issuer = EksternBrukerUtils.ISSUER_TOKENX, claimMap = ["acr=Level4"]),
-)
 class StorageController(
     val storage: AttachmentStorage,
     val virusScanService: VirusScanService,
-    val contextHolder: TokenValidationContextHolder,
     @Value("\${attachment.max.size.mb}") val maxFileSizeInMb: Int,
     val hasher: Hasher,
     val pdfService: PdfService,
 ) {
-
     // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @PostMapping(
         path = ["{bucket}"],
@@ -63,15 +55,19 @@ class StorageController(
             throw InvalidDocumentSize(BadRequestCode.IMAGE_TOO_LARGE)
         }
 
-        virusScanService.scan(bytes, multipartFile.originalFilename)
+        val filnavn =
+            multipartFile.originalFilename
+                ?: throw BadRequestException(BadRequestCode.FILENAME_MISSING)
+        virusScanService.scan(bytes, filnavn)
 
-        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(hentFnrFraToken())
 
         val uuid = UUID.randomUUID().toString()
 
         storage.put(directory, uuid, bytes)
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(mapOf("dokumentId" to uuid, "filnavn" to multipartFile.originalFilename))
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(mapOf("dokumentId" to uuid, "filnavn" to filnavn))
     }
 
     @PostMapping(
@@ -87,7 +83,7 @@ class StorageController(
             throw InvalidDocumentSize(BadRequestCode.DOCUMENT_MISSING)
         }
 
-        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(hentFnrFraToken())
 
         val dokumenter = documentList.map { storage.get(directory, it.toString()) }
 
@@ -97,7 +93,8 @@ class StorageController(
 
         storage.put(directory, uuid, mergedeDokumenter)
 
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
             .body(mapOf("dokumentId" to uuid))
     }
 
@@ -106,9 +103,7 @@ class StorageController(
     fun getAttachmentRessurs(
         @PathVariable("bucket") bucket: String,
         @PathVariable("dokumentId") dokumentId: String,
-    ): ResponseEntity<Ressurs<ByteArray>> {
-        return ResponseEntity.ok(Ressurs.success(getAttachment(bucket, dokumentId)))
-    }
+    ): ResponseEntity<Ressurs<ByteArray>> = ResponseEntity.ok(Ressurs.success(getAttachment(bucket, dokumentId)))
 
     // / TODO: "bucket"-path brukes ikke ennå. "familievedlegg" brukes alltid
     @GetMapping(path = ["{bucket}/{dokumentId}/pdf"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
@@ -116,20 +111,16 @@ class StorageController(
         @PathVariable("bucket") bucket: String,
         @PathVariable("dokumentId") dokumentId: String,
     ): ByteArray {
-        val directory = hasher.lagFnrHash(contextHolder.hentFnr())
+        val directory = hasher.lagFnrHash(hentFnrFraToken())
         val data = storage[directory, dokumentId]
         log.debug("Loaded file $dokumentId")
         return data
     }
 
-    @Unprotected
     @GetMapping(path = ["ping"], produces = [MediaType.TEXT_PLAIN_VALUE])
-    fun ping(): String {
-        return "Kontakt med familie-dokument"
-    }
+    fun ping(): String = "Kontakt med familie-dokument"
 
     companion object {
-
         private val log = LoggerFactory.getLogger(StorageController::class.java)
     }
 }

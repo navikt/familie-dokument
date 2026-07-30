@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service
 class VirusScanService(
     private val client: VirusScanClient,
 ) {
-
     private val logger = LoggerFactory.getLogger(VirusScanService::class.java)
 
-    fun scan(bytes: ByteArray, name: String) {
+    fun scan(
+        bytes: ByteArray,
+        name: String,
+    ) {
         logger.debug("Scanner {}", name)
         val scanResults = client.scan(bytes)
         if (scanResults.size != 1) {

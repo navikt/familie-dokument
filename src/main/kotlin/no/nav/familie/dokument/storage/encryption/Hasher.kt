@@ -10,7 +10,6 @@ class Hasher(
     @Value("\${FAMILIE_DOKUMENT_FNR_SECRET_SALT}")
     val hemmeligSalt: String,
 ) {
-
     fun lagFnrHash(fnr: String): String {
         require(hemmeligSalt.isNotBlank(), { "hemmeligSalt kan ikke være tom" })
         require(fnr.isNotBlank(), { "Fnr kan ikke være tom" })

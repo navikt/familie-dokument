@@ -50,7 +50,6 @@ spec:
       cpu: 532m
   ingresses:
     - https://familie-dokument.intern.nav.no
-    - https://www.nav.no/familie/dokument
   accessPolicy:
     inbound:
       rules:
@@ -73,6 +72,8 @@ spec:
           namespace: tilleggsstonader
         - application: tilleggsstonader-klage
           namespace: tilleggsstonader
+        - application: gjenlevende-bs-sak
+          namespace: etterlatte
     outbound:
       rules:
         - application: clamav
@@ -85,8 +86,6 @@ spec:
     application:
       enabled: true
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
-  secureLogs:
-    enabled: true
   tokenx:
     enabled: true
   env:

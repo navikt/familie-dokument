@@ -4,12 +4,12 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import io.mockk.verify
 import no.nav.familie.dokument.storage.google.GcpStorageWrapper
-import no.nav.familie.dokument.storage.hentFnr
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.setUpMockHentFnr
-import no.nav.familie.dokument.testutils.ExtensionMockUtil.unmockHentFnr
-import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.familie.sikkerhet.EksternBrukerUtils
+import no.nav.familie.sikkerhet.EksternBrukerUtils.hentFnrFraToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -17,53 +17,51 @@ import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 
 class EncryptedStorageTest {
+    private val unencryptedData = "originalStream".toByteArray()
+    private val encryptedData = "encryptedStream".toByteArray()
+    private val encryptedStream = ByteArrayInputStream(encryptedData)
 
-    private val UNENCRYPTED_DATA = "originalStream".toByteArray()
-    private val ENCRYPTED_DATA = "encryptedStream".toByteArray()
-    private val ENCRYPTED_STREAM = ByteArrayInputStream(ENCRYPTED_DATA)
-    private val FNR = "DummyFnr"
-    private val DIRECTORY = "directory"
-    private val KEY = "UUID"
+    companion object {
+        private const val FNR = "DummyFnr"
+        private const val DIRECTORY = "directory"
+        private const val KEY = "UUID"
+    }
 
     private val storage: GcpStorageWrapper = mockk()
-    private val tokenValidationContextHolder: TokenValidationContextHolder = mockk()
     private val encryptor: Encryptor = mockk()
 
-    private val encryptedStorage = EncryptedStorage(tokenValidationContextHolder, storage, encryptor)
+    private val encryptedStorage = EncryptedStorage(storage, encryptor)
 
     @BeforeEach
     fun setUpMockedEncryptor() {
-        every { encryptor.encryptedStream(FNR, any()) } returns ENCRYPTED_STREAM
-        every { encryptor.decrypt(FNR, eq(ENCRYPTED_DATA)) } returns UNENCRYPTED_DATA
+        every { encryptor.encryptedStream(FNR, any()) } returns encryptedStream
+        every { encryptor.decrypt(FNR, eq(encryptedData)) } returns unencryptedData
         every { storage.put(eq(DIRECTORY), eq(KEY), any()) } just Runs
 
-        setUpMockHentFnr()
-
-        every {
-            tokenValidationContextHolder.hentFnr()
-        } returns FNR
+        mockkObject(EksternBrukerUtils)
+        every { hentFnrFraToken() } returns FNR
     }
 
     @AfterEach
     internal fun tearDown() {
-        unmockHentFnr()
+        unmockkObject(EksternBrukerUtils)
     }
 
     @Test
     fun encrypts_before_put() {
-        encryptedStorage.put(DIRECTORY, KEY, ByteArrayInputStream(UNENCRYPTED_DATA))
+        encryptedStorage.put(DIRECTORY, KEY, ByteArrayInputStream(unencryptedData))
 
         verify {
-            storage.put(DIRECTORY, KEY, ENCRYPTED_STREAM)
+            storage.put(DIRECTORY, KEY, encryptedStream)
         }
     }
 
     @Test
     fun encrypts_after_get() {
-        every { storage[DIRECTORY, KEY] } returns ENCRYPTED_DATA
+        every { storage[DIRECTORY, KEY] } returns encryptedData
 
         val fetchedData = encryptedStorage[DIRECTORY, KEY]
 
-        assertThat(fetchedData).isEqualTo(UNENCRYPTED_DATA)
+        assertThat(fetchedData).isEqualTo(unencryptedData)
     }
 }

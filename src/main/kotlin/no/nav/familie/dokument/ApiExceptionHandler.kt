@@ -2,7 +2,6 @@ package no.nav.familie.dokument
 
 import no.nav.familie.dokument.storage.google.GcpRateLimitException
 import no.nav.familie.kontrakter.felles.Ressurs
-import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException
 import org.slf4j.LoggerFactory
 import org.springframework.core.NestedExceptionUtils
 import org.springframework.http.HttpHeaders
@@ -15,19 +14,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.multipart.MultipartException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.util.concurrent.TimeoutException
 
 @Suppress("unused")
 @ControllerAdvice
 class ApiExceptionHandler : ResponseEntityExceptionHandler() {
-
     private val logger = LoggerFactory.getLogger(ApiExceptionHandler::class.java)
     private val secureLogger = LoggerFactory.getLogger("secureLogger")
 
-    private fun rootCause(throwable: Throwable): String {
-        return NestedExceptionUtils.getMostSpecificCause(throwable).javaClass.simpleName
-    }
+    private fun rootCause(throwable: Throwable): String = NestedExceptionUtils.getMostSpecificCause(throwable).javaClass.simpleName
 
     fun handleExceptionInternal(
         ex: Exception,
@@ -48,6 +45,21 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
             logger.error("En feil har oppstått - throwable=${rootCause(ex)} status=${status.value()}")
         }
         return super.handleExceptionInternal(ex, body, headers, status, request)
+    }
+
+    @ExceptionHandler(MultipartException::class)
+    fun handleMultipartException(ex: MultipartException): ResponseEntity<Ressurs<String>> {
+        val cause = NestedExceptionUtils.getMostSpecificCause(ex)
+        if (cause is java.io.EOFException || cause.message?.contains("EOF", ignoreCase = true) == true) {
+            secureLogger.warn("Multipart-feil: klienten avbrøt opplasting (EOF)", ex)
+            logger.warn("Multipart-feil: klienten avbrøt opplasting - throwable=${rootCause(ex)}")
+        } else {
+            secureLogger.error("En feil har oppstått", ex)
+            logger.error("En feil har oppstått - throwable=${rootCause(ex)}")
+        }
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Ressurs.failure("Feil ved parsing av multipart-request"))
     }
 
     @ExceptionHandler(Throwable::class)
@@ -84,24 +96,27 @@ class ApiExceptionHandler : ResponseEntityExceptionHandler() {
             .body(Ressurs.failure("Uventet feil"))
     }
 
-    // Denne håndterer eks JwtTokenUnauthorizedException
+    // Denne håndterer feil med @ResponseStatus-annotasjon
     private fun håndtertResponseStatusFeil(
         throwable: Throwable,
         responseStatus: ResponseStatus,
     ): ResponseEntity<Ressurs<String>> {
         val status = if (responseStatus.value != HttpStatus.INTERNAL_SERVER_ERROR) responseStatus.value else responseStatus.code
-        val loggMelding = "En håndtert feil har oppstått" +
-            " throwable=${rootCause(throwable)}" +
-            " reason=${responseStatus.reason}" +
-            " status=$status"
+        val loggMelding =
+            "En håndtert feil har oppstått" +
+                " throwable=${rootCause(throwable)}" +
+                " reason=${responseStatus.reason}" +
+                " status=$status"
 
         loggFeil(throwable, loggMelding)
         return ResponseEntity.status(status).body(Ressurs.failure("Håndtert feil"))
     }
 
-    private fun loggFeil(throwable: Throwable, loggMelding: String) {
+    private fun loggFeil(
+        throwable: Throwable,
+        loggMelding: String,
+    ) {
         when (throwable) {
-            is JwtTokenUnauthorizedException -> logger.debug(loggMelding)
             is GcpDocumentNotFound -> logger.warn(loggMelding)
             else -> logger.error(loggMelding)
         }

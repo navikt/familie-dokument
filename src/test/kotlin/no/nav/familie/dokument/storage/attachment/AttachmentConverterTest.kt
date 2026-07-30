@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class AttachmentConverterTest {
-
     private val imageConversionService: ImageConversionService = mockk()
     private val flattenPdfService: FlattenPdfService = mockk()
     private val converter = AttachmentToStorableFormatConverter(imageConversionService, flattenPdfService)

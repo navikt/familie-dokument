@@ -17,7 +17,6 @@ import java.util.stream.Collectors
 import javax.imageio.ImageIO
 
 class PdfGeneratorTest {
-
     private val pdfService = PdfService()
 
     @Test
@@ -29,12 +28,11 @@ class PdfGeneratorTest {
         assertTrue(pdfsAreEqual("eksempel1.pdf", pdf))
     }
 
-    private fun getDocument(fixtureName: String): String {
-        return IOUtils.toString(
+    private fun getDocument(fixtureName: String): String =
+        IOUtils.toString(
             this.javaClass.getResourceAsStream("/$PDF_RESOURSE_PATH/$fixtureName"),
             StandardCharsets.UTF_8,
         )
-    }
 
     /**
      * Test if the data in the given byte array represents a PDF file.
@@ -72,25 +70,31 @@ class PdfGeneratorTest {
         return false
     }
 
-    private fun pdfsAreEqual(resource: String, actualPdfBytes: ByteArray): Boolean {
+    private fun pdfsAreEqual(
+        resource: String,
+        actualPdfBytes: ByteArray,
+    ): Boolean {
         Files.createDirectories(Paths.get(TEST_OUTPUT_PATH))
 
         // Load expected PDF document from resources, change class below.
         val expectedPdfBytes = toByteArray("$PDF_RESOURSE_PATH/$resource")
 
         // Get a list of results.
-        val problems = PdfVisualTester.comparePdfDocuments(
-            expectedPdfBytes,
-            actualPdfBytes,
-            resource,
-            false,
-        )
+        val problems =
+            PdfVisualTester.comparePdfDocuments(
+                expectedPdfBytes,
+                actualPdfBytes,
+                resource,
+                false,
+            )
 
         // Get a list of results.
         if (problems.isNotEmpty()) {
             System.err.println("Found problems with test case ($resource):")
             System.err.println(
-                problems.stream().map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
+                problems
+                    .stream()
+                    .map { p: PdfVisualTester.PdfCompareResult -> p.logMessage }
                     .collect(Collectors.joining("\n    ", "[\n    ", "\n]")),
             )
             System.err.println("For test case ($resource) writing failure artifacts to '$TEST_OUTPUT_PATH'")
@@ -118,7 +122,6 @@ class PdfGeneratorTest {
     }
 
     companion object {
-
         private const val TEST_OUTPUT_PATH = "target/regression-tests/"
         private const val PDF_RESOURSE_PATH = "pdf"
     }

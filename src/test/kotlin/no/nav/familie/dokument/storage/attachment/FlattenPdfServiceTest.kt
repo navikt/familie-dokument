@@ -7,7 +7,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 internal class FlattenPdfServiceTest {
-
     private val samvaersavtaleAdobe: ByteArray = TestUtil.toByteArray("samvaersavtaler/samvaersavtale_adobe.pdf")
     private val samvaersavtaleChrome: ByteArray = TestUtil.toByteArray("samvaersavtaler/samvaersavtale_chrome.pdf")
     private val samvaersavtaleEndretMedChrome: ByteArray = TestUtil.toByteArray("samvaersavtaler/samvaersavtale_endret_i_chrome.pdf")

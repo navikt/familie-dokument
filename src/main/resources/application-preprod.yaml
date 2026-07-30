@@ -11,9 +11,3 @@ cors:
     - "https://ensligmorellerfar.dev.nav.no"
     - "https://familie.dev.nav.no"
     - "http://localhost:3000"
-
-no.nav.security.jwt:
-  issuer:
-    tokenx:
-      discoveryurl: ${TOKEN_X_WELL_KNOWN_URL}
-      accepted_audience: ${TOKEN_X_CLIENT_ID}

@@ -13,17 +13,15 @@ import org.springframework.context.annotation.Profile
 @Import(EncryptedStorageConfiguration::class)
 @Profile("!local && !local-fd")
 class AttachmentConfiguration {
-
     @Bean
-    internal fun converter(imageConversionService: ImageConversionService, flattenPdfService: FlattenPdfService): AttachmentToStorableFormatConverter {
-        return AttachmentToStorableFormatConverter(imageConversionService, flattenPdfService)
-    }
+    internal fun converter(
+        imageConversionService: ImageConversionService,
+        flattenPdfService: FlattenPdfService,
+    ): AttachmentToStorableFormatConverter = AttachmentToStorableFormatConverter(imageConversionService, flattenPdfService)
 
     @Bean
     fun attachmentStorage(
         @Qualifier(ATTACHMENT_ENCRYPTED_STORAGE) storage: EncryptedStorage,
         storableFormatConverter: AttachmentToStorableFormatConverter,
-    ): AttachmentStorage {
-        return AttachmentStorage(storage, storableFormatConverter)
-    }
+    ): AttachmentStorage = AttachmentStorage(storage, storableFormatConverter)
 }
