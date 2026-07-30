@@ -10,6 +10,7 @@ cors:
     - "https://familie-ks-soknad.dev.nav.no"
     - "https://ensligmorellerfar.dev.nav.no"
     - "https://familie.dev.nav.no"
+    - "http://localhost:3000"
 
 no.nav.security.jwt:
   issuer:
