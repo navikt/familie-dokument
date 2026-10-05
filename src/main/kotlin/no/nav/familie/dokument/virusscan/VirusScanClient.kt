@@ -15,7 +15,6 @@ class VirusScanClient(
     config: VirusScanConfig,
     consumerIdClientInterceptor: ConsumerIdClientInterceptor,
 ) {
-
     private val requestFactory =
         SimpleClientHttpRequestFactory().apply {
             setConnectTimeout(Duration.ofSeconds(3))
