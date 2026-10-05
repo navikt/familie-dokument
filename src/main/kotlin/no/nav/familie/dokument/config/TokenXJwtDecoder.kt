@@ -29,5 +29,5 @@ class TokenXJwtDecoder(
             }
         }
 
-    override fun decode(token: String?): Jwt? = decoder.decode(token)
+    override fun decode(token: String): Jwt = decoder.decode(token)
 }
