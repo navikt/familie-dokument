@@ -1,4 +1,4 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-25-dev@sha256:313224d21d0d0e9b5306f92e265c50e6a224dfd671d7d0fc457c6a1403c7f04c
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-25-dev@sha256:65870334a3252c6d56d102d2fed4398328e4aded6a4701909eb4a892fda56637
 COPY ./target/familie-dokument.jar "app.jar"
 
 ENV TZ="Europe/Oslo"
