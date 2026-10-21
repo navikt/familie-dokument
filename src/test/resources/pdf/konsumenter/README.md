@@ -32,5 +32,18 @@ Sanity-datasettene leses uten token.
 | `vedtaksbrev_avslag_endring_inntekt.html` | `avslagIkkeTiProsentEndringInntekt` |
 | `varsel_om_ny_vurdering.html` | `varselOmNyVurdering` |
 
-Bruk kun syntetiske personidenter. Generer fasit med
-`mvn test -Dtest=PdfGeneratorTest -DoppdaterPdfFasit=true` før avhengigheter oppgraderes.
+Bruk kun syntetiske personidenter.
+
+## Oppdatere fasit
+
+Fasit oppdateres manuelt. Når en fasit mangler eller avviker, feiler testen. Ny pdf skrives til
+`target/regression-tests/ny-fasit/` med samme mappestruktur som fasiten, og avviksbilder til `target/regression-tests`.
+Se over dem, og kopier de nye pdf-ene inn som fasit hvis endringen er riktig. Alle på én gang:
+
+```sh
+cp -R target/regression-tests/ny-fasit/. src/test/resources/pdf/
+```
+
+Brudd på PDF/A-2A som er kjent og godtatt, står i `KJENTE_PDFA_BRUDD` i `PdfGeneratorTest`. Fasit-pdf-ene er binære og
+vises ikke som diff i pull requesten. Legg derfor endrede fasiter i en egen commit og legg ved bilder av endringene i
+pull requesten.

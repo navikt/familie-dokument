@@ -8,6 +8,7 @@ import org.apache.pdfbox.text.PDFTextStripper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
@@ -44,8 +45,9 @@ class PdfGeneratorTest {
      * med fasit-pdf-en som ligger ved siden av html-filen. Kildene til html-filene er beskrevet i
      * pdf/konsumenter/README.md.
      *
-     * Ny html-fil legges under src/test/resources/pdf/konsumenter/<konsument>/. Fasit-pdf-er som mangler eller avviker
-     * skrives på nytt med `mvn test -Dtest=PdfGeneratorTest -DoppdaterPdfFasit=true`.
+     * Ny html-fil legges under src/test/resources/pdf/konsumenter/<konsument>/. Fasit oppdateres manuelt: Når
+     * fasiten mangler eller avviker, skrives pdf-en til target/regression-tests/ny-fasit med samme mappestruktur som
+     * fasiten. Er den riktig, kopieres den inn som fasit.
      */
     @ParameterizedTest(name = "{0}")
     @MethodSource("konsumentHtml")
@@ -53,28 +55,36 @@ class PdfGeneratorTest {
         // Arrange
         val fasit = html.removeSuffix(".html") + ".pdf"
         val fasitFil = Paths.get(SRC_TEST_RESOURCES, PDF_RESOURSE_PATH, fasit).toFile()
+        File(NY_FASIT_PATH, fasit).delete()
 
         // Act
         val pdf = pdfService.lagPdf(getDocument(html))
 
         // Assert
-        if (System.getProperty(OPPDATER_FASIT_PROPERTY).toBoolean() &&
-            (
-                !fasitFil.exists() ||
-                    tekstinnhold(fasitFil.readBytes()) != tekstinnhold(pdf) ||
-                    !pdfsAreEqual(fasit, fasitFil.readBytes(), pdf)
-            )
-        ) {
-            fasitFil.writeBytes(pdf)
-            println("Oppdaterte fasit $fasitFil")
-        }
         assertTrue(isPdf(pdf), "$html ga ikke gyldig pdf")
-        assertEquals(KJENTE_PDFA_BRUDD[html].orEmpty(), pdfA2ABrudd(pdf), "$html har endrede PDF/A-2A-brudd")
         val forventet =
             fasitFil.takeIf { it.exists() }?.readBytes()
-                ?: error("Mangler fasit $fasit. Kjør med -D$OPPDATER_FASIT_PROPERTY=true for å generere den.")
-        assertEquals(tekstinnhold(forventet), tekstinnhold(pdf), "$html har annen tittel eller tekst enn fasit")
-        assertTrue(pdfsAreEqual(fasit, forventet, pdf), "$html avviker visuelt fra fasit, se $TEST_OUTPUT_PATH")
+                ?: fail("Mangler fasit for $html. ${skrivNyFasit(fasit, fasitFil, pdf)}")
+        assertTrue(pdfsAreEqual(fasit, forventet, pdf)) {
+            "$html avviker visuelt fra fasit, se avvikene i $TEST_OUTPUT_PATH. ${skrivNyFasit(fasit, fasitFil, pdf)}"
+        }
+        assertEquals(tekstinnhold(forventet), tekstinnhold(pdf)) {
+            "$html har annen tittel eller tekst enn fasit. ${skrivNyFasit(fasit, fasitFil, pdf)}"
+        }
+        assertEquals(KJENTE_PDFA_BRUDD[html].orEmpty(), pdfA2ABrudd(pdf)) {
+            "$html har andre PDF/A-2A-brudd enn de som står i KJENTE_PDFA_BRUDD"
+        }
+    }
+
+    private fun skrivNyFasit(
+        fasit: String,
+        fasitFil: File,
+        pdf: ByteArray,
+    ): String {
+        val nyFasit = File(NY_FASIT_PATH, fasit)
+        nyFasit.parentFile.mkdirs()
+        nyFasit.writeBytes(pdf)
+        return "Er den nye pdf-en riktig, kopier $nyFasit til $fasitFil."
     }
 
     /**
@@ -183,10 +193,10 @@ class PdfGeneratorTest {
 
     companion object {
         private const val TEST_OUTPUT_PATH = "target/regression-tests/"
+        private const val NY_FASIT_PATH = "${TEST_OUTPUT_PATH}ny-fasit"
         private const val PDF_RESOURSE_PATH = "pdf"
         private const val SRC_TEST_RESOURCES = "src/test/resources"
         private const val KONSUMENT_PATH = "konsumenter"
-        private const val OPPDATER_FASIT_PROPERTY = "oppdaterPdfFasit"
 
         /**
          * Tekst i @page-margbokser (f.eks. sidetall) arver ikke font-family fra body. Uten font-family, eller med en
