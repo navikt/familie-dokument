@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory
 import org.w3c.dom.Element
 
 /**
- * Tegner svg med Batik. En svg som Batik ikke klarer å tegne, blir stående tom i stedet for at hele pdf-genereringen
- * feiler. Bare typen feil logges, siden feilmeldingene fra Batik kan inneholde tekst fra dokumentet.
+ * Tegner svg med Batik, men lar en svg som feiler bli tom. Uten dette feiler hele pdf-en på grunn av én svg.
+ * Logger bare feiltypen, fordi feilmeldingen kan inneholde personopplysninger fra dokumentet.
  */
 class FeiltolerantSvgDrawer(
     private val svgDrawer: SVGDrawer = BatikSVGDrawer(),
