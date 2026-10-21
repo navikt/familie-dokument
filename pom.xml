@@ -26,7 +26,7 @@
         <kontrakter.version>4.0_20261014103049_c61507f</kontrakter.version>
         <tika-core.version>3.3.1</tika-core.version>
         <jsoup.version>1.19.1</jsoup.version>
-        <testcontainers.version>1.21.4</testcontainers.version>
+        <testcontainers.version>2.0.5</testcontainers.version>
         <verapdf.version>1.30.2</verapdf.version>
      </properties>
 
@@ -186,13 +186,13 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>localstack</artifactId>
+            <artifactId>testcontainers-localstack</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
