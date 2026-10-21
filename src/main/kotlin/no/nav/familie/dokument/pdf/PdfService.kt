@@ -4,6 +4,7 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PDFontSupplier
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
+import org.apache.batik.anim.dom.SVGDOMImplementation
 import org.apache.fontbox.ttf.TTFParser
 import org.apache.pdfbox.io.IOUtils
 import org.apache.pdfbox.io.RandomAccessReadBuffer
@@ -22,11 +23,15 @@ import org.apache.xmpbox.type.BadFieldValueException
 import org.apache.xmpbox.xml.XmpSerializer
 import org.jsoup.Jsoup
 import org.jsoup.helper.W3CDom
+import org.jsoup.parser.Parser
+import org.jsoup.parser.Tag
+import org.jsoup.parser.TagSet
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
+import org.w3c.dom.DOMException
 import org.w3c.dom.Document
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -40,11 +45,50 @@ class PdfService {
         log.debug("Generer pdf")
 
         val pdfOutputStream = ByteArrayOutputStream()
-        val w3cDokument = W3CDom().fromJsoup(Jsoup.parse(html))
+        val dokument = Jsoup.parse(html, "", htmlParser()).also { fjernSvgElementerSomBatikIkkeStøtter(it) }
+        val w3cDokument = W3CDom().fromJsoup(dokument)
         genererPdf(w3cDokument, pdfOutputStream)
 
         return pdfOutputStream.toByteArray()
     }
+
+    /**
+     * Html-parser der alle tagger kan selvlukkes, slik at f.eks. `<div/>` blir et tomt element og ikke omslutter
+     * innholdet som kommer etter. Script i svg tolkes som vanlig tekst, slik at `<svg><script/>` ikke gjør
+     * resten av dokumentet om til script-innhold.
+     */
+    private fun htmlParser(): Parser =
+        Parser.htmlParser().tagSet(
+            TagSet.Html().onNewTag {
+                it.set(Tag.SelfClose)
+                if (it.namespace() == Parser.NamespaceSvg && it.normalName() == "script") it.clear(Tag.Data)
+            },
+        )
+
+    /**
+     * Fjerner elementer i svg-navnerommet som Batik ikke kan opprette, f.eks. rdf:RDF og sodipodi:namedview fra
+     * Inkscape eller svg-elementer Batik ikke kjenner. Slike elementer tegnes ikke, men får pdf-genereringen til å feile.
+     */
+    private fun fjernSvgElementerSomBatikIkkeStøtter(dokument: org.jsoup.nodes.Document) {
+        val batikDokument =
+            SVGDOMImplementation.getDOMImplementation().createDocument(SVG_NAVNEROM, "svg", null)
+        dokument
+            .select("svg *")
+            .filter { it.tag().namespace() == SVG_NAVNEROM }
+            .filterNot { batikKanOpprette(batikDokument, it.tagName()) }
+            .forEach { it.remove() }
+    }
+
+    private fun batikKanOpprette(
+        batikDokument: Document,
+        tagName: String,
+    ): Boolean =
+        try {
+            batikDokument.createElementNS(SVG_NAVNEROM, tagName)
+            true
+        } catch (_: DOMException) {
+            false
+        }
 
     fun fontSupplier(fontName: String): PDFontSupplier {
         val font =
@@ -152,6 +196,8 @@ class PdfService {
     }
 
     companion object {
+        private const val SVG_NAVNEROM = SVGDOMImplementation.SVG_NAMESPACE_URI
+
         val colorProfile: ByteArray
             get() {
                 val cpr = ClassPathResource("sRGB.icc")
