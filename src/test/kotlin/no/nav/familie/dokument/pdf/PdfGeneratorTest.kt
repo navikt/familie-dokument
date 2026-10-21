@@ -4,13 +4,16 @@ import com.openhtmltopdf.pdfboxout.visualtester.PdfVisualTester
 import no.nav.familie.dokument.TestUtil.toByteArray
 import org.apache.commons.io.IOUtils
 import org.apache.pdfbox.Loader
+import org.apache.pdfbox.rendering.PDFRenderer
 import org.apache.pdfbox.text.PDFTextStripper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 import org.verapdf.pdfa.Foundries
 import org.verapdf.pdfa.flavours.PDFAFlavour
@@ -38,6 +41,69 @@ class PdfGeneratorTest {
         assertTrue(isPdf(pdf))
         assertTrue(isPDF_2_ACompliant(pdf))
         assertTrue(pdfsAreEqual("eksempel1.pdf", toByteArray("$PDF_RESOURSE_PATH/eksempel1.pdf"), pdf))
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("svgSomBatikIkkeStøtterAlt")
+    fun `skal generere pdf fra html med svg-elementer som batik ikke støtter`(
+        beskrivelse: String,
+        svg: String,
+    ) {
+        // Arrange
+        val html = "<html><head><title>$beskrivelse</title></head><body>$svg</body></html>"
+
+        // Act
+        val pdf = pdfService.lagPdf(html)
+
+        // Assert
+        assertTrue(isPdf(pdf))
+        assertTrue(isPDF_2_ACompliant(pdf))
+    }
+
+    @Test
+    fun `skal tegne svg-elementer med svg-prefiks`() {
+        // Arrange
+        val html =
+            """
+            <html><head><title>Prefiks</title></head><body>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="200" height="200">
+              <svg:rect width="200" height="200" fill="#000000" />
+            </svg>
+            </body></html>
+            """.trimIndent()
+
+        // Act
+        val pdf = pdfService.lagPdf(html)
+
+        // Assert
+        val side = Loader.loadPDF(pdf).use { PDFRenderer(it).renderImageWithDPI(0, 72f) }
+        val mørkePiksler =
+            (0 until side.width).sumOf { x -> (0 until side.height).count { y -> side.getRGB(x, y) and 0xff < 64 } }
+        assertTrue(mørkePiksler > 10_000, "svg:rect ble ikke tegnet, fant $mørkePiksler mørke piksler")
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            """<div style="display:none"/>""",
+            """<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><script href="a.js"/></svg>""",
+        ],
+    )
+    fun `skal tolke selvlukkende tagger som tomme elementer`(selvlukkendeTagg: String) {
+        // Arrange
+        val html =
+            """
+            <html><head><title>Selvlukkende</title></head><body>
+            $selvlukkendeTagg<p>Teksten etter skal vises</p>
+            </body></html>
+            """.trimIndent()
+
+        // Act
+        val pdf = pdfService.lagPdf(html)
+
+        // Assert
+        val tekst = Loader.loadPDF(pdf).use { PDFTextStripper().getText(it) }
+        assertTrue(tekst.contains("Teksten etter skal vises"), "Teksten etter $selvlukkendeTagg mangler i pdf-en: $tekst")
     }
 
     /**
@@ -233,5 +299,34 @@ class PdfGeneratorTest {
                 .sorted()
                 .toList()
         }
+
+        @JvmStatic
+        fun svgSomBatikIkkeStøtterAlt(): List<Arguments> =
+            listOf(
+                Arguments.of(
+                    "metadata og attributter fra inkscape",
+                    """
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                         xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                         xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                         xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                         width="40" height="40" viewBox="0 0 40 40" inkscape:version="1.3">
+                      <metadata><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format></cc:Work></rdf:RDF></metadata>
+                      <sodipodi:namedview id="namedview" pagecolor="#ffffff" inkscape:zoom="1" />
+                      <g inkscape:label="Lag 1" inkscape:groupmode="layer"><rect width="40" height="40" fill="#c30000" /></g>
+                    </svg>
+                    """.trimIndent(),
+                ),
+                Arguments.of(
+                    "ukjente elementer i svg uten xmlns",
+                    """
+                    <svg width="20" height="20">
+                      <filter id="f"><feDropShadow dx="1" dy="1" /></filter>
+                      <foo />
+                      <rect width="20" height="20" fill="#000000" />
+                    </svg>
+                    """.trimIndent(),
+                ),
+            )
     }
 }
