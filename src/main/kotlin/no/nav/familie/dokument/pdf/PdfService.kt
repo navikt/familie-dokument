@@ -3,7 +3,6 @@ package no.nav.familie.dokument.pdf
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PDFontSupplier
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
-import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import org.apache.batik.anim.dom.SVGDOMImplementation
 import org.apache.fontbox.ttf.TTFParser
 import org.apache.pdfbox.io.IOUtils
@@ -54,7 +53,7 @@ class PdfService {
 
     /**
      * Html-parser der alle tagger kan selvlukkes, slik at f.eks. `<div/>` blir et tomt element og ikke omslutter
-     * innholdet som kommer etter. Script i svg tolkes som vanlig tekst, slik at `<svg><script/>` ikke gjør
+     * innholdet som kommer etter. Innholdet i script i svg tolkes som vanlig markup, slik at `<svg><script/>` ikke gjør
      * resten av dokumentet om til script-innhold.
      */
     private fun htmlParser(): Parser =
@@ -131,7 +130,7 @@ class PdfService {
                         400,
                         BaseRendererBuilder.FontStyle.ITALIC,
                         true,
-                    ).useSVGDrawer(BatikSVGDrawer())
+                    ).useSVGDrawer(FeiltolerantSvgDrawer())
                     .withW3cDocument(w3cDokument, "")
                     .buildPdfRenderer()
             builder.createPDFWithoutClosing()

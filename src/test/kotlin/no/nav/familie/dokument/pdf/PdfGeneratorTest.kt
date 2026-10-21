@@ -45,7 +45,7 @@ class PdfGeneratorTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("svgSomBatikIkkeStøtterAlt")
-    fun `skal generere pdf fra html med svg-elementer som batik ikke støtter`(
+    fun `skal tegne svg som har elementer batik ikke støtter`(
         beskrivelse: String,
         svg: String,
     ) {
@@ -58,6 +58,27 @@ class PdfGeneratorTest {
         // Assert
         assertTrue(isPdf(pdf))
         assertTrue(isPDF_2_ACompliant(pdf))
+        val mørkePiksler = antallMørkePiksler(pdf)
+        assertTrue(mørkePiksler > 100, "svg-en ble ikke tegnet, fant $mørkePiksler mørke piksler")
+    }
+
+    @Test
+    fun `skal generere pdf med tom svg når batik ikke klarer å tegne den`() {
+        // Arrange
+        val html =
+            """
+            <html><head><title>Ugyldig svg</title></head><body style="font-family: 'Source Sans Pro'">
+            <svg width="200" height="20"><text font-size="-3">tekst</text></svg><p>Teksten etter skal vises</p>
+            </body></html>
+            """.trimIndent()
+
+        // Act
+        val pdf = pdfService.lagPdf(html)
+
+        // Assert
+        assertEquals(emptySet<String>(), pdfA2ABrudd(pdf))
+        val tekst = Loader.loadPDF(pdf).use { PDFTextStripper().getText(it) }
+        assertTrue(tekst.contains("Teksten etter skal vises"), "Teksten etter svg-en mangler i pdf-en: $tekst")
     }
 
     @Test
@@ -76,9 +97,7 @@ class PdfGeneratorTest {
         val pdf = pdfService.lagPdf(html)
 
         // Assert
-        val side = Loader.loadPDF(pdf).use { PDFRenderer(it).renderImageWithDPI(0, 72f) }
-        val mørkePiksler =
-            (0 until side.width).sumOf { x -> (0 until side.height).count { y -> side.getRGB(x, y) and 0xff < 64 } }
+        val mørkePiksler = antallMørkePiksler(pdf)
         assertTrue(mørkePiksler > 10_000, "svg:rect ble ikke tegnet, fant $mørkePiksler mørke piksler")
     }
 
@@ -158,6 +177,11 @@ class PdfGeneratorTest {
      */
     private fun tekstinnhold(pdf: ByteArray): String =
         Loader.loadPDF(pdf).use { "${it.documentInformation.title}\n${PDFTextStripper().getText(it)}" }
+
+    private fun antallMørkePiksler(pdf: ByteArray): Int {
+        val side = Loader.loadPDF(pdf).use { PDFRenderer(it).renderImageWithDPI(0, 72f) }
+        return (0 until side.width).sumOf { x -> (0 until side.height).count { y -> side.getRGB(x, y) and 0xff < 64 } }
+    }
 
     private fun getDocument(fixtureName: String): String =
         IOUtils.toString(
