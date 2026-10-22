@@ -29,6 +29,14 @@ updates:
     - dependency-name: org.jetbrains.kotlinx:kotlinx-coroutines-core
       versions:
       - 1.5.0-native-mt
+    # Nyere versjoner (testet 1.1.97) endrer layout i konsumentenes pdf-er, bl.a. avklippet fast bunntekst og sideskift.
+    - dependency-name: io.github.openhtmltopdf:*
+      versions:
+      - ">= 1.1.38"
+    # 3.6.0 knekker ByteBuddy self-attach for mockk på Linux med JDK 25, se apache/maven-surefire#3461.
+    - dependency-name: org.apache.maven.plugins:maven-surefire-plugin
+      versions:
+      - ">= 3.6.0"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
