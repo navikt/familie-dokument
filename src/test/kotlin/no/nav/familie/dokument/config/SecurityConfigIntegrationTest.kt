@@ -25,8 +25,16 @@ class SecurityConfigIntegrationTest : OppslagSpringRunnerTest() {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["/internal/info", "/internal/status/isAlive"])
-    fun `info-endepunktet er ikke eksponert`(path: String) {
+    @ValueSource(
+        strings = [
+            "/internal/info",
+            "/internal/mappings",
+            "/internal/status/isAlive",
+            "/internal/healthcheck",
+            "/internal/prometheus/other",
+        ],
+    )
+    fun `øvrige internal-endepunkter krever token`(path: String) {
         val response =
             restTemplate.exchange<String>(
                 localhost(path),
@@ -34,14 +42,17 @@ class SecurityConfigIntegrationTest : OppslagSpringRunnerTest() {
                 HttpEntity<String>(headers),
             )
 
-        assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+        assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
     }
 
-    @Test
-    fun `internal health-endepunkt er tilgjengelig uten token`() {
+    @ParameterizedTest
+    @ValueSource(
+        strings = ["/internal", "/internal/health", "/internal/metrics", "/internal/metrics/jvm.memory.used", "/internal/prometheus"],
+    )
+    fun `offentlige internal-endepunkter er tilgjengelige uten token`(path: String) {
         val response =
             restTemplate.exchange<String>(
-                localhost("/internal/health"),
+                localhost(path),
                 HttpMethod.GET,
                 HttpEntity<String>(headers),
             )
