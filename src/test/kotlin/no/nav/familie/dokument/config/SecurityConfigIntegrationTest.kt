@@ -3,12 +3,40 @@ package no.nav.familie.dokument.config
 import no.nav.familie.dokument.storage.integrationTest.OppslagSpringRunnerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.resttestclient.exchange
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 
 class SecurityConfigIntegrationTest : OppslagSpringRunnerTest() {
+    @ParameterizedTest
+    @ValueSource(strings = ["/internal/health/liveness", "/internal/health/readiness"])
+    fun `helseprober er tilgjengelige uten token`(path: String) {
+        val response =
+            restTemplate.exchange<String>(
+                localhost(path),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["/internal/info", "/internal/status/isAlive"])
+    fun `info-endepunktet er ikke eksponert`(path: String) {
+        val response =
+            restTemplate.exchange<String>(
+                localhost(path),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+    }
+
     @Test
     fun `internal health-endepunkt er tilgjengelig uten token`() {
         val response =
