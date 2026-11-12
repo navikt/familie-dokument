@@ -13,12 +13,15 @@ spring:
       max-request-size: 21MB
 
 management:
+  endpoint.info.access: none
   endpoint.health.show-details: always
+  endpoint.health.probes.enabled: true
+  info:
+    defaults:
+      enabled: false
   endpoints.web:
-    exposure.include: info, health, metrics, prometheus
+    exposure.include: health, metrics, prometheus
     base-path: "/internal"
-    path-mapping:
-      info: "status/isAlive"
   prometheus.metrics.export.enabled: true
 
 attachment.max.size.mb: 20

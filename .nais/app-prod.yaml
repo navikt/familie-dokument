@@ -15,13 +15,13 @@ spec:
   envFrom:
     - secret: familie-dokument-secret
   liveness:
-    path: /internal/status/isAlive
+    path: /internal/health/liveness
     initialDelay: 30
     timeout: 5
     periodSeconds: 10     # How often (in seconds) to perform the probe. Default to 10 seconds
     failureThreshold: 10 # when a Pod starts and the probe fails,
   readiness:
-    path: /internal/status/isAlive
+    path: /internal/health/readiness
     initialDelay: 30
     timeout: 5
     periodSeconds: 10

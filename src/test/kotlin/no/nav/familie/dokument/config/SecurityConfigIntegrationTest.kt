@@ -3,17 +3,56 @@ package no.nav.familie.dokument.config
 import no.nav.familie.dokument.storage.integrationTest.OppslagSpringRunnerTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.boot.resttestclient.exchange
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 
 class SecurityConfigIntegrationTest : OppslagSpringRunnerTest() {
-    @Test
-    fun `internal health-endepunkt er tilgjengelig uten token`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["/internal/health/liveness", "/internal/health/readiness"])
+    fun `helseprober er tilgjengelige uten token`(path: String) {
         val response =
             restTemplate.exchange<String>(
-                localhost("/internal/health"),
+                localhost(path),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "/internal/info",
+            "/internal/mappings",
+            "/internal/status/isAlive",
+            "/internal/healthcheck",
+            "/internal/prometheus/other",
+        ],
+    )
+    fun `øvrige internal-endepunkter krever token`(path: String) {
+        val response =
+            restTemplate.exchange<String>(
+                localhost(path),
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+            )
+
+        assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = ["/internal", "/internal/health", "/internal/metrics", "/internal/metrics/jvm.memory.used", "/internal/prometheus"],
+    )
+    fun `offentlige internal-endepunkter er tilgjengelige uten token`(path: String) {
+        val response =
+            restTemplate.exchange<String>(
+                localhost(path),
                 HttpMethod.GET,
                 HttpEntity<String>(headers),
             )
