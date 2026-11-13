@@ -99,9 +99,31 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         assertThat(response.statusCode).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
-    private fun leseVedlegg(navn: String): MultiValueMap<String, Any> {
-        val content = StorageControllerIntegrationTest::class.java.getResource("/vedlegg/$navn")!!.readBytes()
+    @Test
+    fun `Skal returnere 400 med IMAGE_DIMENSIONS_TOO_LARGE for bilde med for mange piksler`() {
+        // Arrange
+        val bombe = StorageControllerIntegrationTest::class.java.getResource("/dummy/dekompresjonsbombe-25000x25000.png")!!.readBytes()
 
+        // Act
+        val response =
+            restTemplate.exchange<Map<String, Any>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg("bilde.png", bombe), headers),
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        assertThat(response.body?.get("melding")).isEqualTo("CODE=IMAGE_DIMENSIONS_TOO_LARGE")
+    }
+
+    private fun leseVedlegg(navn: String): MultiValueMap<String, Any> =
+        vedlegg(navn, StorageControllerIntegrationTest::class.java.getResource("/vedlegg/$navn")!!.readBytes())
+
+    private fun vedlegg(
+        navn: String,
+        content: ByteArray,
+    ): MultiValueMap<String, Any> {
         val map = LinkedMultiValueMap<String, Any>()
         map.add(
             "file",
