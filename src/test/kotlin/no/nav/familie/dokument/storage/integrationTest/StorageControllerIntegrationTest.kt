@@ -6,6 +6,9 @@ import com.google.cloud.storage.StorageException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import no.nav.familie.dokument.storage.attachment.FlattenPdfService
+import no.nav.familie.dokument.storage.attachment.Testpdfer
+import no.nav.familie.dokument.storage.attachment.Testpdfer.Objektstrøm
 import no.nav.familie.kontrakter.felles.Ressurs
 import no.nav.familie.kontrakter.felles.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
@@ -115,6 +118,25 @@ class StorageControllerIntegrationTest : OppslagSpringRunnerTest() {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
         assertThat(response.body?.get("melding")).isEqualTo("CODE=IMAGE_DIMENSIONS_TOO_LARGE")
+    }
+
+    @Test
+    fun `Skal returnere 400 med INVALID_DOCUMENT_FORMAT for pdf som pakkes ut til mer enn grensen`() {
+        // Arrange
+        val objekter = listOf(Testpdfer.KATALOG, Testpdfer.SIDER)
+        val bombe = Testpdfer.pdf(listOf(Objektstrøm(objekter, utpakketStørrelse = 2 * FlattenPdfService.MAKS_UTPAKKET_PER_PDF.toInt())))
+
+        // Act
+        val response =
+            restTemplate.exchange<Map<String, Any>>(
+                localhost("/api/mapper/familie-dokument-test"),
+                HttpMethod.POST,
+                HttpEntity(vedlegg("vedlegg.pdf", bombe), headers),
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        assertThat(response.body?.get("melding")).isEqualTo("CODE=INVALID_DOCUMENT_FORMAT")
     }
 
     private fun leseVedlegg(navn: String): MultiValueMap<String, Any> =

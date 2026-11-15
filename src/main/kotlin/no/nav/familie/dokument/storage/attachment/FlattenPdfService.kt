@@ -1,6 +1,5 @@
 package no.nav.familie.dokument.storage.attachment
 
-import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm
 import org.slf4j.LoggerFactory
@@ -13,10 +12,10 @@ class FlattenPdfService {
 
     fun convert(input: ByteArray): ByteArray {
         return try {
-            Loader.loadPDF(input).use { loadedPdf ->
-                val pdAcroForm: PDAcroForm? = loadedPdf.documentCatalog.acroForm
+            BegrensetPdfParser(input, MAKS_UTPAKKET_PER_PDF).parse().use { loadedPdf ->
                 if (loadedPdf.isEncrypted) return input
-                pdAcroForm?.let {
+                val pdAcroForm: PDAcroForm? = loadedPdf.documentCatalog.acroForm
+                pdAcroForm?.takeIf { it.fields.isNotEmpty() }?.let {
                     it.flatten()
                     val byteArrayOutputStream = ByteArrayOutputStream()
                     loadedPdf.save(byteArrayOutputStream)
@@ -27,5 +26,9 @@ class FlattenPdfService {
             logger.info("PDF-en er passordbeskyttet og det er ikke mulig å flate ut potensielle pdf-form felter")
             input
         }
+    }
+
+    companion object {
+        const val MAKS_UTPAKKET_PER_PDF = 8L * 1024 * 1024
     }
 }
