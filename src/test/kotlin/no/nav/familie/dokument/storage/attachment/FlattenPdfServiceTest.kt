@@ -351,7 +351,8 @@ internal class FlattenPdfServiceTest {
             val objektstrøm = dokument.document.getObjectFromPool(COSObjectKey(2, 0)).`object` as COSStream
 
             // Act & Assert
-            assertThatThrownBy { objektstrøm.createInputStream() }.isInstanceOf(InvalidDocumentFormat::class.java)
+            assertThatThrownBy { objektstrøm.createInputStream() }
+                .isInstanceOfSatisfying(InvalidDocumentFormat::class.java) { assertThat(it.secureLogMessage).contains(forStor) }
         }
     }
 
